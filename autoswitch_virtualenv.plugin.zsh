@@ -3,7 +3,7 @@ precmd() { check_venv }
 
 function maybeworkon() {
   if [ "$1" != "$(basename $VIRTUAL_ENV)" ]; then
-     printf "Switching virtualenv: $1  "
+     printf "Switching virtualenv: %s  " $1
      workon "$1"
      # For some reason python --version writes to stderr
      printf "[%s]\n" "$(python --version 2>&1)"
@@ -16,7 +16,7 @@ function check_venv()
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
         if [[ -f ".venv" ]]; then
-           maybeworkon `cat .venv`
+           maybeworkon "$(cat .venv)"
         else
            maybeworkon default3
         fi
