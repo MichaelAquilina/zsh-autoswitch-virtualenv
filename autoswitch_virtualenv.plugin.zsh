@@ -1,4 +1,6 @@
-precmd() { check_venv }
+function precmd() {
+  check_venv
+}
 
 
 function maybeworkon() {
