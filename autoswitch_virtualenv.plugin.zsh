@@ -19,8 +19,10 @@ function check_venv()
         MYOLDPWD="$PWD"
         if [[ -f ".venv" ]]; then
            maybeworkon "$(cat .venv)"
-        else
-           maybeworkon default3
+        elif [[ -n "$DEFAULT_VIRTUALENV" ]]; then
+           maybeworkon "$DEFAULT_VIRTUALENV"
+        elif [[ -n "$VIRTUAL_ENV" ]]; then
+           deactivate
         fi
     fi
 }
