@@ -2,7 +2,6 @@ function precmd() {
   check_venv
 }
 
-
 function maybeworkon() {
   if [ "$1" != "$(basename $VIRTUAL_ENV)" ]; then
      printf "Switching virtualenv: %s  " $1
