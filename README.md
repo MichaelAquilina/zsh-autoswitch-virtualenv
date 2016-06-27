@@ -10,3 +10,16 @@ default python virtual environment - set by `DEFAULT_VIRTUALENV` environment var
 deactivate any currently active virtualenv.
 
 NOTE that the virutalenv you specify in `.venv` must already exist.
+
+Requirements
+------------
+
+`virtualenvwrapper` must be installed for this plugin to work correctly.
+
+On Ubuntu simply install from the standard repositories:
+
+`sudo apt-get install virtualenvwrapper`
+
+Mac OSX can install `virtualenvwrapper` from brew:
+
+`brew install virtualenvwrapper`
