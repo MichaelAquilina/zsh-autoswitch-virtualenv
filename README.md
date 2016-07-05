@@ -40,12 +40,14 @@ Next time you switch to that folder, you'll see the following message
 ```
 $ cd my-python-project
 Switching virtualenv: my-python-project  [Python 3.4.3+]
+$
 ```
 If you have set the `DEFAULT_VIRTUALENV` environment variable, exiting that directory will switch
 back to the value set.
 ```
 $ cd ..
-Switching virtualenv: default3  [Python 3.4.3+]
+Switching virtualenv: mydefaultenv  [Python 3.4.3+]
+$
 ```
 Otherwise, `deactivate` will simply be called on the virtualenv to switch back to the global
 python environment.
