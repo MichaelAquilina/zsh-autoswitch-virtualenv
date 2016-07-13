@@ -5,7 +5,7 @@ Simple ZSH plugin that switches python virtualenvs automatically as you move bet
 
 Simply create a `.venv` file with the name of the virtualenv you want to automatically switch to
 when you move into the directory. Moving out of the directory will automatically switch back to the
-default python virtual environment - set by `AUTOSWITCH_DEFAULTENV` environment variable. If
+default python virtual environment - set by the `AUTOSWITCH_DEFAULTENV` environment variable. If
 `AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory without a `.venv` file will simply
 deactivate any currently active virtualenv.
 
@@ -28,7 +28,7 @@ Mac OSX can install `virtualenvwrapper` from brew:
 Installation from Antigen
 -------------------------
 
-Installing from Antigen is super easy! Just add the following line to your `.zshrc`:
+Installing from [Antigen](https://github.com/zsh-users/antigen) is super easy! Just add the following line to your `.zshrc`:
 
 ```
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
