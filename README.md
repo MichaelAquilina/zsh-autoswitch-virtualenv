@@ -11,6 +11,8 @@ deactivate any currently active virtualenv.
 
 NOTE that the virutalenv you specify in `.venv` must already exist.
 
+:tada: Pull Requests for fixes or improvements are welcome! :tada:
+
 Requirements
 ------------
 
