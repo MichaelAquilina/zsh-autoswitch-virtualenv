@@ -70,4 +70,4 @@ Options
 -------
 
 Right now the only option available is to prevent verbose messages from being displayed when moving
-between directories. You can do this by setting "AUTOSWITCH_SILENT" to a non-empty value.
+between directories. You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
