@@ -5,8 +5,8 @@ Simple ZSH plugin that switches python virtualenvs automatically as you move bet
 
 Simply create a `.venv` file with the name of the virtualenv you want to automatically switch to
 when you move into the directory. Moving out of the directory will automatically switch back to the
-default python virtual environment - set by `DEFAULT_VIRTUALENV` environment variable. If
-`DEFAULT_VIRTUALENV` has not been set, then moving to a directory without a `.venv` file will simply
+default python virtual environment - set by `AUTOSWITCH_DEFAULTENV` environment variable. If
+`AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory without a `.venv` file will simply
 deactivate any currently active virtualenv.
 
 NOTE that the virutalenv you specify in `.venv` must already exist.
@@ -33,11 +33,11 @@ Installing from Antigen is super easy! Just add the following line to your `.zsh
 ```
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
-if you want to set a default virtual environment then you can also export `DEFAULT_VIRTUALENV` in
+if you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
 your `.zshrc` file.
 
 ```
-export DEFAULT_VIRTUALENV="mydefaultenv"
+export AUTOSWITCH_DEFAULTENV="mydefaultenv"
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
@@ -56,7 +56,7 @@ $ cd my-python-project
 Switching virtualenv: my-python-project  [Python 3.4.3+]
 $
 ```
-If you have set the `DEFAULT_VIRTUALENV` environment variable, exiting that directory will switch
+If you have set the `AUTOSWITCH_DEFAULTENV` environment variable, exiting that directory will switch
 back to the value set.
 ```
 $ cd ..
@@ -65,3 +65,9 @@ $
 ```
 Otherwise, `deactivate` will simply be called on the virtualenv to switch back to the global
 python environment.
+
+Options
+-------
+
+Right now the only option available is to prevent verbose messages from being displayed when moving
+between directories. You can do this by setting "AUTOSWITCH_SILENT" to a non-empty value.
