@@ -35,6 +35,20 @@ Installing from [Antigen](https://github.com/zsh-users/antigen) is super easy! J
 ```
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
+
+Installation with Zgen
+----------------------
+
+Installing with [Zgen](https://github.com/tarjoilija/zgen) is super easy! Just add the following line to your `.zshrc`:
+
+```zgen load unixorn/tumult.plugin.zsh```
+
+where you're doing your other `zgen load` calls.
+
+
+Setting a default virtualenv
+----------------------------
+```
 if you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
 your `.zshrc` file.
 
