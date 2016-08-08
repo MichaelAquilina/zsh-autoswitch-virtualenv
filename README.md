@@ -40,7 +40,7 @@ Installing with Zgen
 
 Installing with [Zgen](https://github.com/tarjoilija/zgen) is also easy! Add the following line to your `.zshrc`:
 
-```zgen load unixorn/tumult.plugin.zsh```
+```zgen load MichaelAquilina/zsh-autoswitch-virtualenv```
 
 where you're making your other `zgen load` calls.
 
