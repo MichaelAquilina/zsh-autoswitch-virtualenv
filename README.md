@@ -9,7 +9,14 @@ default python virtual environment - set by the `AUTOSWITCH_DEFAULTENV` environm
 `AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory without a `.venv` file will
 deactivate any currently active virtualenv.
 
-NOTE: The virutalenv you specify in `.venv` must already exist.
+NOTE: The virutalenv you specify in `.venv` must already exist. I personally use the following function (found in my `~/.zshrc`) to make this process convenient:
+```
+function mkvenv() {
+   venv_name="$(basename $PWD)"
+   echo "$venv_name" > ".venv"
+   mkvirtualenv "$venv_name" $@
+}
+```
 
 :tada: Pull Requests for fixes or improvements are welcome! :tada:
 
