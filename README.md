@@ -6,17 +6,13 @@ Autoswitch Python Virtualenv
 *zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python virtualenvs automatically as
 you move between directories.
 
-This plugin simply allows you to create a virtual environment with the same name as the current
-directory. However that virtualenv will now be automatically activated when you enter the same
-directory again and deactivate it when you move outside!
-
 You do this by simply calling the `mkvenv` command in the directory you wish to setup a virtual
-environment. After that command is completed, everything is setup and you are good to go!
+environment. After that command is completed, everything is setup and you are good to go! See the
+*Commands* section below for more detail.
 
 Moving out of the directory will automatically deactivate the virtual environment. However you can
-also switch back to a default python virtual environment by setting the `AUTOSWITCH_DEFAULTENV`
-environment variable. If `AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory
-without a `.venv` file will deactivate any currently active virtualenv.
+also switch to a default python virtual environment instead by setting the `AUTOSWITCH_DEFAULTENV`
+environment variable.
 
 Internally this plugin simply worksby creating a file named `.venv` which contains the name of the
 virtual environment created (which is the same name as the current directory but can be edited if
