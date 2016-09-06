@@ -1,24 +1,27 @@
+:tada: Pull Requests for fixes or improvements are welcome! :tada:
+
 Autoswitch Python Virtualenv
 ============================
 
-*zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python virtualenvs automatically as you move between directories.
+*zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python virtualenvs automatically as
+you move between directories.
 
-Simply create a `.venv` file with the name of the virtualenv you want to automatically switch to
-when you move into a directory. Moving out of the directory will automatically switch back to the
-default python virtual environment - set by the `AUTOSWITCH_DEFAULTENV` environment variable. If
-`AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory without a `.venv` file will
-deactivate any currently active virtualenv.
+This plugin simply allows you to create a virtual environment with the same name as the current
+directory. However that virtualenv will now be automatically activated when you enter the same
+directory again and deactivate it when you move outside!
 
-NOTE: The virutalenv you specify in `.venv` must already exist. I personally use the following function (found in my `~/.zshrc`) to make this process convenient:
-```
-function mkvenv() {
-   venv_name="$(basename $PWD)"
-   echo "$venv_name" > ".venv"
-   mkvirtualenv "$venv_name" $@
-}
-```
+You do this by simply calling the `mkvenv` command in the directory you wish to setup a virtual
+environment. After that command is completed, everything is setup and you are good to go!
 
-:tada: Pull Requests for fixes or improvements are welcome! :tada:
+Moving out of the directory will automatically deactivate the virtual environment. However you can
+also switch back to a default python virtual environment by setting the `AUTOSWITCH_DEFAULTENV`
+environment variable. If `AUTOSWITCH_DEFAULTENV` has not been set, then moving to a directory
+without a `.venv` file will deactivate any currently active virtualenv.
+
+Internally this plugin simply worksby creating a file named `.venv` which contains the name of the
+virtual environment created (which is the same name as the current directory but can be edited if
+needed). There is then a precommand hook that looks for a `.venv` file and switches to the name
+specified if one is found.
 
 Requirements
 ------------
@@ -33,8 +36,8 @@ Mac OSX users can install `virtualenvwrapper` with brew:
 
 `brew install virtualenvwrapper`
 
-Installing with Antigen
------------------------
+Installing with Antigen/Zgen
+----------------------------
 
 Installing with [Antigen](https://github.com/zsh-users/antigen) is super easy! Just add the following line to your `.zshrc`:
 
@@ -42,35 +45,31 @@ Installing with [Antigen](https://github.com/zsh-users/antigen) is super easy! J
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
-Installing with Zgen
---------------------
-
 Installing with [Zgen](https://github.com/tarjoilija/zgen) is also easy! Add the following line to your `.zshrc`:
 
-```zgen load MichaelAquilina/zsh-autoswitch-virtualenv```
-
-where you're making your other `zgen load` calls.
-
-Setting a default virtualenv
-----------------------------
-
-If you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
-your `.zshrc` file.
-
 ```
-export AUTOSWITCH_DEFAULTENV="mydefaultenv"
-antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
+zgen load MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
-Example:
+Commands
 --------
 
-Setup a new project with virtualenv autoswitching
+Setup a new project with virtualenv autoswitching using the `mkvenv` helper command.
 ```
 $ cd my-python-project
-$ mkvirtualenv my-python-project
-$ echo "my-python-project" > .venv
+$ mkvenv
+Using real prefix '/usr'
+New python executable in /home/michael/.virtualenvs/my-python-project/bin/python2
+Also creating executable in /home/michael/.virtualenvs/my-python-project/bin/python
+Installing setuptools, pip, wheel...done.
+Found a requirements.txt. Install? (y/N): y
+Collecting requests (from -r requirements.txt (line 1))
+  Using cached requests-2.11.1-py2.py3-none-any.whl
+Installing collected packages: requests
+Successfully installed requests-2.11.1
 ```
+`mkvenv` will create a virtual environment with the same name as the current directory, suggest
+installing `requirements.txt` if available and create the relevant `.venv` file for you.
 
 Next time you switch to that folder, you'll see the following message
 ```
@@ -89,6 +88,33 @@ $
 
 Otherwise, `deactivate` will simply be called on the virtualenv to switch back to the global
 python environment.
+
+You can remove the virtual environment for a directory you are currently in using the `rmvenv`
+helper function:
+```
+$ cd my-python-project
+$ rmvenv
+Switching virtualenv: mydefaultenv  [Python 2.7.12]
+Removing myproject...
+```
+This will delete the virtual environment in `.venv` and remove the `.venv` file itself. The `rmvenv`
+command will fail if there is no `.venv` file in the current directory:
+```
+$ cd my-non-python-project
+$ rmvenv
+No .venv file in the current directory!
+```
+
+Setting a default virtualenv
+----------------------------
+
+If you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
+your `.zshrc` file.
+
+```
+export AUTOSWITCH_DEFAULTENV="mydefaultenv"
+antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
+```
 
 Options
 -------
