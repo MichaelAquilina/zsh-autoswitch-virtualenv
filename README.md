@@ -19,6 +19,9 @@ virtual environment created (which is the same name as the current directory but
 needed). There is then a precommand hook that looks for a `.venv` file and switches to the name
 specified if one is found.
 
+**NOTE**: you may want to add `.venv` to your `.gitignore` in git projects (or equivalent file for
+the Version Control you are using).
+
 Requirements
 ------------
 
