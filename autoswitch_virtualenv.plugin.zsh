@@ -23,11 +23,52 @@ function check_venv()
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
         if [[ -f ".venv" ]]; then
-           maybeworkon "$(cat .venv)"
-        elif [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-           maybeworkon "$AUTOSWITCH_DEFAULTENV"
-        elif [[ -n "$VIRTUAL_ENV" ]]; then
-           deactivate
+          maybeworkon "$(cat .venv)"
+        else
+          default_venv
         fi
     fi
+}
+
+# Switch to the default virtual environment
+function default_venv()
+{
+  if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
+     maybeworkon "$AUTOSWITCH_DEFAULTENV"
+  elif [[ -n "$VIRTUAL_ENV" ]]; then
+     deactivate
+  fi
+}
+
+
+# remove virutal environment for current directory
+function rmvenv()
+{
+  if [[ -f ".venv" ]]; then
+    venv_name="$(cat .venv)"
+    current_venv="$(basename $VIRTUAL_ENV)"
+    if [[ "$current_venv" = "$venv_name" ]]; then
+      default_venv
+    fi
+    rmvirtualenv "$venv_name"
+    rm ".venv"
+  else
+    echo "No .venv file in the current directory!"
+  fi
+}
+
+
+# helper function to create a virtual environment for the current directory
+function mkvenv()
+{
+   venv_name="$(basename $PWD)"
+   echo "$venv_name" > ".venv"
+   mkvirtualenv "$venv_name" $@
+   if [[ -f "requirements.txt" ]]; then
+    printf "Found a requirements.txt. Install? (y/N): "
+    read install_prompt
+    if [[ "$install_prompt" = "y" ]]; then
+      pip install -r requirements.txt
+    fi
+  fi
 }
