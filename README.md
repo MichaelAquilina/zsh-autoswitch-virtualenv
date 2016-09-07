@@ -61,7 +61,7 @@ Using real prefix '/usr'
 New python executable in /home/michael/.virtualenvs/my-python-project/bin/python2
 Also creating executable in /home/michael/.virtualenvs/my-python-project/bin/python
 Installing setuptools, pip, wheel...done.
-Found a requirements.txt. Install? (y/N): y
+Found a requirements.txt. Install? (Y/n):
 Collecting requests (from -r requirements.txt (line 1))
   Using cached requests-2.11.1-py2.py3-none-any.whl
 Installing collected packages: requests
