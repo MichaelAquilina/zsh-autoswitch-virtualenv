@@ -61,14 +61,18 @@ function rmvenv()
 # helper function to create a virtual environment for the current directory
 function mkvenv()
 {
-   venv_name="$(basename $PWD)"
-   echo "$venv_name" > ".venv"
-   mkvirtualenv "$venv_name" $@
-   if [[ -f "requirements.txt" ]]; then
-    printf "Found a requirements.txt. Install? (Y/n): "
-    read install_prompt
-    if [[ "$install_prompt" != "n" ]]; then
-      pip install -r requirements.txt
+  if [[ -f ".venv" ]]; then
+    echo ".venv file already exists. If this is a mistake use the rmvenv command"
+  else
+    venv_name="$(basename $PWD)"
+    echo "$venv_name" > ".venv"
+    mkvirtualenv "$venv_name" $@
+    if [[ -f "requirements.txt" ]]; then
+      printf "Found a requirements.txt. Install? (Y/n): "
+      read install_prompt
+      if [[ "$install_prompt" != "n" ]]; then
+        pip install -r requirements.txt
+      fi
     fi
   fi
 }
