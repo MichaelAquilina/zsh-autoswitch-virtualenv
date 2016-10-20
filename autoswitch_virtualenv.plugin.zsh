@@ -71,7 +71,7 @@ function mkvenv()
       printf "Found a %s file. Install? (Y/n): " "$requirements"
       read install_prompt
       if [[ "$install_prompt" != "n" ]]; then
-        pip install -r $requirements
+        pip install -r "$requirements"
       fi
     done
     echo "$venv_name" > ".venv"
