@@ -65,7 +65,6 @@ function mkvenv()
     echo ".venv file already exists. If this is a mistake use the rmvenv command"
   else
     venv_name="$(basename $PWD)"
-    echo "$venv_name" > ".venv"
     mkvirtualenv "$venv_name" $@
     if [[ -f "requirements.txt" ]]; then
       printf "Found a requirements.txt. Install? (Y/n): "
@@ -74,5 +73,6 @@ function mkvenv()
         pip install -r requirements.txt
       fi
     fi
+    echo "$venv_name" > ".venv"
   fi
 }
