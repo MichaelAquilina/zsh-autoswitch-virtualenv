@@ -66,13 +66,14 @@ function mkvenv()
   else
     venv_name="$(basename $PWD)"
     mkvirtualenv "$venv_name" $@
-    if [[ -f "requirements.txt" ]]; then
-      printf "Found a requirements.txt. Install? (Y/n): "
+    for requirements in *requirements.txt
+    do
+      printf "Found a %s file. Install? (Y/n): " "$requirements"
       read install_prompt
       if [[ "$install_prompt" != "n" ]]; then
-        pip install -r requirements.txt
+        pip install -r $requirements
       fi
-    fi
+    done
     echo "$venv_name" > ".venv"
   fi
 }
