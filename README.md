@@ -14,7 +14,7 @@ Moving out of the directory will automatically deactivate the virtual environmen
 also switch to a default python virtual environment instead by setting the `AUTOSWITCH_DEFAULTENV`
 environment variable.
 
-Internally this plugin simply worksby creating a file named `.venv` which contains the name of the
+Internally this plugin simply works by creating a file named `.venv` which contains the name of the
 virtual environment created (which is the same name as the current directory but can be edited if
 needed). There is then a precommand hook that looks for a `.venv` file and switches to the name
 specified if one is found.
