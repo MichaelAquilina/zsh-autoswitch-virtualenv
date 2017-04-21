@@ -68,9 +68,8 @@ function mkvenv()
     mkvirtualenv "$venv_name" $@
     for requirements in *requirements.txt
     do
-      printf "Found a %s file. Install? (Y/n): " "$requirements"
-      read install_prompt
-      if [[ "$install_prompt" != "n" ]]; then
+      printf "Found a %s file. Install? [y/N]: " "$requirements"
+      if read -q; then
         pip install -r "$requirements"
       fi
     done
