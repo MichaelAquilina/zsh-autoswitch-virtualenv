@@ -7,7 +7,7 @@ you move between directories.
 :tada: Pull Requests for fixes or improvements are welcome! :tada:
 
 How it Works
-============
+------------
 
 Simply call the `mkvenv` command in the directory you wish to setup a virtual environment.
 After that command is completed, everything is setup and you are good to go! See the
@@ -43,6 +43,7 @@ brew install virtualenvwrapper
 
 Installing with ZSH Package Managers
 -------------------------------------
+
 Add one of the following lines to your `.zshrc` file depending on the package manager you are using:
 
 #### [ZPlug](https://github.com/zplug/zplug)
@@ -61,7 +62,7 @@ zgen load MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
 Commands
-========
+--------
 
 Setup a new project with virtualenv autoswitching using the `mkvenv` helper command.
 
@@ -122,7 +123,7 @@ No .venv file in the current directory!
 ```
 
 Setting a default virtualenv
-============================
+----------------------------
 
 If you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
 your `.zshrc` file.
@@ -133,7 +134,7 @@ antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
 Options
-=======
+-------
 
 Right now the only option available is to prevent verbose messages from being displayed when moving
 between directories. You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
