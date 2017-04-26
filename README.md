@@ -38,7 +38,7 @@ Mac OSX users can install `virtualenvwrapper` with brew:
 Installing with ZSH Package Managers
 -------------------------------------
 
-#### [ZPlug]https://github.com/zplug/zplug)
+#### [ZPlug](https://github.com/zplug/zplug)
 ```
 zplug MichaelAquilina/zsh-autoswitch-virtualenv
 ```
