@@ -36,6 +36,11 @@ follows based on what operating system you are using:
 sudo apt-get install virtualenvwrapper
 ```
 
+#### OpenSUSE
+```
+sudo zypper install python-virtualenvwrapper
+```
+
 #### Mac OSX
 ```
 brew install virtualenvwrapper
