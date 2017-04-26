@@ -25,15 +25,18 @@ the Version Control you are using).
 Requirements
 ------------
 
-`virtualenvwrapper` must be installed for this plugin to work correctly.
+`virtualenvwrapper` must be installed for this plugin to work correctly. You can install it as
+follows based on what operating system you are using:
 
-On Ubuntu simply install from the standard repositories:
+#### Ubuntu
+```
+sudo apt-get install virtualenvwrapper
+```
 
-`sudo apt-get install virtualenvwrapper`
-
-Mac OSX users can install `virtualenvwrapper` with brew:
-
-`brew install virtualenvwrapper`
+#### Mac OSX
+```
+brew install virtualenvwrapper
+```
 
 Installing with ZSH Package Managers
 -------------------------------------
