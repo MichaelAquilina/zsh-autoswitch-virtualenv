@@ -1,11 +1,10 @@
-:tada: Pull Requests for fixes or improvements are welcome! :tada:
-
 Autoswitch Python Virtualenv
 ============================
 
 *zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python virtualenvs automatically as
 you move between directories.
 
+:tada: Pull Requests for fixes or improvements are welcome! :tada:
 
 How it Works
 ============
