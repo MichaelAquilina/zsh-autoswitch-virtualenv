@@ -37,6 +37,7 @@ Mac OSX users can install `virtualenvwrapper` with brew:
 
 Installing with ZSH Package Managers
 -------------------------------------
+Add one of the following lines to your `.zshrc` file depending on the package manager you are using:
 
 #### [ZPlug](https://github.com/zplug/zplug)
 ```
