@@ -88,6 +88,19 @@ $
 Otherwise, `deactivate` will simply be called on the virtualenv to switch back to the global
 python environment.
 
+Autoswitching is smart enough to detect that you have traversed to a project subdirectory. So your
+virtualenv will not be deactivated if you enter a subdirectory.
+
+```
+$ cd my-python-project
+Switching virtualenv: my-python-project  [Python 3.4.3+]
+$ cd src
+$ # Notice how this has not deactivated the project virtualenv
+$ cd ../..
+Switching virtualenv: mydefaultenv  [Python 3.4.3+]
+$ # exited the project parent folder, so the virtualenv is now deactivated
+```
+
 You can remove the virtual environment for a directory you are currently in using the `rmvenv`
 helper function:
 ```
