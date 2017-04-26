@@ -24,8 +24,10 @@ function check_venv()
         MYOLDPWD="$PWD"
         if [[ -f ".venv" ]]; then
           maybeworkon "$(cat .venv)"
-        else
+          AUTOSWITCH_PROJECT="$PWD"
+        elif [[ "$PWD" != "$AUTOSWITCH_PROJECT"* ]]; then
           default_venv
+          AUTOSWITCH_PROJECT=""
         fi
     fi
 }
