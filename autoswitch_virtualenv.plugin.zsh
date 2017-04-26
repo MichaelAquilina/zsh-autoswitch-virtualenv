@@ -25,7 +25,7 @@ function check_venv()
         if [[ -f ".venv" ]]; then
           maybeworkon "$(cat .venv)"
           AUTOSWITCH_PROJECT="$PWD"
-        elif [[ "$PWD" != "$AUTOSWITCH_PROJECT"* ]]; then
+        elif [[ "$PWD" != "$AUTOSWITCH_PROJECT/"* ]]; then
           default_venv
           AUTOSWITCH_PROJECT=""
         fi
