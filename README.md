@@ -35,17 +35,20 @@ Mac OSX users can install `virtualenvwrapper` with brew:
 
 `brew install virtualenvwrapper`
 
-Installing with Antigen/Zgen
-----------------------------
+Installing with ZSH Package Managers
+-------------------------------------
 
-Installing with [Antigen](https://github.com/zsh-users/antigen) is super easy! Just add the following line to your `.zshrc`:
+#### [ZPlug]https://github.com/zplug/zplug)
+```
+zplug MichaelAquilina/zsh-autoswitch-virtualenv
+```
 
+#### [Antigen](https://github.com/zsh-users/antigen)
 ```
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
-Installing with [Zgen](https://github.com/tarjoilija/zgen) is also easy! Add the following line to your `.zshrc`:
-
+#### [Zgen](https://github.com/tarjoilija/zgen)
 ```
 zgen load MichaelAquilina/zsh-autoswitch-virtualenv
 ```
