@@ -41,6 +41,15 @@ sudo apt-get install virtualenvwrapper
 brew install virtualenvwrapper
 ```
 
+You need to source this file in your `.zshrc` file as part of your setup. In Ubuntu for example:
+
+```
+VIRTUALENVWRAPPER="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+if [[ -f "$VIRTUALENVWRAPPER" ]]; then
+  source "$VIRTUALENVWRAPPER"
+fi
+```
+
 Installing with ZSH Package Managers
 -------------------------------------
 
