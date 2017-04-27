@@ -3,7 +3,7 @@ function precmd() {
 }
 
 function maybeworkon() {
-  if [ "$1" != "$(basename $VIRTUAL_ENV)" ]; then
+  if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         printf "Switching virtualenv: %s  " $1
      fi
