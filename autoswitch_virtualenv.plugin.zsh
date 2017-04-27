@@ -17,14 +17,21 @@ function maybeworkon() {
   fi
 }
 
+
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
         if [[ -f ".venv" ]]; then
-          maybeworkon "$(cat .venv)"
-          AUTOSWITCH_PROJECT="$PWD"
+          if [[ "$(stat -c %u .venv)" = "$(id -u)" ]]; then
+            maybeworkon "$(cat .venv)"
+            AUTOSWITCH_PROJECT="$PWD"
+          else
+            echo "AUTOSWITCH WARNING: Found a .venv file but it is not owned by the current user"
+            echo "This will not be activated to prevent potentially malicious actions"
+            echo "Change ownership of .venv to '$USER' to fix this"
+          fi
         elif [[ "$PWD" != "$AUTOSWITCH_PROJECT/"* ]]; then
           default_venv
           AUTOSWITCH_PROJECT=""
