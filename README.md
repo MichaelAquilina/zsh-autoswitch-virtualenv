@@ -165,3 +165,11 @@ Options
 
 Right now the only option available is to prevent verbose messages from being displayed when moving
 between directories. You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
+
+
+Security Warnings
+-----------------
+
+zsh-autoswitch-virtualenv will warn you if you are not the owner of `.venv` file found in a directory
+and refuse to activate that virtual envionrment. This is a security measure that prevents other
+(potentially malicious) users from switching you to a virtual environment you did not want to switch to.
