@@ -43,7 +43,7 @@ sudo zypper install python-virtualenvwrapper
 
 #### Mac OSX
 ```
-brew install virtualenvwrapper
+brew install pyenv-virtualenvwrapper
 ```
 
 You need to source this file in your `.zshrc` file as part of your setup. In Ubuntu for example:
