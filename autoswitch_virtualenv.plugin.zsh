@@ -23,15 +23,22 @@ function check_venv()
 {
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
+
+        SWITCH_TO=""
+
         if [[ -f ".venv" ]]; then
-          if [[ "$(stat -c %u .venv)" = "$(id -u)" ]]; then
-            maybeworkon "$(cat .venv)"
-            AUTOSWITCH_PROJECT="$PWD"
-          else
+          if [[ "$(stat -c %u .venv)" != "$(id -u)" ]]; then
             echo "AUTOSWITCH WARNING: Found a .venv file but it is not owned by the current user"
             echo "This will not be activated to prevent potentially malicious actions"
             echo "Change ownership of .venv to '$USER' to fix this"
+          else
+            SWITCH_TO="$(cat .venv)"
+            AUTOSWITCH_PROJECT="$PWD"
           fi
+        fi
+
+        if [[ -n "$SWITCH_TO" ]]; then
+          maybeworkon "$SWITCH_TO"
         elif [[ "$PWD" != "$AUTOSWITCH_PROJECT/"* ]]; then
           default_venv
           AUTOSWITCH_PROJECT=""
