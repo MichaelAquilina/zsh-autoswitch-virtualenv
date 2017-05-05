@@ -82,6 +82,8 @@ function mkvenv()
   else
     venv_name="$(basename $PWD)"
     mkvirtualenv "$venv_name" $@
+
+    setopt nullglob
     for requirements in *requirements.txt
     do
       printf "Found a %s file. Install? [y/N]: " "$requirements"
