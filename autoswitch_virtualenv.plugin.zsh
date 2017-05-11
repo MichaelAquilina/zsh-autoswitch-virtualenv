@@ -27,10 +27,18 @@ function check_venv()
         SWITCH_TO=""
 
         if [[ -f ".venv" ]]; then
-          if [[ "$(stat -c %u .venv)" != "$(id -u)" ]]; then
+          file_owner="$(stat -c %u .venv)"
+          file_permissions="$(stat -c %a .venv)"
+
+          if [[ "$file_owner" != "$(id -u)" ]]; then
             echo "AUTOSWITCH WARNING: Found a .venv file but it is not owned by the current user"
             echo "This will not be activated to prevent potentially malicious actions"
             echo "Change ownership of .venv to '$USER' to fix this"
+          elif [[ "$file_permissions" != "600" ]]; then
+            echo "AUTOSWITCH WARNING:"
+            echo "Found a .venv file with weak permission settings ($file_permissions)."
+            echo "You should change this to 600."
+            echo "Run the following command to fix this: chmod 600 .venv"
           else
             SWITCH_TO="$(cat .venv)"
             AUTOSWITCH_PROJECT="$PWD"
