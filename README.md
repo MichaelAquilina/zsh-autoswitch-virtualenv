@@ -10,8 +10,12 @@ How it Works
 ------------
 
 Simply call the `mkvenv` command in the directory you wish to setup a virtual environment.
-After that command is completed, everything is setup and you are good to go! See the
-*Commands* section below for more detail.
+A virtual environment specific to that folder will now activate every time you enter it.
+
+See the *Commands* section below for more detail.
+
+More Details
+------------
 
 Moving out of the directory will automatically deactivate the virtual environment. However you can
 also switch to a default python virtual environment instead by setting the `AUTOSWITCH_DEFAULTENV`
@@ -78,6 +82,8 @@ zgen load MichaelAquilina/zsh-autoswitch-virtualenv
 Commands
 --------
 
+##### mkvenv
+
 Setup a new project with virtualenv autoswitching using the `mkvenv` helper command.
 
 ```
@@ -130,6 +136,8 @@ Switching virtualenv: mydefaultenv  [Python 3.4.3+]
 $ # exited the project parent folder, so the virtualenv is now deactivated
 ```
 
+##### rmvenv
+
 You can remove the virtual environment for a directory you are currently in using the `rmvenv`
 helper function:
 
@@ -149,8 +157,11 @@ $ rmvenv
 No .venv file in the current directory!
 ```
 
-Setting a default virtualenv
-----------------------------
+Options
+-------
+
+
+#### Setting a default virtual environment
 
 If you want to set a default virtual environment then you can also export `AUTOSWITCH_DEFAULTENV` in
 your `.zshrc` file.
@@ -160,17 +171,20 @@ export AUTOSWITCH_DEFAULTENV="mydefaultenv"
 antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 ```
 
-Options
--------
+#### Set verbosity when changing environments
 
-Right now the only option available is to prevent verbose messages from being displayed when moving
-between directories. You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
+You can prevent verbose messages from being displayed when moving between directories. 
+You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
 
 
 Security Warnings
 -----------------
 
-zsh-autoswitch-virtualenv will warn you if you are not the owner of the `.venv` file found in a directory
-you have navigated to. In addition to this, it will refuse to activate that virtual envionrment automatically.
-This is a security measure that prevents other, potentially malicious users, from switching you to a virtual
+zsh-autoswitch-virtualenv will warn you in the following situations:
+
+* You are not the owner of the `.venv` file found in a directory. It will refuse to activate that virtual envionrment automatically.
+
+* The `.venv` file has weak permissions. Zsh will warn you that you should change `.venv` file to have read only permissions if it is not set that way already.
+
+These are security measures that prevents other, potentially malicious users, from switching you to a virtual
 environment you did not want to switch to.
