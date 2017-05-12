@@ -38,7 +38,7 @@ function check_venv()
             echo "AUTOSWITCH WARNING:"
             echo "Found a .venv file with weak permission settings ($file_permissions)."
             echo "You should change this to 600 (read only for only your user)"
-            echo "Run the following command to fix this: chmod 600 .venv"
+            echo "Run the following command to fix this: \"chmod 600 .venv\""
           else
             SWITCH_TO="$(cat .venv)"
             AUTOSWITCH_PROJECT="$PWD"
