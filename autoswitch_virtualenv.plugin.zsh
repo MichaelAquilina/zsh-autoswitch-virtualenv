@@ -100,5 +100,6 @@ function mkvenv()
       fi
     done
     echo "$venv_name" > ".venv"
+    chmod 600 .venv
   fi
 }
