@@ -173,18 +173,19 @@ antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 
 #### Set verbosity when changing environments
 
-You can prevent verbose messages from being displayed when moving between directories. 
+You can prevent verbose messages from being displayed when moving between directories.
 You can do this by setting `AUTOSWITCH_SILENT` to a non-empty value.
 
 
 Security Warnings
 -----------------
 
-zsh-autoswitch-virtualenv will warn you in the following situations:
+zsh-autoswitch-virtualenv will warn you and refuse to activate a virtual envionrment automatically in the following situations:
 
-* You are not the owner of the `.venv` file found in a directory. It will refuse to activate that virtual envionrment automatically.
+* You are not the owner of the `.venv` file found in a directory.
+* The `.venv` file has weak permissions. I.e. it is readable or writable by other users on the system.
 
-* The `.venv` file has weak permissions. Zsh will warn you that you should change `.venv` file to have read only permissions if it is not set that way already.
+In both cases, the warnings should explain how to fix the problem.
 
 These are security measures that prevents other, potentially malicious users, from switching you to a virtual
 environment you did not want to switch to.
