@@ -41,7 +41,7 @@ function check_venv()
             echo "Reason: Found a .venv file with weak permission settings ($file_permissions)."
             echo "Run the following command to fix this: \"chmod 600 .venv\""
           else
-            SWITCH_TO="$(cat .venv)"
+            SWITCH_TO="$(<.venv)"
             AUTOSWITCH_PROJECT="$PWD"
           fi
         fi
@@ -70,7 +70,7 @@ function default_venv()
 function rmvenv()
 {
   if [[ -f ".venv" ]]; then
-    venv_name="$(cat .venv)"
+    venv_name="$(<.venv)"
     current_venv="$(basename $VIRTUAL_ENV)"
     if [[ "$current_venv" = "$venv_name" ]]; then
       default_venv
