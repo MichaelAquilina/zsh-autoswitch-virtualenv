@@ -17,6 +17,22 @@ function maybeworkon() {
   fi
 }
 
+# Gives the path to the nearest parent .venv file or nothing if it gets to root
+function check_venv_path()
+{
+    local check_dir=$1
+
+    if [[ -f "${check_dir}/.venv" ]]; then
+        echo "${check_dir}/.venv"
+        return
+    else
+        if [ "$check_dir" = "/" ]; then
+            return
+        fi
+        check_venv_path $(dirname "$check_dir")
+    fi
+}
+
 
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
@@ -26,22 +42,23 @@ function check_venv()
 
         SWITCH_TO=""
 
-        if [[ -f ".venv" ]]; then
-          file_owner="$(stat -c %u .venv)"
-          file_permissions="$(stat -c %a .venv)"
+        venv_path=$(check_venv_path "$PWD")
+        if [[ -n "$venv_path" ]]; then
+          file_owner="$(stat -c %u "$venv_path")"
+          file_permissions="$(stat -c %a "$venv_path")"
 
           if [[ "$file_owner" != "$(id -u)" ]]; then
             echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
             echo ""
             echo "Reason: Found a .venv file but it is not owned by the current user"
-            echo "Change ownership of .venv to '$USER' to fix this"
+            echo "Change ownership of $venv_path to '$USER' to fix this"
           elif [[ "$file_permissions" != "600" ]]; then
             echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
             echo ""
             echo "Reason: Found a .venv file with weak permission settings ($file_permissions)."
             echo "Run the following command to fix this: \"chmod 600 .venv\""
           else
-            SWITCH_TO="$(<.venv)"
+            SWITCH_TO="$(<"$venv_path")"
             AUTOSWITCH_PROJECT="$PWD"
           fi
         fi
