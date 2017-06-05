@@ -29,7 +29,7 @@ function check_venv_path()
         if [ "$check_dir" = "/" ]; then
             return
         fi
-        check_venv_path $(dirname "$check_dir")
+        check_venv_path "$(dirname "$check_dir")"
     fi
 }
 
