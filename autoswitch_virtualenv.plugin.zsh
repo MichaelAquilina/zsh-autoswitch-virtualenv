@@ -102,5 +102,6 @@ function mkvenv()
     done
     echo "$venv_name" > ".venv"
     chmod 600 .venv
+    AUTOSWITCH_PROJECT="$PWD"
   fi
 }
