@@ -1,8 +1,8 @@
 function precmd() {
-  check_venv
+  _check_venv
 }
 
-function maybeworkon() {
+function _maybeworkon() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         printf "Switching virtualenv: %s  " $1
@@ -18,7 +18,7 @@ function maybeworkon() {
 }
 
 # Gives the path to the nearest parent .venv file or nothing if it gets to root
-function check_venv_path()
+function _check_venv_path()
 {
     local check_dir=$1
 
@@ -29,20 +29,20 @@ function check_venv_path()
         if [ "$check_dir" = "/" ]; then
             return
         fi
-        check_venv_path "$(dirname "$check_dir")"
+        _check_venv_path "$(dirname "$check_dir")"
     fi
 }
 
 
 # Automatically switch virtualenv when .venv file detected
-function check_venv()
+function _check_venv()
 {
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
 
         SWITCH_TO=""
 
-        venv_path=$(check_venv_path "$PWD")
+        venv_path=$(_check_venv_path "$PWD")
         if [[ -n "$venv_path" ]]; then
           file_owner="$(stat -c %u "$venv_path")"
           file_permissions="$(stat -c %a "$venv_path")"
@@ -64,19 +64,19 @@ function check_venv()
         fi
 
         if [[ -n "$SWITCH_TO" ]]; then
-          maybeworkon "$SWITCH_TO"
+          _maybeworkon "$SWITCH_TO"
         elif [[ "$PWD" != "$AUTOSWITCH_PROJECT/"* ]]; then
-          default_venv
+          _default_venv
           AUTOSWITCH_PROJECT=""
         fi
     fi
 }
 
 # Switch to the default virtual environment
-function default_venv()
+function _default_venv()
 {
   if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-     maybeworkon "$AUTOSWITCH_DEFAULTENV"
+     _maybeworkon "$AUTOSWITCH_DEFAULTENV"
   elif [[ -n "$VIRTUAL_ENV" ]]; then
      deactivate
   fi
@@ -90,7 +90,7 @@ function rmvenv()
     venv_name="$(<.venv)"
     current_venv="$(basename $VIRTUAL_ENV)"
     if [[ "$current_venv" = "$venv_name" ]]; then
-      default_venv
+      _default_venv
     fi
     rmvirtualenv "$venv_name"
     rm ".venv"
