@@ -1,7 +1,3 @@
-function precmd() {
-  _check_venv
-}
-
 function _maybeworkon() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
@@ -122,3 +118,5 @@ function mkvenv()
     AUTOSWITCH_PROJECT="$PWD"
   fi
 }
+
+add-zsh-hook precmd _check_venv
