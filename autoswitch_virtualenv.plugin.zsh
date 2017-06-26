@@ -38,10 +38,18 @@ function _check_venv()
 
         SWITCH_TO=""
 
+        # Get the .venv file, scanning parent directories
         venv_path=$(_check_venv_path "$PWD")
         if [[ -n "$venv_path" ]]; then
-          file_owner="$(stat -c %u "$venv_path")"
-          file_permissions="$(stat -c %a "$venv_path")"
+
+          stat --version &> /dev/null
+          if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
+            file_owner="$(stat -c %u "$venv_path")"
+            file_permissions="$(stat -c %a "$venv_path")"
+          else                      # macOS, or FreeBSD stat
+            file_owner="$(stat -f %u "$venv_path")"
+            file_permissions="$(stat -f %OLp "$venv_path")"
+          fi
 
           if [[ "$file_owner" != "$(id -u)" ]]; then
             echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
