@@ -117,7 +117,10 @@ function mkvenv()
     for requirements in *requirements.txt
     do
       printf "Found a %s file. Install? [y/N]: " "$requirements"
-      if read -q; then
+      local ans=$(read -q)
+      echo ""
+
+      if $ans; then
         pip install -r "$requirements"
       fi
     done
