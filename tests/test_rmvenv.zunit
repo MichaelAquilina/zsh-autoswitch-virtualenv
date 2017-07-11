@@ -1,0 +1,31 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load "../autoswitch_virtualenv.plugin.zsh"
+    target="$(mktemp -d)"
+    assert "$target" is_dir
+}
+
+@teardown {
+    rm -rf "$teardown"
+}
+
+@test 'rmvenv with no .venv' {
+    cd "$target"
+
+    run rmvenv
+
+    assert "$output" same_as "No .venv file in the current directory!"
+    assert $state equals 0
+}
+
+@test 'rmvenv with existing .venv' {
+    touch "$target/.venv"
+    assert "$target/.venv" is_file
+
+    cd "$target"
+    run rmvenv
+
+    assert "$output" is_empty
+    assert $state equals 0
+}
