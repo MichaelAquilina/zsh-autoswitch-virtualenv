@@ -1,6 +1,8 @@
 Autoswitch Python Virtualenv
 ============================
 
+![Travis CI](https://img.shields.io/travis/MichaelAquilina/zsh-autoswitch-virtualenv.svg)
+
 *zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python virtualenvs automatically as
 you move between directories.
 

@@ -14,7 +14,7 @@
     assert '_check_venv' in $precmd_functions
 }
 
-@test '_check_venv_path with bad path works' {
+@test '_check_venv_path with non-existent path' {
     run _check_venv_path '/i/dont/exist'
 
     assert "$output" is_empty
