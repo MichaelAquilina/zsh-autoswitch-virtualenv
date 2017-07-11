@@ -2,6 +2,7 @@
 
 @setup {
     load "../autoswitch_virtualenv.plugin.zsh"
+    load "/usr/bin/virtualenvwrapper"
     target="$(mktemp -d)"
     assert "$target" is_dir
 }
@@ -20,12 +21,15 @@
 }
 
 @test 'rmvenv with existing .venv' {
-    touch "$target/.venv"
+    run mkvirtualenv "oranges"
+    run deactivate
+
+    echo "oranges" > "$target/.venv"
     assert "$target/.venv" is_file
 
     cd "$target"
     run rmvenv
 
-    assert "$output" is_empty
+    assert "$output" same_as "Removing oranges..."
     assert $state equals 0
 }
