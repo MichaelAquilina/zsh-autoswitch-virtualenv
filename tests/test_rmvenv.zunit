@@ -33,3 +33,14 @@
     assert "$output" same_as "Removing oranges..."
     assert $state equals 0
 }
+
+@test 'rmvenv with existing .venv with deleted virtualenv' {
+    echo "idontexist" > "$target/.venv"
+    assert "$target/.venv" is_file
+
+    cd "$target"
+    run rmvenv
+
+    assert "$lines[1]" same_as "Removing idontexist..."
+    assert "$lines[2]" same_as "Did not find environment $HOME/.virtualenvs/idontexist to remove."
+}
