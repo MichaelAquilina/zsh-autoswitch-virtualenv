@@ -34,31 +34,16 @@ the Version Control you are using).
 Requirements
 ------------
 
-`virtualenvwrapper` must be installed for this plugin to work correctly. You can install it as
-follows based on what operating system you are using:
-
-#### Ubuntu
-```
-sudo apt-get install virtualenvwrapper
-```
-
-#### OpenSUSE
-```
-sudo zypper install python-virtualenvwrapper
-```
-
-#### Mac OSX
-```
-brew install pyenv-virtualenvwrapper
-```
-
-You need to source this file in your `.zshrc` file as part of your setup. In Ubuntu for example:
+`virtualenvwrapper` must be installed for this plugin to work correctly. You should install it with pip:
 
 ```
-VIRTUALENVWRAPPER="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
-if [[ -f "$VIRTUALENVWRAPPER" ]]; then
-  source "$VIRTUALENVWRAPPER"
-fi
+pip install virtualenvwrapper
+```
+
+You need to source this file in your `.zshrc` file as part of your setup. This should work:
+
+```
+source =virtualenvwrapper.sh
 ```
 
 Installing with ZSH Package Managers
