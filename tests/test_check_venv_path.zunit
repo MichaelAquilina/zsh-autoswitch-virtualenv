@@ -1,0 +1,49 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load "../autoswitch_virtualenv.plugin.zsh"
+    target="$(mktemp -d)"
+    assert "$target" is_dir
+}
+
+@teardown {
+    rm -rf "$target"
+}
+
+@test 'precmd functions are loaded' {
+    assert '_check_venv' in $precmd_functions
+}
+
+@test '_check_venv_path with non-existent path' {
+    run _check_venv_path '/i/dont/exist'
+
+    assert "$output" is_empty
+    assert $state equals 0
+}
+
+@test '_check_venv_path with no venv' {
+    run _check_venv_path "$target"
+
+    assert "$output" is_empty
+    assert $state equals 0
+}
+
+@test '_check_venv_path with existing venv' {
+    touch "$target/.venv"
+    assert "$target/.venv" is_file
+
+    run _check_venv_path "$target"
+
+    assert "$output" same_as "$target/.venv"
+    assert $state equals 0
+}
+
+@test '_check_venv_path in subdirectory with parent venv' {
+    touch "$target/.venv"
+    assert "$target/.venv" is_file
+
+    run _check_venv_path "$target/src/examples"
+
+    assert "$output" same_as "$target/.venv"
+    assert $state equals 0
+}
