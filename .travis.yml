@@ -29,7 +29,7 @@ install:
     - pip install virtualenvwrapper
 
 before_script:
-    - mkdir ~/bin
+    - mkdir -p ~/bin
     - curl -L https://raw.githubusercontent.com/molovo/revolver/master/revolver > ~/bin/revolver
     - curl -L https://github.com/molovo/zunit/releases/download/v0.8.1/zunit > ~/bin/zunit
     - chmod u+x ~/bin/{revolver,zunit}
