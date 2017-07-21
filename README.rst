@@ -6,8 +6,6 @@ Autoswitch Python Virtualenv
 *zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python
 virtualenvs automatically as you move between directories.
 
-:tada: Pull Requests for fixes or improvements are welcome! :tada:
-
 How it Works
 ------------
 
@@ -162,8 +160,7 @@ This will delete the virtual environment in ``.venv`` and remove the
 Options
 -------
 
-Setting a default virtual environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**Setting a default virtual environment**
 
 If you want to set a default virtual environment then you can also
 export ``AUTOSWITCH_DEFAULTENV`` in your ``.zshrc`` file.
@@ -173,8 +170,7 @@ export ``AUTOSWITCH_DEFAULTENV`` in your ``.zshrc`` file.
     export AUTOSWITCH_DEFAULTENV="mydefaultenv"
     antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 
-Set verbosity when changing environments
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**Set verbosity when changing environments**
 
 You can prevent verbose messages from being displayed when moving
 between directories. You can do this by setting ``AUTOSWITCH_SILENT`` to
