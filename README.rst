@@ -57,22 +57,19 @@ Installing with ZSH Package Managers
 Add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:
 
-`ZPlug <https://github.com/zplug/zplug>`__
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ZPlug_
 
 ::
 
     zplug MichaelAquilina/zsh-autoswitch-virtualenv
 
-`Antigen <https://github.com/zsh-users/antigen>`__
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Antigen_
 
 ::
 
     antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 
-`Zgen <https://github.com/tarjoilija/zgen>`__
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Zgen_
 
 ::
 
@@ -198,6 +195,12 @@ In both cases, the warnings should explain how to fix the problem.
 These are security measures that prevents other, potentially malicious
 users, from switching you to a virtual environment you did not want to
 switch to.
+
+.. _Zplug: https://github.com/zplug/zplug
+
+.. _Antigen: https://github.com/zsh-users/antigen
+
+.. _ZGen: https://github.com/tarjoilija/zgen
 
 .. |TravisCI| image:: https://travis-ci.org/MichaelAquilina/zsh-autoswitch-virtualenv.svg?branch=master
    :target: https://travis-ci.org/MichaelAquilina/zsh-autoswitch-virtualenv
