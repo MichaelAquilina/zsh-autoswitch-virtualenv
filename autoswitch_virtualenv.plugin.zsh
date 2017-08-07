@@ -131,5 +131,5 @@ function mkvenv()
 }
 
 autoload -Uz add-zsh-hook
-add-zsh-hook -D precmd _check_venv
-add-zsh-hook precmd _check_venv
+add-zsh-hook -D chpwd _check_venv
+add-zsh-hook chpwd _check_venv
