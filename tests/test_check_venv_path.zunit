@@ -10,8 +10,8 @@
     rm -rf "$target"
 }
 
-@test 'precmd functions are loaded' {
-    assert '_check_venv' in $precmd_functions
+@test 'chpwd functions are loaded' {
+    assert '_check_venv' in $chpwd_functions
 }
 
 @test '_check_venv_path with non-existent path' {
