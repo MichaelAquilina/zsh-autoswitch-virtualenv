@@ -49,6 +49,9 @@ setup. This should work:
 
     source =virtualenvwrapper.sh
 
+Make sure this is put *before* your package manager loading code (i.e. the
+line of code discussed in the section that follows).
+
 Installing with ZSH Package Managers
 ------------------------------------
 
