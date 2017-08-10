@@ -133,3 +133,6 @@ function mkvenv()
 autoload -Uz add-zsh-hook
 add-zsh-hook -D chpwd _check_venv
 add-zsh-hook chpwd _check_venv
+
+# Check if the starting directory contains a .venv
+_check_venv
