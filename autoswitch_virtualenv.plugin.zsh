@@ -66,15 +66,10 @@ function _check_venv()
           fi
         fi
 
-        echo "$PWD"
-        echo "$AUTOSWITCH_PROJECT/"
         if [[ -n "$SWITCH_TO" ]]; then
-          echo "_maybeworkon"
           _maybeworkon "$SWITCH_TO"
         else
-          echo "_default_venv"
           _default_venv
-          AUTOSWITCH_PROJECT=""
         fi
     fi
 }
