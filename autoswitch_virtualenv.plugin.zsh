@@ -63,13 +63,16 @@ function _check_venv()
             echo "Run the following command to fix this: \"chmod 600 .venv\""
           else
             SWITCH_TO="$(<"$venv_path")"
-            AUTOSWITCH_PROJECT="$PWD"
           fi
         fi
 
+        echo "$PWD"
+        echo "$AUTOSWITCH_PROJECT/"
         if [[ -n "$SWITCH_TO" ]]; then
+          echo "_maybeworkon"
           _maybeworkon "$SWITCH_TO"
-        elif [[ "$PWD" != "$AUTOSWITCH_PROJECT/"* ]]; then
+        else
+          echo "_default_venv"
           _default_venv
           AUTOSWITCH_PROJECT=""
         fi
