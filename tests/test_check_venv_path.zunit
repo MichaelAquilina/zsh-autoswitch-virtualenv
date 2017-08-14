@@ -2,6 +2,7 @@
 
 @setup {
     load "../autoswitch_virtualenv.plugin.zsh"
+    source =virtualenvwrapper.sh
     target="$(mktemp -d)"
     assert "$target" is_dir
 }
