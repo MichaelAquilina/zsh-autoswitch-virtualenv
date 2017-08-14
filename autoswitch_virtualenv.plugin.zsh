@@ -81,7 +81,7 @@ function _default_venv()
   if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
      _maybeworkon "$AUTOSWITCH_DEFAULTENV"
   elif [[ -n "$VIRTUAL_ENV" ]]; then
-     virtualenv_deactivate
+     deactivate
   fi
 }
 
