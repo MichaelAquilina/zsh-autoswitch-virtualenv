@@ -22,7 +22,7 @@
 
 @test 'rmvenv with existing .venv' {
     run mkvirtualenv "oranges"
-    run deactivate
+    run virtualenv_deactivate
 
     echo "oranges" > "$target/.venv"
     assert "$target/.venv" is_file
