@@ -13,6 +13,7 @@ function _maybeworkon() {
   fi
 }
 
+
 # Gives the path to the nearest parent .venv file or nothing if it gets to root
 function _check_venv_path()
 {
@@ -60,7 +61,7 @@ function _check_venv()
             echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
             echo ""
             echo "Reason: Found a .venv file with weak permission settings ($file_permissions)."
-            echo "Run the following command to fix this: \"chmod 600 .venv\""
+            echo "Run the following command to fix this: \"chmod 600 $venv_path\""
           else
             SWITCH_TO="$(<"$venv_path")"
           fi
