@@ -1,0 +1,26 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load "../autoswitch_virtualenv.plugin.zsh"
+    source =virtualenvwrapper.sh
+    target="$(mktemp -d)"
+    assert "$target" is_dir
+
+    venv="$(pwgen 8 1)"
+    run mkvirtualenv "$venv"
+}
+
+@teardown {
+    run rmvirtualenv "$venv"
+    rm -rf "$target"
+}
+
+@test 'changing directory autoswitches' {
+    echo "$venv" > "$target/.venv"
+    chmod 600 "$target/.venv"
+
+    run cd "$target"
+
+    assert "$output" contains "Switching virtualenv: $venv"
+    assert $state equals 0
+}
