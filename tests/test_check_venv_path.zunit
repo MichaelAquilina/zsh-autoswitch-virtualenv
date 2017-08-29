@@ -12,7 +12,7 @@
 }
 
 @test 'chpwd functions are loaded' {
-    assert '_check_venv' in $chpwd_functions
+    assert 'check_venv' in $chpwd_functions
 }
 
 @test '_check_venv_path with non-existent path' {

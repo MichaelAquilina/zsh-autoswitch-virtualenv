@@ -32,7 +32,7 @@ function _check_venv_path()
 
 
 # Automatically switch virtualenv when .venv file detected
-function _check_venv()
+function check_venv()
 {
     if [ "$PWD" != "$MYOLDPWD" ]; then
         MYOLDPWD="$PWD"
@@ -130,5 +130,5 @@ function mkvenv()
 }
 
 autoload -Uz add-zsh-hook
-add-zsh-hook -D chpwd _check_venv
-add-zsh-hook chpwd _check_venv
+add-zsh-hook -D chpwd check_venv
+add-zsh-hook chpwd check_venv
