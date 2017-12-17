@@ -118,7 +118,7 @@ function mkvenv()
       printf "Found a %s file. Install? [y/N]: " "$requirements"
       read ans
 
-      if [[ "$ans" = "y" || "$ans" = "Y" ]] then
+      if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
         pip install -r "$requirements"
       fi
     done
