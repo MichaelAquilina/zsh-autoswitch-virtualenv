@@ -52,14 +52,6 @@ setup. This should work:
 Make sure this is put *before* your package manager loading code (i.e. the
 line of code discussed in the section that follows).
 
-If you wish autoswitch to detect the initial directory when the terminal
-is starting up, then add the following line of code to you ``.zshrc`` file after
-loading your plugin manager.
-
-::
-
-    check_venv
-
 In combination, your ``.zshrc`` file should look something like this (if you
 are using zplug)
 
@@ -69,9 +61,6 @@ are using zplug)
     source =virtualenvwrapper.sh
 
     zplug load
-
-    # Check initial directory for any .venv file
-    check_venv
 
 Installing with ZSH Package Managers
 ------------------------------------
