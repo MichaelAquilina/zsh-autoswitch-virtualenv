@@ -82,8 +82,8 @@ are using zplug)
     # Check initial directory for any .venv file
     check_venv
 
-Installing with ZSH Package Managers
-------------------------------------
+Installing
+----------
 
 Add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:
