@@ -1,6 +1,7 @@
 dist: trusty
 sudo: required
 
+# Required for correct setup of virtualenvwrapper
 language: python
 
 env:
@@ -15,15 +16,14 @@ addons:
     - build-essential
 
 before_install:
-    - export LOCAL="$(mktemp --directory --tmpdir=${TMPDIR:/tmp} local.bin.XXXXXX)"
-    - wget $URL
-    - tar -xf zsh-$ZSH_VERSION.tar.*
-    - cd zsh-$ZSH_VERSION
-    - ./configure --prefix=$LOCAL
-    - make
-    - make install
+    - if ! [[ -d "$HOME/zsh" ]]; then wget $URL; fi
+    - if ! [[ -d "$HOME/zsh" ]]; then tar -xf zsh-$ZSH_VERSION.tar.*; fi
+    - if ! [[ -d "$HOME/zsh" ]]; then cd zsh-$ZSH_VERSION; fi
+    - if ! [[ -d "$HOME/zsh" ]]; then ./configure --prefix=$HOME/zsh; fi
+    - if ! [[ -d "$HOME/zsh" ]]; then make; fi
+    - if ! [[ -d "$HOME/zsh" ]]; then make install; fi
     - cd -
-    - export PATH="$LOCAL/bin:$PATH"
+    - export PATH="$HOME/zsh/bin:$PATH"
 
 install:
     - pip install virtualenvwrapper
@@ -36,3 +36,7 @@ before_script:
 
 script:
     - zunit --verbose
+
+cache:
+  directories:
+  - $HOME/zsh
