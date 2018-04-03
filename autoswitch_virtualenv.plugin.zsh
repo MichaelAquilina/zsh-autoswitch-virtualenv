@@ -20,7 +20,7 @@ function _check_venv_path()
     local check_dir=$1
 
     if [[ -f "${check_dir}/.venv" ]]; then
-        echo "${check_dir}/.venv"
+        printf "${check_dir}/.venv"
         return
     else
         if [ "$check_dir" = "/" ]; then
@@ -53,15 +53,13 @@ function check_venv()
           fi
 
           if [[ "$file_owner" != "$(id -u)" ]]; then
-            echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
-            echo ""
-            echo "Reason: Found a .venv file but it is not owned by the current user"
-            echo "Change ownership of $venv_path to '$USER' to fix this"
+            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+            printf "Reason: Found a .venv file but it is not owned by the current user\n"
+            printf "Change ownership of $venv_path to '$USER' to fix this\n"
           elif [[ "$file_permissions" != "600" ]]; then
-            echo "AUTOSWITCH WARNING: Virtualenv will not be activated"
-            echo ""
-            echo "Reason: Found a .venv file with weak permission settings ($file_permissions)."
-            echo "Run the following command to fix this: \"chmod 600 $venv_path\""
+            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+            printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
+            printf "Run the following command to fix this: \"chmod 600 $venv_path\"\n"
           else
             SWITCH_TO="$(<"$venv_path")"
           fi
@@ -98,7 +96,7 @@ function rmvenv()
     rmvirtualenv "$venv_name"
     rm ".venv"
   else
-    echo "No .venv file in the current directory!"
+    printf "No .venv file in the current directory!\n"
   fi
 }
 
@@ -107,7 +105,7 @@ function rmvenv()
 function mkvenv()
 {
   if [[ -f ".venv" ]]; then
-    echo ".venv file already exists. If this is a mistake use the rmvenv command"
+    printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
   else
     venv_name="$(basename $PWD)"
     mkvirtualenv "$venv_name" $@
@@ -122,7 +120,7 @@ function mkvenv()
         pip install -r "$requirements"
       fi
     done
-    echo "$venv_name" > ".venv"
+    printf "$venv_name\n" > ".venv"
     chmod 600 .venv
     AUTOSWITCH_PROJECT="$PWD"
   fi
