@@ -126,9 +126,10 @@ function mkvenv()
   fi
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook -D chpwd check_venv
-add-zsh-hook chpwd check_venv
+if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+    autoload -Uz add-zsh-hook
+    add-zsh-hook -D chpwd check_venv
+    add-zsh-hook chpwd check_venv
 
-# auto-detect virtualenv on zsh startup
-[[ -o interactive ]] && check_venv
+    check_venv
+fi
