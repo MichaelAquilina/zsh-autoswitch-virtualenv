@@ -2,6 +2,8 @@ dist: trusty
 sudo: required
 
 language: python
+python:
+  - "3.6"
 
 env:
  - ZSH_VERSION=5.3.1 URL="https://downloads.sourceforge.net/project/zsh/zsh/5.3.1/zsh-5.3.1.tar.xz"
@@ -24,6 +26,9 @@ before_install:
     - make install
     - cd -
     - export PATH="$LOCAL/bin:$PATH"
+
+install:
+    - pip install virtualenvwrapper
 
 before_script:
     - mkdir -p ~/bin
