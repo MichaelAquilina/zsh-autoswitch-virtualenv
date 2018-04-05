@@ -31,7 +31,7 @@
 }
 
 @test 'switches virtualenv if current virtualenv is different' {
-    VIRTUAL_ENV="default_venv"
+    VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
 
     run _maybeworkon foobar
 
@@ -40,7 +40,7 @@
 }
 
 @test 'switches virtualenv if current virtualenv is different (silent)' {
-    VIRTUAL_ENV="default_venv"
+    VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
     AUTOSWITCH_SILENT="1"
 
     run _maybeworkon foobar
@@ -50,7 +50,7 @@
 }
 
 @test 'does not switch to already activated virtualenv' {
-    VIRTUAL_ENV="bwaaah"
+    VIRTUAL_ENV="$HOME/.virtualenvs/bwaaah"
 
     run _maybeworkon bwaaah
 
