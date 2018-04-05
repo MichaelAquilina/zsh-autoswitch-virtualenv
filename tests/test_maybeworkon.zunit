@@ -21,7 +21,7 @@
 }
 
 
-@test 'switches virtualenv if nothing is activated' {
+@test '_maybeworkon - switches virtualenv if nothing is activated' {
     VIRTUAL_ENV=""
 
     run _maybeworkon foobar
@@ -30,7 +30,7 @@
     assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
 }
 
-@test 'switches virtualenv if current virtualenv is different' {
+@test '_maybeworkon - switches virtualenv if current virtualenv is different' {
     VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
 
     run _maybeworkon foobar
@@ -39,7 +39,7 @@
     assert "$output" contains "Switching virtualenv: foobar  [$PYTHON_VERSION]"
 }
 
-@test 'switches virtualenv if current virtualenv is different (silent)' {
+@test '_maybeworkon - switches virtualenv if current virtualenv is different (silent)' {
     VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
     AUTOSWITCH_SILENT="1"
 
@@ -49,7 +49,7 @@
     assert "$output" is_empty
 }
 
-@test 'does not switch to already activated virtualenv' {
+@test '_maybeworkon - does not switch to already activated virtualenv' {
     VIRTUAL_ENV="$HOME/.virtualenvs/bwaaah"
 
     run _maybeworkon bwaaah
