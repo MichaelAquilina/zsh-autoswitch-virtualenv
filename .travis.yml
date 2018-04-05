@@ -28,7 +28,7 @@ before_install:
     - export PATH="$LOCAL/bin:$PATH"
 
 install:
-    - pip install virtualenvwrapper
+    - pip install virtualenvwrapper restructuredtext_lint
 
 before_script:
     - mkdir -p ~/bin
@@ -37,4 +37,5 @@ before_script:
     - chmod u+x ~/bin/{revolver,zunit}
 
 script:
+    - rst-lint *.rst
     - zunit --verbose
