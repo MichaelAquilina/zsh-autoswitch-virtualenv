@@ -1,0 +1,49 @@
+#!/usr/bin/env zunit
+
+@setup {
+    source =virtualenvwrapper.sh
+
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+    cd "$TARGET"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+
+@test 'rmvenv - shows warning if no .venv present' {
+    run rmvenv
+
+    assert $state equals 0
+    assert "$output" same_as "No .venv file in the current directory!"
+}
+
+
+@test 'rmvenv - removes .venv if present' {
+    # lightweight simulation of creating a virtualenv
+    mkdir -p "$HOME/.virtualenvs/12345"
+
+    echo "12345" > .venv
+
+    run rmvenv
+
+    assert $state equals 0
+    assert "$output" same_as "Removing 12345..."
+    test ! -f .venv
+    test ! -d "$HOME/.virtualenvs/12345"
+}
+
+@test 'rmvenv - removes .venv and deactivates if currently active' {
+    test_venv="$(basename $PWD)"
+    run mkvenv
+
+    run rmvenv
+
+    assert $state equals 0
+    assert "$output" same_as "Removing $test_venv..."
+    test ! -f .venv
+    test ! -d "$HOME/.virtualenvs/$test_venv"
+}
