@@ -1,50 +1,45 @@
 #!/usr/bin/env zunit
 
+
 @setup {
+    export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
-    source =virtualenvwrapper.sh
-    target="$(mktemp -d)"
-    assert "$target" is_dir
+    TARGET="$(mktemp -d)"
 }
 
 @teardown {
-    rm -rf "$target"
+    rm -rf "$TARGET"
 }
 
-@test 'chpwd functions are loaded' {
-    assert 'check_venv' in $chpwd_functions
+@test '_check_venv_path - test finds in base directory' {
+    touch "$TARGET/.venv"
+
+    run _check_venv_path "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/.venv"
 }
 
-@test '_check_venv_path with non-existent path' {
-    run _check_venv_path '/i/dont/exist'
+@test '_check_venv_path - returns nothing if not found' {
+   run _check_venv_path "$TARGET"
 
+   assert $state equals 0
+   assert "$output" is_empty
+}
+
+@test '_check_venv_path - finds .venv in parent directories' {
+    touch "$TARGET/.venv"
+    mkdir "$TARGET/foo"
+
+    run _check_venv_path "$TARGET/foo"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/.venv"
+}
+
+@test '_check_venv_path - returns nothing with root path' {
+    run _check_venv_path '/'
+
+    assert $state equals 0
     assert "$output" is_empty
-    assert $state equals 0
-}
-
-@test '_check_venv_path with no venv' {
-    run _check_venv_path "$target"
-
-    assert "$output" is_empty
-    assert $state equals 0
-}
-
-@test '_check_venv_path with existing venv' {
-    touch "$target/.venv"
-    assert "$target/.venv" is_file
-
-    run _check_venv_path "$target"
-
-    assert "$output" same_as "$target/.venv"
-    assert $state equals 0
-}
-
-@test '_check_venv_path in subdirectory with parent venv' {
-    touch "$target/.venv"
-    assert "$target/.venv" is_file
-
-    run _check_venv_path "$target/src/examples"
-
-    assert "$output" same_as "$target/.venv"
-    assert $state equals 0
 }

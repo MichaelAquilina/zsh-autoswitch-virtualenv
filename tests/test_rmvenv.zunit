@@ -1,48 +1,49 @@
 #!/usr/bin/env zunit
 
 @setup {
-    load "../autoswitch_virtualenv.plugin.zsh"
     source =virtualenvwrapper.sh
-    target="$(mktemp -d)"
-    assert "$target" is_dir
+
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+    cd "$TARGET"
 }
 
 @teardown {
-    rm -rf "$teardown"
+    rm -rf "$TARGET"
 }
 
-@test 'rmvenv with no .venv' {
-    cd "$target"
 
+@test 'rmvenv - shows warning if no .venv present' {
     run rmvenv
 
+    assert $state equals 0
     assert "$output" same_as "No .venv file in the current directory!"
-    assert $state equals 0
 }
 
-@test 'rmvenv with existing .venv' {
-    run mkvirtualenv "oranges"
-    run deactivate
 
-    cd "$target"
-    echo "oranges" > "$target/.venv"
-    chmod 600 "$target/.venv"
-    assert "$target/.venv" is_file
+@test 'rmvenv - removes .venv if present' {
+    # lightweight simulation of creating a virtualenv
+    mkdir -p "$HOME/.virtualenvs/12345"
+
+    echo "12345" > .venv
 
     run rmvenv
 
-    assert "$output" same_as "Removing oranges..."
     assert $state equals 0
+    assert "$output" same_as "Removing 12345..."
+    test ! -f .venv
+    test ! -d "$HOME/.virtualenvs/12345"
 }
 
-@test 'rmvenv with existing .venv with deleted virtualenv' {
-    echo "idontexist" > "$target/.venv"
-    chmod 600 "$target/.venv"
-    assert "$target/.venv" is_file
+@test 'rmvenv - removes .venv and deactivates if currently active' {
+    test_venv="$(basename $PWD)"
+    run mkvenv
 
-    cd "$target"
     run rmvenv
 
-    assert "$lines[1]" same_as "Removing idontexist..."
-    assert "$lines[2]" same_as "Did not find environment $HOME/.virtualenvs/idontexist to remove."
+    assert $state equals 0
+    assert "$output" same_as "Removing $test_venv..."
+    test ! -f .venv
+    test ! -d "$HOME/.virtualenvs/$test_venv"
 }

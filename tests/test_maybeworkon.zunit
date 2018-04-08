@@ -1,0 +1,59 @@
+#!/usr/bin/env zunit
+
+
+@setup {
+    source =virtualenvwrapper.sh
+
+    if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
+        echo "Creating test virtualenv"
+        run mkvirtualenv foobar --python=python3
+    fi
+
+    PYTHON_VERSION="$(python3 --version 2>&1)"
+
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+
+@test '_maybeworkon - switches virtualenv if nothing is activated' {
+    VIRTUAL_ENV=""
+
+    run _maybeworkon foobar
+
+    assert $state equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
+
+@test '_maybeworkon - switches virtualenv if current virtualenv is different' {
+    VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
+
+    run _maybeworkon foobar
+
+    assert $state equals 0
+    assert "$output" contains "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
+
+@test '_maybeworkon - switches virtualenv if current virtualenv is different (silent)' {
+    VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
+    AUTOSWITCH_SILENT="1"
+
+    run _maybeworkon foobar
+
+    assert $state equals 0
+    assert "$output" is_empty
+}
+
+@test '_maybeworkon - does not switch to already activated virtualenv' {
+    VIRTUAL_ENV="$HOME/.virtualenvs/bwaaah"
+
+    run _maybeworkon bwaaah
+
+    assert $state equals 0
+    assert "$output" is_empty
+}
