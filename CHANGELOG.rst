@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.1
+-----
+* Add tests for mkvenv and check_venv
+
+
 0.2.0
 -----
 * Introduce Changelog

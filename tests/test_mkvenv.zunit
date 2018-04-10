@@ -1,0 +1,40 @@
+#!/usr/bin/env zunit
+
+@setup {
+    source =virtualenvwrapper.sh
+
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+    cd "$TARGET"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+@test 'mkvenv - does not create .venv if one exists' {
+    touch .venv
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$output" same_as ".venv file already exists. If this is a mistake use the rmvenv command"
+}
+
+
+@test 'mkvenv - creates .venv' {
+    mkdir myproject
+    cd myproject
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$output" contains "New python executable"
+    assert "$TARGET/myproject/.venv" exists
+
+    run cat "$TARGET/myproject/.venv"
+
+    assert $status equals 0
+    assert "$output" same_as "myproject"
+}
