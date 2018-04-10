@@ -1,0 +1,97 @@
+#!/usr/bin/env zunit
+
+@setup {
+    source =virtualenvwrapper.sh
+
+    if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
+        echo "Creating test virtualenv"
+        run mkvirtualenv foobar --python=python3
+    fi
+    if [[ ! -d "$HOME/.virtualenvs/foodefault/" ]]; then
+        echo "Creating default test virtualenv"
+        run mkvirtualenv foodefault --python=python3
+    fi
+
+    PYTHON_VERSION="$(python3 --version 2>&1)"
+
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+}
+
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+
+@test 'check_venv - Security warning for weak permissions' {
+    PWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+    chmod g+w "$TARGET/.venv"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
+    assert "$lines[2]" is_empty
+    assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (620)."
+    assert "$lines[4]" same_as "Run the following command to fix this: \"chmod 600 $TARGET/.venv\""
+}
+
+
+@test 'check_venv - does not change if MYOLDPWD=PWD' {
+    PWD="$TARGET"
+    MYOLDPWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" is_empty
+}
+
+
+@test 'check_venv - go to default if .venv available' {
+    PWD="$TARGET"
+    MYOLDPWD="$(dirname $TARGET)"
+    AUTOSWITCH_DEFAULTENV="foodefault"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foodefault  [$PYTHON_VERSION]"
+}
+
+
+@test 'check_venv - deactivate if no .venv available' {
+    PWD="$TARGET"
+    MYOLDPWD="$(dirname $TARGET)"
+    unset AUTOSWITCH_DEFAULTENV
+    echo world
+    function deactivate {
+        echo deactivating
+    }
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "deactivating"
+}
+
+
+@test 'check_venv - works as intended with .venv available' {
+    PWD="$TARGET"
+    MYOLDPWD="(dirname $TARGET)"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
