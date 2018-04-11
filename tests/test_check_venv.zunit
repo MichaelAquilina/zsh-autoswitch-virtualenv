@@ -71,7 +71,6 @@
     PWD="$TARGET"
     MYOLDPWD="$(dirname $TARGET)"
     unset AUTOSWITCH_DEFAULTENV
-    echo world
     function deactivate {
         echo deactivating
     }
