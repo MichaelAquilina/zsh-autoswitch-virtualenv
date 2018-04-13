@@ -13,6 +13,7 @@ virtualenvs automatically as you move between directories.
 * Commands_
 * Options_
 * `Security Warnings`_
+* `Running Tests`_
 
 
 How it Works
@@ -224,6 +225,26 @@ In both cases, the warnings should explain how to fix the problem.
 These are security measures that prevents other, potentially malicious
 users, from switching you to a virtual environment you did not want to
 switch to.
+
+Running Tests
+-------------
+
+Install `zunit <https://zunit.xyz/>`__. Run ``zunit`` in the root
+directory of the repo.
+
+::
+
+    $ zunit
+    Launching ZUnit
+    ZUnit: 0.8.2
+    ZSH:   zsh 5.3.1 (x86_64-suse-linux-gnu)
+
+    ✔ ysu message correct output
+    ✔ ysu global message correct output
+    ✔ ysu git message correct output
+
+NOTE: It is required that you use a minimum zunit version of 0.8.2
+
 
 .. _Zplug: https://github.com/zplug/zplug
 
