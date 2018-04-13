@@ -239,9 +239,10 @@ directory of the repo.
     ZUnit: 0.8.2
     ZSH:   zsh 5.3.1 (x86_64-suse-linux-gnu)
 
-    ✔ ysu message correct output
-    ✔ ysu global message correct output
-    ✔ ysu git message correct output
+    ✔ _check_venv_path - returns nothing if not found
+    ✔ _check_venv_path - finds .venv in parent directories
+    ✔ _check_venv_path - returns nothing with root path
+    ✔ check_venv - Security warning for weak permissions
 
 NOTE: It is required that you use a minimum zunit version of 0.8.2
 
