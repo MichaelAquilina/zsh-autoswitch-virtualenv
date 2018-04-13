@@ -1,0 +1,64 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load =virtualenvwrapper.sh
+
+    if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
+        echo "Creating test virtualenv"
+        run mkvirtualenv foobar --python=python3
+    fi
+    unset VIRTUAL_ENV
+    PYTHON_VERSION="$(python3 --version)"
+}
+
+
+@test 'plugin - does nothing on load if no default set' {
+    unset AUTOSWITCH_DEFAULTENV
+
+    run load ../autoswitch_virtualenv.plugin.zsh
+
+    assert $status equals 0
+    assert "$output" is_empty
+}
+
+@test 'plugin - runs default env on load' {
+    AUTOSWITCH_DEFAULTENV="foobar"
+    run load ../autoswitch_virtualenv.plugin.zsh
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
+
+@test 'plugin - does nothing if switching to directory without .venv' {
+    unset AUTOSWITCH_DEFAULTENV
+    load ../autoswitch_virtualenv.plugin.zsh
+
+    TEMP_DIR="$(mktemp -d)"
+
+    run cd "$TEMP_DIR"
+
+    assert $status equals 0
+    assert "$output" is_empty
+}
+
+@test 'plugin - switches env when .venv found' {
+    unset AUTOSWITCH_DEFAULTENV
+    load ../autoswitch_virtualenv.plugin.zsh
+
+    TEMP_DIR="$(mktemp -d)"
+    echo "foobar" > "$TEMP_DIR/.venv"
+    chmod 600 "$TEMP_DIR/.venv"
+
+    run cd "$TEMP_DIR"
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+
+    mkdir "$TEMP_DIR/foo"
+
+    # switches even in project subdirectories
+    run cd "$TEMP_DIR/foo"
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
