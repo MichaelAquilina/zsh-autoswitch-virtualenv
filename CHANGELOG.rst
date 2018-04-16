@@ -4,6 +4,8 @@ Changelog
 0.3.0
 -----
 * Disable plugin and print help message if virtualenvwrapper not setup correctly
+* Fix bug in rmvenv when no virtualenv was activated
+* Fix flaky tests
 
 0.2.1
 -----
