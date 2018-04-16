@@ -99,11 +99,17 @@ function _default_venv()
 function rmvenv()
 {
   if [[ -f ".venv" ]]; then
+
     venv_name="$(<.venv)"
-    current_venv="$(basename $VIRTUAL_ENV)"
-    if [[ "$current_venv" = "$venv_name" ]]; then
-      _default_venv
+
+    # detect if we need to switch virtualenv first
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        current_venv="$(basename $VIRTUAL_ENV)"
+        if [[ "$current_venv" = "$venv_name" ]]; then
+            _default_venv
+        fi
     fi
+
     rmvirtualenv "$venv_name"
     rm ".venv"
   else
