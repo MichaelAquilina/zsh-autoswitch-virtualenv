@@ -1,3 +1,14 @@
+if ! type workon > /dev/null; then
+    export DISABLE_AUTOSWITCH_VENV="1"
+    printf "\e[1m\e[31m"
+    printf "zsh-autoswitch-virtualenv requires virtualenvwrapper to be installed!\n\n"
+    printf "If this is already installed but you are still seeing this message, add the "
+    printf "following to your ~/.zshrc:\n"
+    printf "\e[39m"
+    printf "source =virtualenvwrapper.sh\n"
+    printf "\e[0m"
+fi
+
 function _maybeworkon() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then

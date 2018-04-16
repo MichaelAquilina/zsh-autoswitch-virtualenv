@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.0
+-----
+* Disable plugin and print help message if virtualenvwrapper not setup correctly
+
 0.2.1
 -----
 * Add tests for mkvenv and check_venv
