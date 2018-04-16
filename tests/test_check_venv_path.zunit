@@ -2,6 +2,7 @@
 
 
 @setup {
+    source =virtualenvwrapper.sh
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
     TARGET="$(mktemp -d)"

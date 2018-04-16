@@ -69,10 +69,11 @@
 
 @test 'check_venv - deactivate if no .venv available' {
     PWD="$TARGET"
-    MYOLDPWD="$(dirname $TARGET)"
+    MYOLDPWD="$(dirname TARGET)"
+    VIRTUAL_ENV="foo"
     unset AUTOSWITCH_DEFAULTENV
     function deactivate {
-        echo deactivating
+        echo "deactivating"
     }
 
     run check_venv
