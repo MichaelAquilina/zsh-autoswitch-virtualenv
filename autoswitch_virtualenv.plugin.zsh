@@ -6,6 +6,8 @@ if ! type workon > /dev/null; then
     printf "following to your ~/.zshrc:\n"
     printf "\e[39m"
     printf "source =virtualenvwrapper.sh\n"
+    printf "\n"
+    printf "See https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv#Setup for more details\n"
     printf "\e[0m"
 fi
 

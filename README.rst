@@ -8,8 +8,8 @@ virtualenvs automatically as you move between directories.
 
 * `How it Works`_
 * `More Details`_
-* Requirements_
 * Installing_
+* Setup_
 * Commands_
 * Options_
 * `Security Warnings`_
@@ -42,37 +42,6 @@ to the name specified if one is found.
 **NOTE**: you may want to add ``.venv`` to your ``.gitignore`` in git
 projects (or equivalent file for the Version Control you are using).
 
-Requirements
-------------
-
-``virtualenvwrapper`` must be installed for this plugin to work
-correctly. You should install it with pip:
-
-::
-
-    pip install virtualenvwrapper
-
-You need to source this file in your ``.zshrc`` file as part of your
-setup. This should work:
-
-::
-
-    source =virtualenvwrapper.sh
-
-Make sure this is put *before* your package manager loading code (i.e. the
-line of code discussed in the section that follows).
-
-In combination, your ``.zshrc`` file should look something like this (if you
-are using zplug)
-
-::
-
-    zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
-    source =virtualenvwrapper.sh
-
-    zplug load
-
-
 Installing
 ----------
 
@@ -96,6 +65,36 @@ Zgen_
 ::
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
+
+Setup
+-----
+
+``virtualenvwrapper`` must be installed for this plugin to work
+correctly. You should install it with pip:
+
+::
+
+    pip install virtualenvwrapper
+
+You need to source this file in your ``.zshrc`` file as part of your
+setup. This should work:
+
+::
+
+    source =virtualenvwrapper.sh
+
+**IMPORTANT:** Make sure this is put *before* your package manager loading code (i.e. the
+line of code discussed in the section that follows).
+
+In combination, your ``.zshrc`` file should look something like this (if you
+are using zplug)
+
+::
+
+    zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
+    source =virtualenvwrapper.sh
+
+    zplug load
 
 Commands
 --------
