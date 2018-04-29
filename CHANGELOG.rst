@@ -1,9 +1,13 @@
 Changelog
 =========
 
-0.3.1
+0.3.2
 -----
 * Fix bug #19 where MYOLDPWD would get set in window titles (zprezto).
+
+0.3.1
+-----
+* Make help message clearer if virutalenvwrapper is not setup correctly
 
 0.3.0
 -----
