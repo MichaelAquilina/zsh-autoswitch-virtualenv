@@ -20,7 +20,7 @@ function _maybeworkon() {
      workon "$1"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-       # For some reason python --version writes to stderr
+       # For some reason python --version writes to st derr
        printf "[%s]\n" "$(python --version 2>&1)"
      fi
   fi
@@ -47,8 +47,11 @@ function _check_venv_path()
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
-    if [ "$PWD" != "$MYOLDPWD" ]; then
-        MYOLDPWD="$PWD"
+    if [ "AS:$PWD" != "$MYOLDPWD" ]; then
+        # Prefix PWD with "AS:" to signify this belongs to this plugin
+        # this prevents the AUTONAMEDIRS in prezto from doing strange things
+        # See https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv/issues/19
+        MYOLDPWD="AS:$PWD"
 
         SWITCH_TO=""
 
