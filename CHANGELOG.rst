@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.1
+-----
+* Fix bug #19 where MYOLDPWD would get set in window titles (zprezto).
+
 0.3.0
 -----
 * Disable plugin and print help message if virtualenvwrapper not setup correctly
