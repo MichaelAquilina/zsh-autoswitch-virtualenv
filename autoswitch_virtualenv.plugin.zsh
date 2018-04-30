@@ -2,13 +2,16 @@ if ! type workon > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
     printf "\e[1m\e[31m"
     printf "zsh-autoswitch-virtualenv requires virtualenvwrapper to be installed!\n\n"
-    printf "If this is already installed but you are still seeing this message, add the "
-    printf "following to your ~/.zshrc:\n"
-    printf "\e[39m"
+    printf "\e[0m\e[39m"
+    printf "If this is already installed but you are still seeing this message, \nadd the "
+    printf "following to your ~/.zshrc:\n\n"
+    printf "\e[1m"
     printf "source =virtualenvwrapper.sh\n"
     printf "\n"
-    printf "See https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv#Setup for more details\n"
     printf "\e[0m"
+    printf "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv#Setup"
+    printf "\e[0m"
+    printf "\n"
 fi
 
 function _maybeworkon() {
