@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.3
+-----
+* Improve help message formatting when plugin is not setup correctly
+
 0.3.2
 -----
 * Fix bug #19 where MYOLDPWD would get set in window titles (zprezto).
