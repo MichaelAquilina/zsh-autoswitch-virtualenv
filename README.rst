@@ -248,5 +248,5 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. |Release| image:: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv.svg
     :target: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv
 
-.. |GPLv3| image:: https://img.shields.io/badge/License-GP%20v3-blue.svg
-   :target: https://www.gnu.org/licenses/glp-3.0
+.. |GPLv3| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
+   :target: https://www.gnu.org/licenses/gpl-3.0
