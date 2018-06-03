@@ -1,3 +1,5 @@
+export AUTOSWITCH_VERSION='0.3.3'
+
 if ! type workon > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
     printf "\e[1m\e[31m"

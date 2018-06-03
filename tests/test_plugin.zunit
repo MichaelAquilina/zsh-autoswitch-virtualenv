@@ -11,6 +11,17 @@
     PYTHON_VERSION="$(python3 --version)"
 }
 
+@test 'correct version exported' {
+    unset AUTOSWITCH_DEFAULTENV
+    load ../autoswitch_virtualenv.plugin.zsh
+
+    git_version="$(git tag --list | sort | tail -1)"
+    git tag --list
+
+    assert "$AUTOSWITCH_VERSION" is_not_empty
+    assert "$AUTOSWITCH_VERSION" same_as "$git_version"
+}
+
 
 @test 'plugin - does nothing on load if no default set' {
     unset AUTOSWITCH_DEFAULTENV
