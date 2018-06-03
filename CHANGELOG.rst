@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.4
+-----
+* export autoswitch version
+
 0.3.3
 -----
 * Improve help message formatting when plugin is not setup correctly
