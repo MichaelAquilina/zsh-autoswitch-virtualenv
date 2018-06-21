@@ -119,6 +119,14 @@ helper command.
     Installing collected packages: requests
     Successfully installed requests-2.11.1
 
+Optionally, you can specify the python binary to use for this virtual environment
+
+::
+
+    $ mkvenv --python=/usr/bin/python3
+
+In fact, mkvenv supports any parameters that can be passed to ``mkvirtualenv``
+
 ``mkvenv`` will create a virtual environment with the same name as the
 current directory, suggest installing ``requirements.txt`` if available
 and create the relevant ``.venv`` file for you.
