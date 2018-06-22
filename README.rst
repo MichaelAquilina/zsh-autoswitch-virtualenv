@@ -125,7 +125,7 @@ Optionally, you can specify the python binary to use for this virtual environmen
 
     $ mkvenv --python=/usr/bin/python3
 
-In fact, mkvenv supports any parameters that can be passed to ``mkvirtualenv``
+In fact, ``mkvenv`` supports any parameters that can be passed to ``mkvirtualenv``
 
 ``mkvenv`` will create a virtual environment with the same name as the
 current directory, suggest installing ``requirements.txt`` if available
