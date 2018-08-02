@@ -77,7 +77,7 @@ function check_venv()
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file but it is not owned by the current user\n"
             printf "Change ownership of $venv_path to '$USER' to fix this\n"
-          elif [[ "$file_permissions" != "600" ]]; then
+          elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: \"chmod 600 $venv_path\"\n"
