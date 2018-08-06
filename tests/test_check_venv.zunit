@@ -25,7 +25,7 @@
 }
 
 
-@test 'check_venv - Security warning for weak permissions' {
+@test 'check_venv - Security warning for weak writeable by group permissions' {
     PWD="$TARGET"
 
     echo "foobar" > "$TARGET/.venv"
@@ -39,6 +39,66 @@
     assert "$lines[2]" is_empty
     assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (620)."
     assert "$lines[4]" same_as "Run the following command to fix this: \"chmod 600 $TARGET/.venv\""
+}
+
+@test 'check_venv - Security warning for weak writeable by everyone permissions' {
+    PWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+    chmod a+w "$TARGET/.venv"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
+    assert "$lines[2]" is_empty
+    assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (622)."
+    assert "$lines[4]" same_as "Run the following command to fix this: \"chmod 600 $TARGET/.venv\""
+}
+
+@test 'check_venv - No security warning for readable by everyone permission' {
+    PWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+    chmod a+r "$TARGET/.venv"
+    MYOLDPWD="$(dirname $TARGET)"
+    AUTOSWITCH_DEFAULTENV="foodefault"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
+
+@test 'check_venv - No security warning for readable by group permission' {
+    PWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+    chmod g+r "$TARGET/.venv"
+    MYOLDPWD="$(dirname $TARGET)"
+    AUTOSWITCH_DEFAULTENV="foodefault"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+}
+
+@test 'check_venv - No security warning for readable only by owner permission' {
+    PWD="$TARGET"
+
+    echo "foobar" > "$TARGET/.venv"
+    chmod 600 "$TARGET/.venv"
+    MYOLDPWD="$(dirname $TARGET)"
+    AUTOSWITCH_DEFAULTENV="foodefault"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
 }
 
 
