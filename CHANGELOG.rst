@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.6
+-----
+* Fix bug where version was not in sync with git
+
 0.3.5
 -----
 * allow readable permissions for everyone and group
