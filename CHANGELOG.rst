@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.5
+-----
+* allow readable permissions for everyone and group
+* Fixes to README
+
 0.3.4
 -----
 * export autoswitch version
