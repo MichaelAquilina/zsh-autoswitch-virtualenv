@@ -1,7 +1,7 @@
 Autoswitch Python Virtualenv
 ============================
 
-|TravisCI| |Release| |GPLv3|
+|CircleCI| |Release| |GPLv3|
 
 *zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python
 virtualenvs automatically as you move between directories.
@@ -250,11 +250,11 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 
 .. _ZGen: https://github.com/tarjoilija/zgen
 
-.. |TravisCI| image:: https://travis-ci.org/MichaelAquilina/zsh-autoswitch-virtualenv.svg?branch=master
-   :target: https://travis-ci.org/MichaelAquilina/zsh-autoswitch-virtualenv
+.. |CircleCI| image:: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv.svg?style=svg
+   :target: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv
 
 .. |Release| image:: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv.svg
-    :target: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv
+   :target: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv
 
 .. |GPLv3| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
    :target: https://www.gnu.org/licenses/gpl-3.0
