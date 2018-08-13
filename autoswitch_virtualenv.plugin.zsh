@@ -25,8 +25,14 @@ function _maybeworkon() {
      workon "$1"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-       # For some reason python --version writes to st derr
-       printf "[%s]\n" "$(python --version 2>&1)"
+       # For some reason python --version writes to stderr
+       if type python > /dev/null; then
+           printf "[%s]\n" "$(python --version 2>&1)"
+       elif type python3 > /dev/null; then
+           printf "[%s]\n" "$(python3 --version 2>&1)"
+       else
+           printf "Unable to find python installed on this machine"
+        fi
      fi
   fi
 }
