@@ -6,10 +6,13 @@ test: &test
     - checkout
     - run:
         name: Install Dependencies
-        command: apt-get update && apt-get install -y curl python3-pip ncurses-bin python python-virtualenv git
+        command: apt-get update && apt-get install -y curl python3-pip python3.4-dev ncurses-bin python python-virtualenv git
     - run:
         name: install virtualenvwrapper
         command: pip3 install virtualenvwrapper
+    - run:
+        name: install pipenv 
+        command: pip3 install pipenv 
     - run:
         name: Download Zunit
         command: |
@@ -20,6 +23,8 @@ test: &test
     - run:
         name: Run Zunit
         command: |
+          export LC_ALL=C.UTF-8
+          export LANG=C.UTF-8
           export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3  # We have to manually set this for some reason
           export TERM="xterm-256color"  # Required by tput
           export PATH="$HOME/bin:$PATH"
