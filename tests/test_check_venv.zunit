@@ -116,7 +116,7 @@
 }
 
 
-@test 'check_venv - go to default if .venv available' {
+@test 'check_venv - go to default if .venv unavailable' {
     PWD="$TARGET"
     MYOLDPWD="$(dirname $TARGET)"
     AUTOSWITCH_DEFAULTENV="foodefault"
@@ -128,9 +128,25 @@
 }
 
 
-@test 'check_venv - deactivate if no .venv available' {
+@test 'check_venv - deactivate if .venv unavailable but pipenv available' {
     PWD="$TARGET"
-    MYOLDPWD="$(dirname TARGET)"
+    MYOLDPWD="$(dirname $TARGET)"
+    VIRTUAL_ENV="foo"
+
+    function pipenv {
+        echo "$HOME/.virtualenvs/foobar"
+    }
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching pipenv: foobar  [$PYTHON_VERSION]"
+}
+
+
+@test 'check_venv - deactivate if neither .venv nor pipenv available' {
+    PWD="$TARGET"
+    MYOLDPWD="$(dirname $TARGET)"
     VIRTUAL_ENV="foo"
     unset AUTOSWITCH_DEFAULTENV
     function deactivate {

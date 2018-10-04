@@ -45,12 +45,12 @@ function _maybeworkon() {
 
 
 function _maybepipenv() {
-  if [[ -z $VIRTUAL_ENV ]]; then
+  if [[ -z "$VIRTUAL_ENV" || "$1" != "$VIRTUAL_ENV" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        printf "Switching pipenv: %s  " $(basename $(pipenv --venv))
+        printf "Switching pipenv: %s  " "$(basename "$1")"
      fi
 
-     . $(pipenv --venv)/bin/activate
+     . "$1"/bin/activate
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         _print_python_version
@@ -116,7 +116,7 @@ function check_venv()
         if [[ -n "$SWITCH_TO" ]]; then
           _maybeworkon "$SWITCH_TO"
         elif [[ -n `pipenv --venv 2>/dev/null` ]]; then
-          _maybepipenv
+          _maybepipenv "$(pipenv --venv)"
         else
           _default_venv
         fi
