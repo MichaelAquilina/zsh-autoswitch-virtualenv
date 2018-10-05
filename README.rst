@@ -10,6 +10,7 @@ virtualenvs automatically as you move between directories.
 * `More Details`_
 * Installing_
 * Setup_
+* `Pipenv Integration`_
 * Commands_
 * Options_
 * `Security Warnings`_
@@ -95,6 +96,11 @@ are using zplug)
     source =virtualenvwrapper.sh
 
     zplug load
+
+Pipenv Integration
+------------------
+
+This plugin will also detect and auto activate virtualenvs made with ``pipenv``.
 
 Commands
 --------
