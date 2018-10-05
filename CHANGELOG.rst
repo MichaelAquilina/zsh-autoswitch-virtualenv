@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.4.0
+-----
+* Add support for detecting and auto activating with pipenv
+
 0.3.6
 -----
 * Fix bug where version was not in sync with git
