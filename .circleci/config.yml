@@ -11,8 +11,8 @@ test: &test
         name: install virtualenvwrapper
         command: pip3 install virtualenvwrapper
     - run:
-        name: install pipenv 
-        command: pip3 install pipenv 
+        name: install pipenv
+        command: pip3 install pipenv
     - run:
         name: Download Zunit
         command: |
@@ -69,6 +69,11 @@ jobs:
         - image: "zshusers/zsh-5.5.1"
       <<: *test
 
+  test-zsh-5.6:
+      docker:
+        - image: "zshusers/zsh-5.6.2"
+      <<: *test
+
 workflows:
   version: 2
   test:
@@ -79,3 +84,4 @@ workflows:
       - test-zsh-5.3
       - test-zsh-5.4
       - test-zsh-5.5
+      - test-zsh-5.6
