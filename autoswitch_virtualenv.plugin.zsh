@@ -16,6 +16,19 @@ if ! type workon > /dev/null; then
     printf "\n"
 fi
 
+
+function _print_python_version() {
+   # For some reason python --version writes to stderr
+   if type python > /dev/null; then
+       printf "[%s]\n" "$(python --version 2>&1)"
+   elif type python3 > /dev/null; then
+       printf "[%s]\n" "$(python3 --version 2>&1)"
+   else
+       printf "Unable to find python installed on this machine"
+    fi
+}
+
+
 function _maybeworkon() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
@@ -25,14 +38,22 @@ function _maybeworkon() {
      workon "$1"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-       # For some reason python --version writes to stderr
-       if type python > /dev/null; then
-           printf "[%s]\n" "$(python --version 2>&1)"
-       elif type python3 > /dev/null; then
-           printf "[%s]\n" "$(python3 --version 2>&1)"
-       else
-           printf "Unable to find python installed on this machine"
-        fi
+        _print_python_version
+     fi
+  fi
+}
+
+
+function _maybepipenv() {
+  if [[ -z "$VIRTUAL_ENV" || "$1" != "$VIRTUAL_ENV" ]]; then
+     if [ -z "$AUTOSWITCH_SILENT" ]; then
+        printf "Switching pipenv: %s  " "$(basename "$1")"
+     fi
+
+     . "$1"/bin/activate
+
+     if [ -z "$AUTOSWITCH_SILENT" ]; then
+        _print_python_version
      fi
   fi
 }
@@ -94,6 +115,8 @@ function check_venv()
 
         if [[ -n "$SWITCH_TO" ]]; then
           _maybeworkon "$SWITCH_TO"
+        elif [[ -n `pipenv --venv 2>/dev/null` ]]; then
+          _maybepipenv "$(pipenv --venv)"
         else
           _default_venv
         fi
