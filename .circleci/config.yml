@@ -23,6 +23,7 @@ test: &test
     - run:
         name: Run Zunit
         command: |
+          # Required by pipenv to work correctly
           export LC_ALL=C.UTF-8
           export LANG=C.UTF-8
           export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3  # We have to manually set this for some reason
