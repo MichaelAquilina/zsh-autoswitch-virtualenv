@@ -27,9 +27,7 @@
     run _maybepipenv "$(pipenv --venv)"
 
     assert $state equals 0
-    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}  \[$PYTHON_VERSION\]"
-
-
+    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}"
 }
 
 @test '_maybepipenv - switches virtualenv if current virtualenv is different' {
@@ -38,7 +36,7 @@
     run _maybepipenv "$(pipenv --venv)"
 
     assert $state equals 0
-    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}  \[$PYTHON_VERSION\]"
+    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}"
 }
 
 @test '_maybepipenv - switches virtualenv if current virtualenv is different (silent)' {

@@ -27,7 +27,7 @@
     run _maybeworkon foobar
 
     assert $state equals 0
-    assert "$output" same_as "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+    assert "$output" same_as "Switching virtualenv: foobar  \e[32m[$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different' {
@@ -36,7 +36,7 @@
     run _maybeworkon foobar
 
     assert $state equals 0
-    assert "$output" contains "Switching virtualenv: foobar  [$PYTHON_VERSION]"
+    assert "$output" contains "Switching virtualenv: foobar  \e[32m[$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different (silent)' {

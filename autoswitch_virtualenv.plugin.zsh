@@ -20,9 +20,9 @@ fi
 function _print_python_version() {
    # For some reason python --version writes to stderr
    if type python > /dev/null; then
-       printf "[%s]\n" "$(python --version 2>&1)"
+       printf "\e[32m[%s]\e[0m\n" "$(python --version 2>&1)"
    elif type python3 > /dev/null; then
-       printf "[%s]\n" "$(python3 --version 2>&1)"
+       printf "\e[32m[%s][\[0m\n" "$(python3 --version 2>&1)"
    else
        printf "Unable to find python installed on this machine"
     fi
