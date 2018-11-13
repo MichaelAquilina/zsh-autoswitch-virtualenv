@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.5.1
+-----
+* Improve color output. Virtualenv name now displayed in purple
+
+
 0.5.0
 -----
 * Color python version output when switching virtualenvs
