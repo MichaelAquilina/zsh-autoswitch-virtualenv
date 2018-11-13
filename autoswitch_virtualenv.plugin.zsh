@@ -1,28 +1,32 @@
 export AUTOSWITCH_VERSION='0.5.0'
 
+RED="\e[31m"
+GREEN="\e[32m"
+PURPLE="\e[35m"
+BOLD="\e[1m"
+NORMAL="\e[0m"
+
 if ! type workon > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
-    printf "\e[1m\e[31m"
+    printf "${BOLD}${RED}"
     printf "zsh-autoswitch-virtualenv requires virtualenvwrapper to be installed!\n\n"
-    printf "\e[0m\e[39m"
+    printf "${NORMAL}"
     printf "If this is already installed but you are still seeing this message, \nadd the "
     printf "following to your ~/.zshrc:\n\n"
-    printf "\e[1m"
+    printf "${BOLD}"
     printf "source =virtualenvwrapper.sh\n"
     printf "\n"
-    printf "\e[0m"
+    printf "${NORMAL}"
     printf "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv#Setup"
-    printf "\e[0m"
     printf "\n"
 fi
-
 
 function _print_python_version() {
    # For some reason python --version writes to stderr
    if type python > /dev/null; then
-       printf "\e[32m[%s]\e[0m\n" "$(python --version 2>&1)"
+       printf "${GREEN}[%s]${NORMAL}\n" "$(python --version 2>&1)"
    elif type python3 > /dev/null; then
-       printf "\e[32m[%s][\[0m\n" "$(python3 --version 2>&1)"
+       printf "${GREEN}[%s]${NORMAL}\n" "$(python3 --version 2>&1)"
    else
        printf "Unable to find python installed on this machine"
     fi
@@ -32,7 +36,7 @@ function _print_python_version() {
 function _maybeworkon() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        printf "Switching virtualenv: %s  " $1
+        printf "Switching virtualenv: ${BOLD}${PURPLE}%s${NORMAL} " $1
      fi
 
      workon "$1"
@@ -47,7 +51,7 @@ function _maybeworkon() {
 function _maybepipenv() {
   if [[ -z "$VIRTUAL_ENV" || "$1" != "$VIRTUAL_ENV" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        printf "Switching pipenv: %s  " "$(basename "$1")"
+        printf "Switching pipenv: ${BOLD}${PURPLE}%s${NORMAL} " "$(basename "$1")"
      fi
 
      . "$1"/bin/activate
