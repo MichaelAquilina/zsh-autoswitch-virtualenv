@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='0.4.0'
+export AUTOSWITCH_VERSION='0.5.0'
 
 if ! type workon > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
