@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.0
+-----
+* Color python version output when switching virtualenvs
+
 0.4.0
 -----
 * Add support for detecting and auto activating with pipenv
