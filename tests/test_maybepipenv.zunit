@@ -27,7 +27,7 @@
     run _maybepipenv "$(pipenv --venv)"
 
     assert $state equals 0
-    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}"
+    assert "$output" contains "Switching pipenv: \e[1m\e[35m$(basename "$PWD")"
 }
 
 @test '_maybepipenv - switches virtualenv if current virtualenv is different' {
@@ -36,7 +36,7 @@
     run _maybepipenv "$(pipenv --venv)"
 
     assert $state equals 0
-    assert "$output" matches "Switching pipenv: $(basename "$PWD")-[^\s]{8}"
+    assert "$output" contains "Switching pipenv: \e[1m\e[35m$(basename "$PWD")"
 }
 
 @test '_maybepipenv - switches virtualenv if current virtualenv is different (silent)' {
