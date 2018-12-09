@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.6.0
+-----
+* Improve plugin performance when checking for virtualenvs
+
 0.5.1
 -----
 * Improve color output. Virtualenv name now displayed in purple
