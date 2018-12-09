@@ -119,7 +119,9 @@ function check_venv()
 
         if [[ -n "$SWITCH_TO" ]]; then
           _maybeworkon "$SWITCH_TO"
-        elif [[ -n `pipenv --venv 2>/dev/null` ]]; then
+
+        # check if Pipfile exists rather than invoking pipenv as it is slow
+        elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
           _maybepipenv "$(pipenv --venv)"
         else
           _default_venv
