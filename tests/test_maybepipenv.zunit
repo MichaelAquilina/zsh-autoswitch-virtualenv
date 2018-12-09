@@ -3,6 +3,10 @@
 @setup {
     source =virtualenvwrapper.sh
 
+    if ! type "pipenv" > /dev/null; then
+        skip "You need to install pipenv to run these tests"
+    fi
+
     echo "Creating test pipenv"
     run pipenv --python 3
 
