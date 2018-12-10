@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.7.0
+-----
+* Vastly improve the performance of switching environments
+
 0.6.0
 -----
 * Improve plugin performance when checking for virtualenvs
