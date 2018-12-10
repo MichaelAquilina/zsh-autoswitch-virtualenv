@@ -39,7 +39,8 @@ function _maybeworkon() {
         printf "Switching virtualenv: ${BOLD}${PURPLE}%s${NORMAL} " $1
      fi
 
-     workon "$1"
+     # Much faster to source the activate file directly rather than use the `workon` command
+     source "$HOME/.virtualenvs/$1/bin/activate"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         _print_python_version
@@ -54,7 +55,7 @@ function _maybepipenv() {
         printf "Switching pipenv: ${BOLD}${PURPLE}%s${NORMAL} " "$(basename "$1")"
      fi
 
-     . "$1"/bin/activate
+     source "$1/bin/activate"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         _print_python_version
@@ -140,7 +141,7 @@ function _default_venv()
 }
 
 
-# remove virutal environment for current directory
+# remove virtual environment for current directory
 function rmvenv()
 {
   if [[ -f ".venv" ]]; then
