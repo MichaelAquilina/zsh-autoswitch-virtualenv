@@ -10,7 +10,6 @@ PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
 
-DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
 
 
 if ! type "virtualenv" > /dev/null; then
@@ -38,6 +37,8 @@ function _python_version() {
 function _maybeworkon() {
   venv_name="$1"
   venv_type="$2"
+
+  DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
 
   if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
