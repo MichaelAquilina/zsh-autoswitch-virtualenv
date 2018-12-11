@@ -6,6 +6,7 @@
         run python -m virtualenv "$HOME/.virtualenvs/foobar" --python=python3
     fi
     unset VIRTUAL_ENV
+    unset AUTOSWITCH_MESSAGE_FORMAT
     PYTHON_VERSION="$(python3 --version)"
 }
 

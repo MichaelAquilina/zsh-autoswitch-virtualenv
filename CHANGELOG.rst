@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.0
+-----
+* Switch messages can now be customised with the AUTOSWITCH_MESSAGE_FORMAT environment variable
+* help text is now displayed when virtualenv is not installed
+
 1.0.0
 -----
 * Remove dependency on virtualenvwrapper. autoswitch-virtualenv now works directly with virtualenv
