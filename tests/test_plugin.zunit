@@ -1,11 +1,9 @@
 #!/usr/bin/env zunit
 
 @setup {
-    load =virtualenvwrapper.sh
-
     if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
         echo "Creating test virtualenv"
-        run mkvirtualenv foobar --python=python3
+        run python -m virtualenv "$HOME/.virtualenvs/foobar" --python=python3
     fi
     unset VIRTUAL_ENV
     PYTHON_VERSION="$(python3 --version)"

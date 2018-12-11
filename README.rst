@@ -9,7 +9,6 @@ virtualenvs automatically as you move between directories.
 * `How it Works`_
 * `More Details`_
 * Installing_
-* Setup_
 * `Pipenv Integration`_
 * Commands_
 * Options_
@@ -67,36 +66,6 @@ Zgen_
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
 
-Setup
------
-
-``virtualenvwrapper`` must be installed for this plugin to work
-correctly. You should install it with pip:
-
-::
-
-    pip install virtualenvwrapper
-
-You need to source this file in your ``.zshrc`` file as part of your
-setup. This should work:
-
-::
-
-    source =virtualenvwrapper.sh
-
-**IMPORTANT:** Make sure this is put *before* your package manager loading code (i.e. the
-line of code discussed in the section that follows).
-
-In combination, your ``.zshrc`` file should look something like this (if you
-are using zplug)
-
-::
-
-    zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
-    source =virtualenvwrapper.sh
-
-    zplug load
-
 Pipenv Integration
 ------------------
 
@@ -131,7 +100,7 @@ Optionally, you can specify the python binary to use for this virtual environmen
 
     $ mkvenv --python=/usr/bin/python3
 
-In fact, ``mkvenv`` supports any parameters that can be passed to ``mkvirtualenv``
+In fact, ``mkvenv`` supports any parameters that can be passed to ``python -m virtualenv``
 
 ``mkvenv`` will create a virtual environment with the same name as the
 current directory, suggest installing ``requirements.txt`` if available

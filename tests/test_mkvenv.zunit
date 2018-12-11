@@ -1,7 +1,6 @@
 #!/usr/bin/env zunit
 
 @setup {
-    source =virtualenvwrapper.sh
 
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
@@ -30,7 +29,6 @@
     run mkvenv
 
     assert $status equals 0
-    assert "$output" contains "New python executable"
     assert "$TARGET/myproject/.venv" exists
 
     run cat "$TARGET/myproject/.venv"

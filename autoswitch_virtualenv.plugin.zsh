@@ -1,25 +1,14 @@
 export AUTOSWITCH_VERSION='0.7.0'
 
+# TODO: Possibly allow the user to modify this if they wish
+VIRTUAL_ENV_DIR="$HOME/.virtualenvs"
+mkdir -p "$VIRTUAL_ENV_DIR"
+
 RED="\e[31m"
 GREEN="\e[32m"
 PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
-
-if ! type workon > /dev/null; then
-    export DISABLE_AUTOSWITCH_VENV="1"
-    printf "${BOLD}${RED}"
-    printf "zsh-autoswitch-virtualenv requires virtualenvwrapper to be installed!\n\n"
-    printf "${NORMAL}"
-    printf "If this is already installed but you are still seeing this message, \nadd the "
-    printf "following to your ~/.zshrc:\n\n"
-    printf "${BOLD}"
-    printf "source =virtualenvwrapper.sh\n"
-    printf "\n"
-    printf "${NORMAL}"
-    printf "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv#Setup"
-    printf "\n"
-fi
 
 function _print_python_version() {
    # For some reason python --version writes to stderr
@@ -40,7 +29,7 @@ function _maybeworkon() {
      fi
 
      # Much faster to source the activate file directly rather than use the `workon` command
-     source "$HOME/.virtualenvs/$1/bin/activate"
+     source "$VIRTUAL_ENV_DIR/$1/bin/activate"
 
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         _print_python_version
@@ -156,7 +145,8 @@ function rmvenv()
         fi
     fi
 
-    rmvirtualenv "$venv_name"
+    printf "Removing %s...\n" "$venv_name"
+    rm -rf "$VIRTUAL_ENV_DIR/$venv_name"
     rm ".venv"
   else
     printf "No .venv file in the current directory!\n"
@@ -171,8 +161,22 @@ function mkvenv()
     printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
   else
     venv_name="$(basename $PWD)"
-    mkvirtualenv "$venv_name" $@
 
+    printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
+    # TODO: Allow verbose option to remove suppressing details
+    virtualenv $@ "$VIRTUAL_ENV_DIR/$venv_name" > /dev/null
+
+    printf "$venv_name\n" > ".venv"
+    chmod 600 .venv
+
+    _maybeworkon "$venv_name"
+
+    install_requirements
+  fi
+}
+
+
+function install_requirements() {
     setopt nullglob
     for requirements in *requirements.txt
     do
@@ -183,11 +187,8 @@ function mkvenv()
         pip install -r "$requirements"
       fi
     done
-    printf "$venv_name\n" > ".venv"
-    chmod 600 .venv
-    AUTOSWITCH_PROJECT="$PWD"
-  fi
 }
+
 
 if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
     autoload -Uz add-zsh-hook
