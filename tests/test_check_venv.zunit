@@ -11,6 +11,7 @@
         run python -m virtualenv "$HOME/.virtualenvs/foodefault" --python=python3
     fi
 
+    unset AUTOSWITCH_MESSAGE_FORMAT
     PYTHON_VERSION="$(python3 --version 2>&1)"
 
     export DISABLE_AUTOSWITCH_VENV="1"

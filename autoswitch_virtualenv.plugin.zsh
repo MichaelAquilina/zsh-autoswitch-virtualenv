@@ -43,7 +43,7 @@ function _maybeworkon() {
      if [ -z "$AUTOSWITCH_SILENT" ]; then
         py_version="$(_python_version "$VIRTUAL_ENV_DIR/$venv_name/bin/python")"
 
-        message="$DEFAULT_MESSAGE_FORMAT"
+        message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
         message="${message//\%venv_type/$venv_type}"
         message="${message//\%venv_name/$venv_name}"
         message="${message//\%py_version/$py_version}"

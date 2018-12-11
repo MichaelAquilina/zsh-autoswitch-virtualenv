@@ -8,6 +8,7 @@
         run python -m virtualenv "$HOME/.virtualenvs/foobar" --python=python3
     fi
 
+    unset AUTOSWITCH_MESSAGE_FORMAT
     PYTHON_VERSION="$(python3 --version 2>&1)"
 
     export DISABLE_AUTOSWITCH_VENV="1"
@@ -27,6 +28,16 @@
 
     assert $state equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+}
+
+@test '_maybeworkon - custom message' {
+    VIRTUAL_ENV=""
+    AUTOSWITCH_MESSAGE_FORMAT="Hello %venv_type - this is %venv_name (%py_version)"
+
+    run _maybeworkon foobar cheese
+
+    assert $state equals 0
+    assert "$output" same_as "Hello cheese - this is foobar ($PYTHON_VERSION)"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different' {
