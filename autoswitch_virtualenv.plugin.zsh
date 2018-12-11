@@ -10,6 +10,18 @@ PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
 
+
+if ! type "virtualenv" > /dev/null; then
+    export DISABLE_AUTOSWITCH_VENV="1"
+    printf "${BOLD}${RED}"
+    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
+    printf "${NORMAL}"
+    printf "If this is already installed but you are still seeing this message, \n"
+    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
+    printf "\n"
+fi
+
+
 function _print_python_version() {
    # For some reason python --version writes to stderr
    if type python > /dev/null; then
