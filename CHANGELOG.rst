@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.1.1
+-----
+* Hotfix: Fix conflict with you-should-use plugin default message
+
 1.1.0
 -----
 * Switch messages can now be customised with the AUTOSWITCH_MESSAGE_FORMAT environment variable
