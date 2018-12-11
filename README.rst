@@ -11,6 +11,7 @@ virtualenvs automatically as you move between directories.
 * Installing_
 * `Pipenv Integration`_
 * Commands_
+* `Customising Messages`_
 * Options_
 * `Security Warnings`_
 * `Running Tests`_
@@ -164,6 +165,38 @@ This will delete the virtual environment in ``.venv`` and remove the
     $ cd my-non-python-project
     $ rmvenv
     No .venv file in the current directory!
+
+
+Customising Messages
+--------------------
+
+By default, the following message is displayed in bold when an alias is found:
+
+::
+
+    Switching %venv_type: %venv_name [%py_version]
+
+Where the following variables represent:
+
+* ``%venv_type`` - the type of virtualenv being activated (virtualenv, pipenv)
+* ``%venv_name`` - the name of the virtualenv being activated
+* ``%py_version`` - the version of python used by the virtualenv being activated
+
+This default message can be customised by setting the ``AUTOSWITCH_MESSAGE_FORMAT`` environment variable.
+
+If for example, you wish to display your own custom message in red, you can add the
+following to your ``~/.zshrc``:
+
+::
+
+    export AUTOSWITCH_MESSAGE_FORMAT="$(tput setaf 1)Switching to %venv_name 🐍 %py_version $(tput sgr0)"
+
+``$(tput setaf 1)`` generates the escape code terminals use for red foreground text. ``$(tput sgr0)`` sets
+the text back to a normal color.
+
+You can read more about how you can use tput and terminal escape codes here:
+http://wiki.bash-hackers.org/scripting/terminalcodes
+
 
 Options
 -------

@@ -10,6 +10,8 @@ PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
 
+DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
+
 
 if ! type "virtualenv" > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
@@ -22,45 +24,34 @@ if ! type "virtualenv" > /dev/null; then
 fi
 
 
-function _print_python_version() {
-   # For some reason python --version writes to stderr
-   if type python > /dev/null; then
-       printf "${GREEN}[%s]${NORMAL}\n" "$(python --version 2>&1)"
-   elif type python3 > /dev/null; then
-       printf "${GREEN}[%s]${NORMAL}\n" "$(python3 --version 2>&1)"
+function _python_version() {
+   PYTHON_BIN="$1"
+   if [[ -f "$PYTHON_BIN" ]] then
+       # For some reason python --version writes to stderr
+       printf "%s" "$($PYTHON_BIN --version 2>&1)"
    else
-       printf "Unable to find python installed on this machine"
-    fi
+       printf "unknown"
+   fi
 }
 
 
 function _maybeworkon() {
-  if [[ -z "$VIRTUAL_ENV" || "$1" != "$(basename $VIRTUAL_ENV)" ]]; then
+  venv_name="$1"
+  venv_type="$2"
+
+  if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        printf "Switching virtualenv: ${BOLD}${PURPLE}%s${NORMAL} " $1
+        py_version="$(_python_version "$VIRTUAL_ENV_DIR/$venv_name/bin/python")"
+
+        message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
+        message="${message//\%venv_type/$venv_type}"
+        message="${message//\%venv_name/$venv_name}"
+        message="${message//\%py_version/$py_version}"
+        printf "${message}\n"
      fi
 
      # Much faster to source the activate file directly rather than use the `workon` command
-     source "$VIRTUAL_ENV_DIR/$1/bin/activate"
-
-     if [ -z "$AUTOSWITCH_SILENT" ]; then
-        _print_python_version
-     fi
-  fi
-}
-
-
-function _maybepipenv() {
-  if [[ -z "$VIRTUAL_ENV" || "$1" != "$VIRTUAL_ENV" ]]; then
-     if [ -z "$AUTOSWITCH_SILENT" ]; then
-        printf "Switching pipenv: ${BOLD}${PURPLE}%s${NORMAL} " "$(basename "$1")"
-     fi
-
-     source "$1/bin/activate"
-
-     if [ -z "$AUTOSWITCH_SILENT" ]; then
-        _print_python_version
-     fi
+     source "$VIRTUAL_ENV_DIR/$venv_name/bin/activate"
   fi
 }
 
@@ -120,11 +111,12 @@ function check_venv()
         fi
 
         if [[ -n "$SWITCH_TO" ]]; then
-          _maybeworkon "$SWITCH_TO"
+          _maybeworkon "$SWITCH_TO" "virtualenv"
 
         # check if Pipfile exists rather than invoking pipenv as it is slow
         elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
-          _maybepipenv "$(pipenv --venv)"
+          venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
+          _maybeworkon "$(basename "$venv_path")" "pipenv"
         else
           _default_venv
         fi
@@ -135,7 +127,7 @@ function check_venv()
 function _default_venv()
 {
   if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-     _maybeworkon "$AUTOSWITCH_DEFAULTENV"
+     _maybeworkon "$AUTOSWITCH_DEFAULTENV" "virtualenv"
   elif [[ -n "$VIRTUAL_ENV" ]]; then
      deactivate
   fi
