@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.0
+-----
+* Remove dependency on virtualenvwrapper. autoswitch-virtualenv now works directly with virtualenv
+
 0.7.0
 -----
 * Vastly improve the performance of switching environments
