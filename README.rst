@@ -45,6 +45,8 @@ projects (or equivalent file for the Version Control you are using).
 Installing
 ----------
 
+``autoswitch-virtualenv`` requires `virtualenv <https://pypi.org/project/virtualenv/>`__ to be installed.
+
 Add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:
 
