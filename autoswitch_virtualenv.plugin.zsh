@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.0.0'
+export AUTOSWITCH_VERSION='1.1.0'
 
 # TODO: Possibly allow the user to modify this if they wish
 VIRTUAL_ENV_DIR="$HOME/.virtualenvs"
