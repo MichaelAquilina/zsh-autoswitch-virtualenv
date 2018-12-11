@@ -1,7 +1,6 @@
 #!/usr/bin/env zunit
 
 @setup {
-    source =virtualenvwrapper.sh
 
     if ! type "pipenv" > /dev/null; then
         skip "You need to install pipenv to run these tests"
