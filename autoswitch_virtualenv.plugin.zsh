@@ -11,7 +11,6 @@ BOLD="\e[1m"
 NORMAL="\e[0m"
 
 
-
 if ! type "virtualenv" > /dev/null; then
     export DISABLE_AUTOSWITCH_VENV="1"
     printf "${BOLD}${RED}"
@@ -150,7 +149,7 @@ function rmvenv()
         fi
     fi
 
-    printf "Removing %s...\n" "$venv_name"
+    printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
     rm -rf "$VIRTUAL_ENV_DIR/$venv_name"
     rm ".venv"
   else
