@@ -62,7 +62,7 @@ function _maybeworkon() {
 # Gives the path to the nearest parent .venv file or nothing if it gets to root
 function _check_venv_path()
 {
-    local check_dir=$1
+    local check_dir="$1"
 
     if [[ -f "${check_dir}/.venv" ]]; then
         printf "${check_dir}/.venv"
@@ -170,8 +170,12 @@ function mkvenv()
     venv_name="$(basename $PWD)"
 
     printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
-    # TODO: Allow verbose option to remove suppressing details
-    virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+
+    if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
+        virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+    else
+        virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+    fi
 
     printf "$venv_name\n" > ".venv"
     chmod 600 .venv
