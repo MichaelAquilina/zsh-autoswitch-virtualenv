@@ -87,10 +87,7 @@ helper command.
 
     $ cd my-python-project
     $ mkvenv
-    Using real prefix '/usr'
-    New python executable in /home/michael/.virtualenvs/my-python-project/bin/python2
-    Also creating executable in /home/michael/.virtualenvs/my-python-project/bin/python
-    Installing setuptools, pip, wheel...done.
+    Creating my-python-project virtualenv
     Found a requirements.txt. Install? [y/N]:
     Collecting requests (from -r requirements.txt (line 1))
       Using cached requests-2.11.1-py2.py3-none-any.whl
@@ -166,6 +163,16 @@ This will delete the virtual environment in ``.venv`` and remove the
     $ rmvenv
     No .venv file in the current directory!
 
+disable_autoswitch_virtualenv
+'''''''''''''''''''''''''''''
+
+Temporarily disables autoswitching of virtualenvs when moving between
+directories.
+
+enable_autoswitch_virtualenv
+''''''''''''''''''''''''''''
+
+Re-enable autoswitching of virtualenvs (if it was previously disabled).
 
 Customising Messages
 --------------------
@@ -216,6 +223,14 @@ export ``AUTOSWITCH_DEFAULTENV`` in your ``.zshrc`` file.
 You can prevent verbose messages from being displayed when moving
 between directories. You can do this by setting ``AUTOSWITCH_SILENT`` to
 a non-empty value.
+
+**Choosing where virtualenvs are stored**
+
+By default, virtualenvs created are placed in ``$HOME/.virtualenvs`` - which is
+the same location that the ``virtualenvwrapper`` package uses.
+
+If you wish to change this to another location, simply set the value of the
+environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
 
 Security Warnings
 -----------------

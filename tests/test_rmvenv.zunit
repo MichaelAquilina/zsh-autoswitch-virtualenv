@@ -30,7 +30,7 @@
     run rmvenv
 
     assert $state equals 0
-    assert "$output" same_as "Removing 12345..."
+    assert "$output" same_as "Removing \e[35m12345\e[0m..."
     test ! -f .venv
     test ! -d "$HOME/.virtualenvs/12345"
 }
@@ -42,7 +42,7 @@
     run rmvenv
 
     assert $state equals 0
-    assert "$output" same_as "Removing $test_venv..."
+    assert "$output" same_as "Removing \e[35m$test_venv\e[0m..."
     test ! -f .venv
     test ! -d "$HOME/.virtualenvs/$test_venv"
 }

@@ -1,15 +1,10 @@
 export AUTOSWITCH_VERSION='1.1.1'
 
-# TODO: Possibly allow the user to modify this if they wish
-VIRTUAL_ENV_DIR="$HOME/.virtualenvs"
-mkdir -p "$VIRTUAL_ENV_DIR"
-
 RED="\e[31m"
 GREEN="\e[32m"
 PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
-
 
 
 if ! type "virtualenv" > /dev/null; then
@@ -21,6 +16,13 @@ if ! type "virtualenv" > /dev/null; then
     printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
     printf "\n"
 fi
+
+
+function _virtual_env_dir() {
+    local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+    mkdir -p "$VIRTUAL_ENV_DIR"
+    printf "%s" "$VIRTUAL_ENV_DIR"
+}
 
 
 function _python_version() {
@@ -42,7 +44,7 @@ function _maybeworkon() {
 
   if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        py_version="$(_python_version "$VIRTUAL_ENV_DIR/$venv_name/bin/python")"
+        py_version="$(_python_version "$(_virtual_env_dir)/$venv_name/bin/python")"
 
         message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
         message="${message//\%venv_type/$venv_type}"
@@ -52,7 +54,7 @@ function _maybeworkon() {
      fi
 
      # Much faster to source the activate file directly rather than use the `workon` command
-     source "$VIRTUAL_ENV_DIR/$venv_name/bin/activate"
+     source "$(_virtual_env_dir)/$venv_name/bin/activate"
   fi
 }
 
@@ -60,7 +62,7 @@ function _maybeworkon() {
 # Gives the path to the nearest parent .venv file or nothing if it gets to root
 function _check_venv_path()
 {
-    local check_dir=$1
+    local check_dir="$1"
 
     if [[ -f "${check_dir}/.venv" ]]; then
         printf "${check_dir}/.venv"
@@ -101,11 +103,11 @@ function check_venv()
           if [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file but it is not owned by the current user\n"
-            printf "Change ownership of $venv_path to '$USER' to fix this\n"
+            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
           elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: \"chmod 600 $venv_path\"\n"
+            printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
           else
             SWITCH_TO="$(<"$venv_path")"
           fi
@@ -150,8 +152,8 @@ function rmvenv()
         fi
     fi
 
-    printf "Removing %s...\n" "$venv_name"
-    rm -rf "$VIRTUAL_ENV_DIR/$venv_name"
+    printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
+    rm -rf "$(_virtual_env_dir)/$venv_name"
     rm ".venv"
   else
     printf "No .venv file in the current directory!\n"
@@ -168,8 +170,12 @@ function mkvenv()
     venv_name="$(basename $PWD)"
 
     printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
-    # TODO: Allow verbose option to remove suppressing details
-    virtualenv $@ "$VIRTUAL_ENV_DIR/$venv_name" > /dev/null
+
+    if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
+        virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+    else
+        virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+    fi
 
     printf "$venv_name\n" > ".venv"
     chmod 600 .venv
@@ -185,7 +191,7 @@ function install_requirements() {
     setopt nullglob
     for requirements in *requirements.txt
     do
-      printf "Found a %s file. Install? [y/N]: " "$requirements"
+      printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
       read ans
 
       if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
@@ -195,10 +201,19 @@ function install_requirements() {
 }
 
 
-if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+function enable_autoswitch_virtualenv() {
     autoload -Uz add-zsh-hook
-    add-zsh-hook -D chpwd check_venv
+    disable_autoswitch_virtualenv
     add-zsh-hook chpwd check_venv
+}
 
+
+function disable_autoswitch_virtualenv() {
+    add-zsh-hook -D chpwd check_venv
+}
+
+
+if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+    enable_autoswitch_virtualenv
     check_venv
 fi
