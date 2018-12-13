@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.2.1
+-----
+* Improvements to coloring of output
+* Add enable/disable command
+* allow --verbose option with mkvenv
+* allow user to specify location of virtual env directories
+
+
 1.1.1
 -----
 * Hotfix: Fix conflict with you-should-use plugin default message
