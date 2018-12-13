@@ -1,9 +1,5 @@
 export AUTOSWITCH_VERSION='1.1.1'
 
-# TODO: Possibly allow the user to modify this if they wish
-VIRTUAL_ENV_DIR="$HOME/.virtualenvs"
-mkdir -p "$VIRTUAL_ENV_DIR"
-
 RED="\e[31m"
 GREEN="\e[32m"
 PURPLE="\e[35m"
@@ -20,6 +16,13 @@ if ! type "virtualenv" > /dev/null; then
     printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
     printf "\n"
 fi
+
+
+function _virtual_env_dir() {
+    local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+    mkdir -p "$VIRTUAL_ENV_DIR"
+    printf "%s" "$VIRTUAL_ENV_DIR"
+}
 
 
 function _python_version() {
@@ -41,7 +44,7 @@ function _maybeworkon() {
 
   if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
      if [ -z "$AUTOSWITCH_SILENT" ]; then
-        py_version="$(_python_version "$VIRTUAL_ENV_DIR/$venv_name/bin/python")"
+        py_version="$(_python_version "$(_virtual_env_dir)/$venv_name/bin/python")"
 
         message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
         message="${message//\%venv_type/$venv_type}"
@@ -51,7 +54,7 @@ function _maybeworkon() {
      fi
 
      # Much faster to source the activate file directly rather than use the `workon` command
-     source "$VIRTUAL_ENV_DIR/$venv_name/bin/activate"
+     source "$(_virtual_env_dir)/$venv_name/bin/activate"
   fi
 }
 
@@ -150,7 +153,7 @@ function rmvenv()
     fi
 
     printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-    rm -rf "$VIRTUAL_ENV_DIR/$venv_name"
+    rm -rf "$(_virtual_env_dir)/$venv_name"
     rm ".venv"
   else
     printf "No .venv file in the current directory!\n"
@@ -168,7 +171,7 @@ function mkvenv()
 
     printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
     # TODO: Allow verbose option to remove suppressing details
-    virtualenv $@ "$VIRTUAL_ENV_DIR/$venv_name" > /dev/null
+    virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
 
     printf "$venv_name\n" > ".venv"
     chmod 600 .venv

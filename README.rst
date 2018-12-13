@@ -217,6 +217,14 @@ You can prevent verbose messages from being displayed when moving
 between directories. You can do this by setting ``AUTOSWITCH_SILENT`` to
 a non-empty value.
 
+**Choosing where virtualenvs are stored**
+
+By default, virtualenvs created are placed in ``$HOME/.virtualenvs`` - which is
+the same location that the ``virtualenvwrapper`` package uses.
+
+If you wish to change this to another location, simply set the value of the
+environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
+
 Security Warnings
 -----------------
 
