@@ -163,6 +163,16 @@ This will delete the virtual environment in ``.venv`` and remove the
     $ rmvenv
     No .venv file in the current directory!
 
+disable_autoswitch_virtualenv
+'''''''''''''''''''''''''''''
+
+Temporarily disables autoswitching of virtualenvs when moving between
+directories.
+
+enable_autoswitch_virtualenv
+''''''''''''''''''''''''''''
+
+Re-enable autoswitching of virtualenvs (if it was previously disabled).
 
 Customising Messages
 --------------------

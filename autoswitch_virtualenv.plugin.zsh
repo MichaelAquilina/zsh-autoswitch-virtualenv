@@ -197,10 +197,19 @@ function install_requirements() {
 }
 
 
-if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+function enable_autoswitch_virtualenv() {
     autoload -Uz add-zsh-hook
-    add-zsh-hook -D chpwd check_venv
+    disable_autoswitch_virtualenv
     add-zsh-hook chpwd check_venv
+}
 
+
+function disable_autoswitch_virtualenv() {
+    add-zsh-hook -D chpwd check_venv
+}
+
+
+if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+    enable_autoswitch_virtualenv
     check_venv
 fi
