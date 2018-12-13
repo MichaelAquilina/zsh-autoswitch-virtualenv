@@ -87,10 +87,7 @@ helper command.
 
     $ cd my-python-project
     $ mkvenv
-    Using real prefix '/usr'
-    New python executable in /home/michael/.virtualenvs/my-python-project/bin/python2
-    Also creating executable in /home/michael/.virtualenvs/my-python-project/bin/python
-    Installing setuptools, pip, wheel...done.
+    Creating my-python-project virtualenv
     Found a requirements.txt. Install? [y/N]:
     Collecting requests (from -r requirements.txt (line 1))
       Using cached requests-2.11.1-py2.py3-none-any.whl
