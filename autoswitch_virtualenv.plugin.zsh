@@ -103,11 +103,11 @@ function check_venv()
           if [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file but it is not owned by the current user\n"
-            printf "Change ownership of $venv_path to '$USER' to fix this\n"
+            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
           elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: \"chmod 600 $venv_path\"\n"
+            printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
           else
             SWITCH_TO="$(<"$venv_path")"
           fi
@@ -191,7 +191,7 @@ function install_requirements() {
     setopt nullglob
     for requirements in *requirements.txt
     do
-      printf "Found a %s file. Install? [y/N]: " "$requirements"
+      printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
       read ans
 
       if [[ "$ans" = "y" || "$ans" = "Y" ]]; then

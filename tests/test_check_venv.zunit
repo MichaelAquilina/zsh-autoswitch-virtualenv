@@ -39,7 +39,7 @@
     assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
     assert "$lines[2]" is_empty
     assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (620)."
-    assert "$lines[4]" same_as "Run the following command to fix this: \"chmod 600 $TARGET/.venv\""
+    assert "$lines[4]" same_as "Run the following command to fix this: \e[35m\"chmod 600 $TARGET/.venv\"\e[0m"
 }
 
 @test 'check_venv - Security warning for weak writeable by everyone permissions' {
@@ -55,7 +55,7 @@
     assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
     assert "$lines[2]" is_empty
     assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (622)."
-    assert "$lines[4]" same_as "Run the following command to fix this: \"chmod 600 $TARGET/.venv\""
+    assert "$lines[4]" same_as "Run the following command to fix this: \e[35m\"chmod 600 $TARGET/.venv\"\e[0m"
 }
 
 @test 'check_venv - No security warning for readable by everyone permission' {
