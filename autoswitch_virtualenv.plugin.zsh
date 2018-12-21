@@ -105,6 +105,9 @@ function check_venv()
         else
             SWITCH_TO="$(<"$venv_path")"
         fi
+    elif [[ -f "$PWD/requirements.txt" ]]; then
+        printf "Python project detected. "
+        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
 
     if [[ -n "$SWITCH_TO" ]]; then
