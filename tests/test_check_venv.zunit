@@ -64,7 +64,6 @@
     echo "foobar" > "$TARGET/.venv"
     chmod 600 "$TARGET/.venv"
     chmod a+r "$TARGET/.venv"
-    MYOLDPWD="$(dirname $TARGET)"
     AUTOSWITCH_DEFAULTENV="foodefault"
 
     run check_venv
@@ -79,7 +78,6 @@
     echo "foobar" > "$TARGET/.venv"
     chmod 600 "$TARGET/.venv"
     chmod g+r "$TARGET/.venv"
-    MYOLDPWD="$(dirname $TARGET)"
     AUTOSWITCH_DEFAULTENV="foodefault"
 
     run check_venv
@@ -93,7 +91,6 @@
 
     echo "foobar" > "$TARGET/.venv"
     chmod 600 "$TARGET/.venv"
-    MYOLDPWD="$(dirname $TARGET)"
     AUTOSWITCH_DEFAULTENV="foodefault"
 
     run check_venv
@@ -103,23 +100,8 @@
 }
 
 
-@test 'check_venv - does not change if MYOLDPWD=PWD' {
-    PWD="$TARGET"
-    # Must be prefixed. See code for details
-    MYOLDPWD="AS:$TARGET"
-
-    echo "foobar" > "$TARGET/.venv"
-
-    run check_venv
-
-    assert $status equals 0
-    assert "$output" is_empty
-}
-
-
 @test 'check_venv - go to default if .venv unavailable' {
     PWD="$TARGET"
-    MYOLDPWD="$(dirname $TARGET)"
     AUTOSWITCH_DEFAULTENV="foodefault"
 
     run check_venv
@@ -131,7 +113,6 @@
 
 @test 'check_venv - activate if .venv unavailable but pipenv available' {
     PWD="$TARGET"
-    MYOLDPWD="$(dirname $TARGET)"
     VIRTUAL_ENV="foo"
     touch "Pipfile"
 
@@ -148,7 +129,6 @@
 
 @test 'check_venv - deactivate if neither .venv nor pipenv available' {
     PWD="$TARGET"
-    MYOLDPWD="$(dirname $TARGET)"
     VIRTUAL_ENV="foo"
     unset AUTOSWITCH_DEFAULTENV
     function deactivate {
@@ -164,7 +144,6 @@
 
 @test 'check_venv - works as intended with .venv available' {
     PWD="$TARGET"
-    MYOLDPWD="(dirname $TARGET)"
 
     echo "foobar" > "$TARGET/.venv"
     chmod 600 "$TARGET/.venv"
