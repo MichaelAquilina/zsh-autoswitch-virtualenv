@@ -79,6 +79,11 @@ function _check_venv_path()
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
+    if [[ -f "requirements.txt" ]] && [[ ! -f ".venv" ]]; then
+        printf "Python project detected. "
+        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+    fi
+
     SWITCH_TO=""
 
     # Get the .venv file, scanning parent directories
