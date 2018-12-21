@@ -26,36 +26,36 @@ function _virtual_env_dir() {
 
 
 function _python_version() {
-   PYTHON_BIN="$1"
-   if [[ -f "$PYTHON_BIN" ]] then
-       # For some reason python --version writes to stderr
-       printf "%s" "$($PYTHON_BIN --version 2>&1)"
-   else
-       printf "unknown"
-   fi
+    PYTHON_BIN="$1"
+    if [[ -f "$PYTHON_BIN" ]] then
+        # For some reason python --version writes to stderr
+        printf "%s" "$($PYTHON_BIN --version 2>&1)"
+    else
+        printf "unknown"
+    fi
 }
 
 
 function _maybeworkon() {
-  venv_name="$1"
-  venv_type="$2"
+    venv_name="$1"
+    venv_type="$2"
 
-  DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
+    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
 
-  if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
-     if [ -z "$AUTOSWITCH_SILENT" ]; then
-        py_version="$(_python_version "$(_virtual_env_dir)/$venv_name/bin/python")"
+    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
+        if [ -z "$AUTOSWITCH_SILENT" ]; then
+            py_version="$(_python_version "$(_virtual_env_dir)/$venv_name/bin/python")"
 
-        message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
-        message="${message//\%venv_type/$venv_type}"
-        message="${message//\%venv_name/$venv_name}"
-        message="${message//\%py_version/$py_version}"
-        printf "${message}\n"
-     fi
+            message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
+            message="${message//\%venv_type/$venv_type}"
+            message="${message//\%venv_name/$venv_name}"
+            message="${message//\%py_version/$py_version}"
+            printf "${message}\n"
+        fi
 
-     # Much faster to source the activate file directly rather than use the `workon` command
-     source "$(_virtual_env_dir)/$venv_name/bin/activate"
-  fi
+        # Much faster to source the activate file directly rather than use the `workon` command
+        source "$(_virtual_env_dir)/$venv_name/bin/activate"
+    fi
 }
 
 
@@ -91,37 +91,37 @@ function check_venv()
         venv_path=$(_check_venv_path "$PWD")
         if [[ -n "$venv_path" ]]; then
 
-          stat --version &> /dev/null
-          if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
-            file_owner="$(stat -c %u "$venv_path")"
-            file_permissions="$(stat -c %a "$venv_path")"
-          else                      # macOS, or FreeBSD stat
-            file_owner="$(stat -f %u "$venv_path")"
-            file_permissions="$(stat -f %OLp "$venv_path")"
-          fi
+            stat --version &> /dev/null
+            if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
+                file_owner="$(stat -c %u "$venv_path")"
+                file_permissions="$(stat -c %a "$venv_path")"
+            else                      # macOS, or FreeBSD stat
+                file_owner="$(stat -f %u "$venv_path")"
+                file_permissions="$(stat -f %OLp "$venv_path")"
+            fi
 
-          if [[ "$file_owner" != "$(id -u)" ]]; then
-            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a .venv file but it is not owned by the current user\n"
-            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-          elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
-            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
-          else
-            SWITCH_TO="$(<"$venv_path")"
-          fi
+            if [[ "$file_owner" != "$(id -u)" ]]; then
+                printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+                printf "Reason: Found a .venv file but it is not owned by the current user\n"
+                printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
+            elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
+                printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+                printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
+                printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
+            else
+                SWITCH_TO="$(<"$venv_path")"
+            fi
         fi
 
         if [[ -n "$SWITCH_TO" ]]; then
-          _maybeworkon "$SWITCH_TO" "virtualenv"
+            _maybeworkon "$SWITCH_TO" "virtualenv"
 
-        # check if Pipfile exists rather than invoking pipenv as it is slow
+            # check if Pipfile exists rather than invoking pipenv as it is slow
         elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
-          venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
-          _maybeworkon "$(basename "$venv_path")" "pipenv"
+            venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
+            _maybeworkon "$(basename "$venv_path")" "pipenv"
         else
-          _default_venv
+            _default_venv
         fi
     fi
 }
@@ -129,61 +129,61 @@ function check_venv()
 # Switch to the default virtual environment
 function _default_venv()
 {
-  if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-     _maybeworkon "$AUTOSWITCH_DEFAULTENV" "virtualenv"
-  elif [[ -n "$VIRTUAL_ENV" ]]; then
-     deactivate
-  fi
+    if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
+        _maybeworkon "$AUTOSWITCH_DEFAULTENV" "virtualenv"
+    elif [[ -n "$VIRTUAL_ENV" ]]; then
+        deactivate
+    fi
 }
 
 
 # remove virtual environment for current directory
 function rmvenv()
 {
-  if [[ -f ".venv" ]]; then
+    if [[ -f ".venv" ]]; then
 
-    venv_name="$(<.venv)"
+        venv_name="$(<.venv)"
 
-    # detect if we need to switch virtualenv first
-    if [[ -n "$VIRTUAL_ENV" ]]; then
-        current_venv="$(basename $VIRTUAL_ENV)"
-        if [[ "$current_venv" = "$venv_name" ]]; then
-            _default_venv
+        # detect if we need to switch virtualenv first
+        if [[ -n "$VIRTUAL_ENV" ]]; then
+            current_venv="$(basename $VIRTUAL_ENV)"
+            if [[ "$current_venv" = "$venv_name" ]]; then
+                _default_venv
+            fi
         fi
-    fi
 
-    printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-    rm -rf "$(_virtual_env_dir)/$venv_name"
-    rm ".venv"
-  else
-    printf "No .venv file in the current directory!\n"
-  fi
+        printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
+        rm -rf "$(_virtual_env_dir)/$venv_name"
+        rm ".venv"
+    else
+        printf "No .venv file in the current directory!\n"
+    fi
 }
 
 
 # helper function to create a virtual environment for the current directory
 function mkvenv()
 {
-  if [[ -f ".venv" ]]; then
-    printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
-  else
-    venv_name="$(basename $PWD)"
-
-    printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
-
-    if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
-        virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+    if [[ -f ".venv" ]]; then
+        printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
     else
-        virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+        venv_name="$(basename $PWD)"
+
+        printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
+
+        if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
+            virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+        else
+            virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+        fi
+
+        printf "$venv_name\n" > ".venv"
+        chmod 600 .venv
+
+        _maybeworkon "$venv_name"
+
+        install_requirements
     fi
-
-    printf "$venv_name\n" > ".venv"
-    chmod 600 .venv
-
-    _maybeworkon "$venv_name"
-
-    install_requirements
-  fi
 }
 
 
@@ -191,12 +191,12 @@ function install_requirements() {
     setopt nullglob
     for requirements in *requirements.txt
     do
-      printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
-      read ans
+        printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
+        read ans
 
-      if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
-        pip install -r "$requirements"
-      fi
+        if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
+            pip install -r "$requirements"
+        fi
     done
 }
 
