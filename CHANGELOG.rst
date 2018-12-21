@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.3.1
+-----
+* Remove redundancy in directory checking logic
+* Display help message when python project is detected
+
 1.2.1
 -----
 * Improvements to coloring of output

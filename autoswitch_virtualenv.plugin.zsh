@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.2.1'
+export AUTOSWITCH_VERSION='1.3.1'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -79,50 +79,46 @@ function _check_venv_path()
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
-    if [ "AS:$PWD" != "$MYOLDPWD" ]; then
-        # Prefix PWD with "AS:" to signify this belongs to this plugin
-        # this prevents the AUTONAMEDIRS in prezto from doing strange things
-        # See https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv/issues/19
-        MYOLDPWD="AS:$PWD"
+    SWITCH_TO=""
 
-        SWITCH_TO=""
+    # Get the .venv file, scanning parent directories
+    venv_path=$(_check_venv_path "$PWD")
+    if [[ -n "$venv_path" ]]; then
 
-        # Get the .venv file, scanning parent directories
-        venv_path=$(_check_venv_path "$PWD")
-        if [[ -n "$venv_path" ]]; then
-
-            stat --version &> /dev/null
-            if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
-                file_owner="$(stat -c %u "$venv_path")"
-                file_permissions="$(stat -c %a "$venv_path")"
-            else                      # macOS, or FreeBSD stat
-                file_owner="$(stat -f %u "$venv_path")"
-                file_permissions="$(stat -f %OLp "$venv_path")"
-            fi
-
-            if [[ "$file_owner" != "$(id -u)" ]]; then
-                printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-                printf "Reason: Found a .venv file but it is not owned by the current user\n"
-                printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-            elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
-                printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-                printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
-                printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
-            else
-                SWITCH_TO="$(<"$venv_path")"
-            fi
+        stat --version &> /dev/null
+        if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
+            file_owner="$(stat -c %u "$venv_path")"
+            file_permissions="$(stat -c %a "$venv_path")"
+        else                      # macOS, or FreeBSD stat
+            file_owner="$(stat -f %u "$venv_path")"
+            file_permissions="$(stat -f %OLp "$venv_path")"
         fi
 
-        if [[ -n "$SWITCH_TO" ]]; then
-            _maybeworkon "$SWITCH_TO" "virtualenv"
-
-            # check if Pipfile exists rather than invoking pipenv as it is slow
-        elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
-            venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
-            _maybeworkon "$(basename "$venv_path")" "pipenv"
+        if [[ "$file_owner" != "$(id -u)" ]]; then
+            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+            printf "Reason: Found a .venv file but it is not owned by the current user\n"
+            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
+        elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
+            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+            printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
+            printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
         else
-            _default_venv
+            SWITCH_TO="$(<"$venv_path")"
         fi
+    elif [[ -f "$PWD/requirements.txt" ]]; then
+        printf "Python project detected. "
+        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+    fi
+
+    if [[ -n "$SWITCH_TO" ]]; then
+        _maybeworkon "$SWITCH_TO" "virtualenv"
+
+        # check if Pipfile exists rather than invoking pipenv as it is slow
+    elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
+        venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
+        _maybeworkon "$(basename "$venv_path")" "pipenv"
+    else
+        _default_venv
     fi
 }
 
