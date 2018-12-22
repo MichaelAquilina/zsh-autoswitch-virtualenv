@@ -43,8 +43,17 @@ function _maybeworkon() {
     DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
 
     if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
+
+        venv_dir="$(_virtual_env_dir)/$venv_name"
+
+        if [[ ! -d "$venv_dir" ]]; then
+            printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
+            printf "If the issue persists run ${PURPLE}rmvenv && mkvenv${NORMAL} in this directory\n"
+            return
+        fi
+
         if [ -z "$AUTOSWITCH_SILENT" ]; then
-            py_version="$(_python_version "$(_virtual_env_dir)/$venv_name/bin/python")"
+            py_version="$(_python_version "$venv_dir/bin/python")"
 
             message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
             message="${message//\%venv_type/$venv_type}"
