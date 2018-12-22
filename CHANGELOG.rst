@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.4.1
+-----
+* Show helpful error message when target virtualenv is not found
+
+
 1.3.1
 -----
 * Remove redundancy in directory checking logic
