@@ -20,6 +20,16 @@
     rm -rf "$TARGET"
 }
 
+@test '_maybeworkon - error message if virtualenv can not be found' {
+    VIRTUAL_ENV=""
+
+    run _maybeworkon idontexist virtualenv
+
+    assert $state equals 0
+    assert "${lines[1]}" same_as "Unable to find \e[35midontexist\e[0m virtualenv"
+    assert "${lines[2]}" same_as "If the issue persists run \e[35mrmvenv && mkvenv\e[0m in this directory"
+}
+
 
 @test '_maybeworkon - switches virtualenv if nothing is activated' {
     VIRTUAL_ENV=""
