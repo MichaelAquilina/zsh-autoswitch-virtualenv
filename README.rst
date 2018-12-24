@@ -85,16 +85,6 @@ Then add this line to your ``.zshrc``
 
     plugins=(autoswitch-virtualenv $plugins)
 
-`Arch Linux`_
-
-Install the ``zsh-you-should-use`` (AUR_) package::
-
-    yaourt -S zsh-you-should-use
-
-Then add this line to your ``.zshrc``::
-
-    source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
-
 
 Pipenv Integration
 ------------------
@@ -301,6 +291,8 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. _Antigen: https://github.com/zsh-users/antigen
 
 .. _ZGen: https://github.com/tarjoilija/zgen
+
+.. _oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh
 
 .. |CircleCI| image:: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv.svg?style=svg
    :target: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv
