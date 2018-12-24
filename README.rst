@@ -69,6 +69,33 @@ Zgen_
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
 
+oh-my-zsh_
+
+Copy this repository to ``$ZSH_CUSTOM/custom/plugins``, where ``$ZSH_CUSTOM``
+is the directory with custom plugins of oh-my-zsh `(read more) <https://github.com/robbyrussell/oh-my-zsh/wiki/Customization/>`_:
+
+::
+
+    git clone "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git" "$ZSH_CUSTOM/plugins/autoswitch-virtualenv"
+
+
+Then add this line to your ``.zshrc``
+
+::
+
+    plugins=(autoswitch-virtualenv $plugins)
+
+`Arch Linux`_
+
+Install the ``zsh-you-should-use`` (AUR_) package::
+
+    yaourt -S zsh-you-should-use
+
+Then add this line to your ``.zshrc``::
+
+    source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
+
+
 Pipenv Integration
 ------------------
 
