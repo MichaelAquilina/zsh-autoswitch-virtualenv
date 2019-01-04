@@ -1,0 +1,85 @@
+#!/usr/bin/env zunit
+
+@setup {
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+
+    function read {
+        eval $1=\"y\"
+        echo y
+    }
+
+    TARGET="$(mktemp -d)"
+    cd "$TARGET"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+@test 'install_requirements - does nothing if no files found' {
+    run install_requirements
+
+    assert $status equals 0
+    assert "$output" is_empty
+}
+
+@test 'install_requirements - does not install with no input' {
+    echo "django" > requirements.txt
+    echo "pytest" > dev-requirements.txt
+
+    # override default mock to return nothing
+    function read {
+        eval $1=\"\"
+        echo ""
+    }
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+        cat "$3"
+    }
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35mdev-requirements.txt\e[0m file. Install? [y/N]: "
+    assert "$lines[2]" same_as "Found a \e[35mrequirements.txt\e[0m file. Install? [y/N]: "
+}
+
+@test 'install_requirements - installs *requirements.txt' {
+    echo "django" > requirements.txt
+    echo "pytest" > dev-requirements.txt
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+        cat "$3"
+    }
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35mdev-requirements.txt\e[0m file. Install? [y/N]: y"
+    assert "$lines[2]" same_as "pip install -r dev-requirements.txt"
+    assert "$lines[3]" same_as "pytest"
+    assert "$lines[4]" same_as "Found a \e[35mrequirements.txt\e[0m file. Install? [y/N]: y"
+    assert "$lines[5]" same_as "pip install -r requirements.txt"
+    assert "$lines[6]" same_as "django"
+}
+
+@test 'install_requirements - installs setup.py' {
+    touch "setup.py"
+    echo "django" > requirements.txt
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+    }
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35msetup.py\e[0m file. Install dependencies? [y/N]: y"
+    assert "$lines[2]" same_as "pip install ."
+}
