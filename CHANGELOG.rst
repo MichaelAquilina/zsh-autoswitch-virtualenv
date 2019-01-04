@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.0
+-----
+* Detect python projects with `setup.py`
+
+
 1.4.1
 -----
 * Show helpful error message when target virtualenv is not found

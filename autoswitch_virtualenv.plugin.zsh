@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.4.1'
+export AUTOSWITCH_VERSION='1.5.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -114,7 +114,7 @@ function check_venv()
         else
             SWITCH_TO="$(<"$venv_path")"
         fi
-    elif [[ -f "$PWD/requirements.txt" ]]; then
+    elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
         printf "Python project detected. "
         printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
@@ -194,6 +194,17 @@ function mkvenv()
 
 function install_requirements() {
     setopt nullglob
+    if [[ -f "$PWD/setup.py" ]]; then
+        printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
+        read ans
+
+        if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
+            pip install .
+            # We probably don't want to ALSO install requirements.txt
+            return
+        fi
+    fi
+
     for requirements in *requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"

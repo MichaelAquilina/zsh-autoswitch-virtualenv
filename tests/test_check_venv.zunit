@@ -25,7 +25,7 @@
     rm -rf Pipfile
 }
 
-@test 'check_venv - Displays message on project detection' {
+@test 'check_venv - Displays message on project detection (requirements.txt)' {
     PWD="$TARGET"
     touch "$TARGET/requirements.txt"
 
@@ -35,6 +35,26 @@
     assert "$output" same_as "Python project detected. Run \e[35mmkvenv\e[0m to setup autoswitching"
 }
 
+@test 'check_venv - Displays message on project detection (setup.py)' {
+    PWD="$TARGET"
+    touch "$TARGET/setup.py"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Python project detected. Run \e[35mmkvenv\e[0m to setup autoswitching"
+}
+
+@test 'check_venv - Displays message on project detection (setup.py + requirements.txt)' {
+    PWD="$TARGET"
+    touch "$TARGET/setup.py"
+    touch "$TARGET/requirements.txt"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Python project detected. Run \e[35mmkvenv\e[0m to setup autoswitching"
+}
 
 @test 'check_venv - Security warning for weak writeable by group permissions' {
     PWD="$TARGET"
