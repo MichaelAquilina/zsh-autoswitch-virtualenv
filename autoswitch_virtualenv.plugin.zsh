@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.4.1'
+export AUTOSWITCH_VERSION='1.5.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
