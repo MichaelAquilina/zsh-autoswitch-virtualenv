@@ -197,7 +197,6 @@ function mkvenv()
 
 
 function install_requirements() {
-    setopt nullglob
     if [[ -f "$PWD/setup.py" ]]; then
         printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
         read ans
@@ -209,6 +208,7 @@ function install_requirements() {
         fi
     fi
 
+    setopt nullglob
     for requirements in *requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
