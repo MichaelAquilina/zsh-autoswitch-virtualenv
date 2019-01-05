@@ -37,7 +37,7 @@
     run _maybeworkon foobar virtualenv
 
     assert $state equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - custom message' {
@@ -50,13 +50,23 @@
     assert "$output" same_as "Hello cheese - this is foobar ($PYTHON_VERSION)"
 }
 
+@test '_maybeworkon - no emoji on non utf-8 LANG' {
+    VIRTUAL_ENV=""
+    LANG="ASCII"
+
+    run _maybeworkon foobar virtualenv
+
+    assert $state equals 0
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+}
+
 @test '_maybeworkon - switches virtualenv if current virtualenv is different' {
     VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
 
     run _maybeworkon foobar virtualfoo
 
     assert $state equals 0
-    assert "$output" contains "Switching virtualfoo: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" contains "Switching virtualfoo: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different (silent)' {

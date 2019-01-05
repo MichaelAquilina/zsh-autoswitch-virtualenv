@@ -99,7 +99,7 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test 'check_venv - No security warning for readable by group permission' {
@@ -113,7 +113,7 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test 'check_venv - No security warning for readable only by owner permission' {
@@ -126,7 +126,7 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 
@@ -137,7 +137,7 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoodefault\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoodefault\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 
@@ -153,7 +153,7 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching pipenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching pipenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 
@@ -181,5 +181,5 @@
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }

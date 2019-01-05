@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.5.0'
+export AUTOSWITCH_VERSION='1.6.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -40,7 +40,11 @@ function _maybeworkon() {
     venv_name="$1"
     venv_type="$2"
 
-    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
+    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    if [[ "$LANG" != *".UTF-8" ]]; then
+        # Remove multibyte characters if the terminal does not support utf-8
+        DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
+    fi
 
     if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
 
@@ -193,7 +197,6 @@ function mkvenv()
 
 
 function install_requirements() {
-    setopt nullglob
     if [[ -f "$PWD/setup.py" ]]; then
         printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
         read ans
@@ -205,6 +208,7 @@ function install_requirements() {
         fi
     fi
 
+    setopt nullglob
     for requirements in *requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
