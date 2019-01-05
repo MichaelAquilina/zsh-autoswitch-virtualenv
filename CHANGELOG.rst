@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.0
+-----
+* Display snake emoji by default when switching virtualenvs
+* Minor tweaks and changes
+
 1.5.0
 -----
 * Detect python projects with `setup.py`
