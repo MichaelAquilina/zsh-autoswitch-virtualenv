@@ -40,7 +40,11 @@ function _maybeworkon() {
     venv_name="$1"
     venv_type="$2"
 
-    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[%py_version]${NORMAL}"
+    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    if [[ "$LANG" != *".UTF-8" ]]; then
+        # Remove multibyte characters if the terminal does not support utf-8
+        DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
+    fi
 
     if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
 
