@@ -256,8 +256,7 @@ zsh-autoswitch-virtualenv will warn you and refuse to activate a virtual
 envionrment automatically in the following situations:
 
 -  You are not the owner of the ``.venv`` file found in a directory.
--  The ``.venv`` file has weak permissions. I.e. it is readable or
-   writable by other users on the system.
+-  The ``.venv`` file has weak permissions. I.e. it is writable by other users on the system.
 
 In both cases, the warnings should explain how to fix the problem.
 
