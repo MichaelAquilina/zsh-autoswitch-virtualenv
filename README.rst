@@ -225,15 +225,16 @@ http://wiki.bash-hackers.org/scripting/terminalcodes
 Options
 -------
 
+The following options can be configured by setting the appropriate variables within your ``~/.zshrc`` file.
+
 **Setting a default virtual environment**
 
-If you want to set a default virtual environment then you can also
-export ``AUTOSWITCH_DEFAULTENV`` in your ``.zshrc`` file.
+You can set a default virtual environment to switch to when not in a python project by setting
+the value of ``AUTOSWITCH_DEFAULTENV`` to the name of a virtualenv. For example:
 
 ::
 
     export AUTOSWITCH_DEFAULTENV="mydefaultenv"
-    antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 
 **Setting a default python binary**
 
