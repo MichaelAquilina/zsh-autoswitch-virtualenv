@@ -9,7 +9,7 @@
         return 0
     }
 
-    run load ../autoswitch_virtualenv.plugin.zsh
+    run load ../autoswitch-virtualenv.plugin.zsh
 
     assert $status equals 0
     assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires virtualenv to be installed!"
