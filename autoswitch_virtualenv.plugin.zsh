@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.6.0'
+export AUTOSWITCH_VERSION='1.7.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -180,10 +180,17 @@ function mkvenv()
 
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
-        if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
-            virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+        # Copy parameters variable so that we can mutate it
+        params=("${@[@]}")
+
+        if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
+            params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
+        fi
+
+        if [[ ${params[(I)--verbose]} -eq 0 ]]; then
+            virtualenv $params "$(_virtual_env_dir)/$venv_name"
         else
-            virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+            virtualenv $params "$(_virtual_env_dir)/$venv_name" > /dev/null
         fi
 
         printf "$venv_name\n" > ".venv"
@@ -197,6 +204,15 @@ function mkvenv()
 
 
 function install_requirements() {
+    if [[ -f "$AUTOSWITCH_DEFAULT_REQUIREMENTS" ]]; then
+        printf "Install default requirements? (${PURPLE}$AUTOSWITCH_DEFAULT_REQUIREMENTS${NORMAL}) [y/N]: "
+        read ans
+
+        if [[ "$ans" = "y" || "$ans" == "Y" ]]; then
+            pip install -r "$AUTOSWITCH_DEFAULT_REQUIREMENTS"
+        fi
+    fi
+
     if [[ -f "$PWD/setup.py" ]]; then
         printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
         read ans

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.7.0
+-----
+* Add option to set default python binary to use when creating virtualenvs
+* Add option to set default requirements file to install when creating virtualenvs
+
 1.6.0
 -----
 * Display snake emoji by default when switching virtualenvs
