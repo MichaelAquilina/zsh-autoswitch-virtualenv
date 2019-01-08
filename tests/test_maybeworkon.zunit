@@ -12,7 +12,7 @@
     PYTHON_VERSION="$(python3 --version 2>&1)"
 
     export DISABLE_AUTOSWITCH_VENV="1"
-    load "../autoswitch_virtualenv.plugin.zsh"
+    load "../autoswitch-virtualenv.plugin.zsh"
     TARGET="$(mktemp -d)"
 }
 

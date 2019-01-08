@@ -12,7 +12,7 @@
 
 @test 'correct version exported' {
     unset AUTOSWITCH_DEFAULTENV
-    load ../autoswitch_virtualenv.plugin.zsh
+    load ../autoswitch-virtualenv.plugin.zsh
 
     git_version="$(git tag --list | sort | tail -1)"
     git tag --list
@@ -25,7 +25,7 @@
 @test 'plugin - does nothing on load if no default set' {
     unset AUTOSWITCH_DEFAULTENV
 
-    run load ../autoswitch_virtualenv.plugin.zsh
+    run load ../autoswitch-virtualenv.plugin.zsh
 
     assert $status equals 0
     assert "$output" is_empty
@@ -33,7 +33,7 @@
 
 @test 'plugin - runs default env on load' {
     AUTOSWITCH_DEFAULTENV="foobar"
-    run load ../autoswitch_virtualenv.plugin.zsh
+    run load ../autoswitch-virtualenv.plugin.zsh
 
     assert $status equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
@@ -41,7 +41,7 @@
 
 @test 'plugin - does nothing if switching to directory without .venv' {
     unset AUTOSWITCH_DEFAULTENV
-    load ../autoswitch_virtualenv.plugin.zsh
+    load ../autoswitch-virtualenv.plugin.zsh
 
     TEMP_DIR="$(mktemp -d)"
 
@@ -53,7 +53,7 @@
 
 @test 'plugin - switches env when .venv found' {
     unset AUTOSWITCH_DEFAULTENV
-    load ../autoswitch_virtualenv.plugin.zsh
+    load ../autoswitch-virtualenv.plugin.zsh
 
     TEMP_DIR="$(mktemp -d)"
     echo "foobar" > "$TEMP_DIR/.venv"
