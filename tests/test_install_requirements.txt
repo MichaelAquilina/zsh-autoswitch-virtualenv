@@ -47,6 +47,24 @@
     assert "$lines[2]" same_as "Found a \e[35mrequirements.txt\e[0m file. Install? [y/N]: "
 }
 
+@test 'install_requirements - installs default requirements' {
+    AUTOSWITCH_DEFAULT_REQUIREMENTS="$(mktemp -d)/default-requirements.txt"
+    echo "django" > "$AUTOSWITCH_DEFAULT_REQUIREMENTS"
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+        cat "$3"
+    }
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Install default requirements? (\e[35m$AUTOSWITCH_DEFAULT_REQUIREMENTS\e[0m) [y/N]: y"
+    assert "$lines[2]" same_as "pip install -r $AUTOSWITCH_DEFAULT_REQUIREMENTS"
+    assert "$lines[3]" same_as "django"
+}
+
 @test 'install_requirements - installs *requirements.txt' {
     echo "django" > requirements.txt
     echo "pytest" > dev-requirements.txt

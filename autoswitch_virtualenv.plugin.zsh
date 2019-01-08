@@ -204,6 +204,15 @@ function mkvenv()
 
 
 function install_requirements() {
+    if [[ -f "$AUTOSWITCH_DEFAULT_REQUIREMENTS" ]]; then
+        printf "Install default requirements? (${PURPLE}$AUTOSWITCH_DEFAULT_REQUIREMENTS${NORMAL}) [y/N]: "
+        read ans
+
+        if [[ "$ans" = "y" || "$ans" == "Y" ]]; then
+            pip install -r "$AUTOSWITCH_DEFAULT_REQUIREMENTS"
+        fi
+    fi
+
     if [[ -f "$PWD/setup.py" ]]; then
         printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
         read ans
