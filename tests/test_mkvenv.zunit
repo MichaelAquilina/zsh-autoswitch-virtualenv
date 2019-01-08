@@ -30,6 +30,53 @@
 
     assert $status equals 0
     assert "$TARGET/myproject/.venv" exists
+    # assert "$lines[1]" same_as "Creating \e[35mmyproject\e[0m virtualenv"
+
+    run cat "$TARGET/myproject/.venv"
+
+    assert $status equals 0
+    assert "$output" same_as "myproject"
+}
+
+@test 'mkvenv - uses default python if set and not specified' {
+    # mock virtualenv function to test its inputs
+    function virtualenv {
+        echo virtualenv $@
+    }
+
+    mkdir myproject
+    cd myproject
+    AUTOSWITCH_DEFAULT_PYTHON="python_foo"
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$TARGET/myproject/.venv" exists
+    # Assert mock output
+    assert "$lines[2]" same_as "virtualenv --python=python_foo $HOME/.virtualenvs/myproject"
+
+    run cat "$TARGET/myproject/.venv"
+
+    assert $status equals 0
+    assert "$output" same_as "myproject"
+}
+
+@test 'mkvenv - uses specified python if default set' {
+    # mock virtualenv function to test its inputs
+    function virtualenv {
+        echo virtualenv $@
+    }
+
+    mkdir myproject
+    cd myproject
+    AUTOSWITCH_DEFAULT_PYTHON="python_foo"
+
+    run mkvenv --python=python_bar
+
+    assert $status equals 0
+    assert "$TARGET/myproject/.venv" exists
+    # Assert mock output
+    assert "$lines[2]" same_as "virtualenv --python=python_bar $HOME/.virtualenvs/myproject"
 
     run cat "$TARGET/myproject/.venv"
 
