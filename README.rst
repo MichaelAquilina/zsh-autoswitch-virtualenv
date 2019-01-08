@@ -235,6 +235,18 @@ export ``AUTOSWITCH_DEFAULTENV`` in your ``.zshrc`` file.
     export AUTOSWITCH_DEFAULTENV="mydefaultenv"
     antigen bundle MichaelAquilina/zsh-autoswitch-virtualenv
 
+**Setting a default python binary**
+
+You may specify a default python binary to use when creating virtualenvs
+by setting the value of ``AUTOSWITCH_DEFAULT_PYTHON``. For example:
+
+::
+
+    export AUTOSWITCH_DEFAULT_PYTHON="/usr/bin/python3"
+
+You may still override this default as usual by passing the --python parameter to
+the mkvenv command.
+
 **Set verbosity when changing environments**
 
 You can prevent verbose messages from being displayed when moving

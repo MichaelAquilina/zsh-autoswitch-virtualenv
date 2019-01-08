@@ -180,10 +180,17 @@ function mkvenv()
 
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
-        if [[ ${@[(ie)--verbose]} -eq ${#@} ]]; then
-            virtualenv $@ "$(_virtual_env_dir)/$venv_name"
+        # Copy parameters variable so that we can mutate it
+        params=("${@[@]}")
+
+        if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
+            params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
+        fi
+
+        if [[ ${params[(I)--verbose]} -eq 0 ]]; then
+            virtualenv $params "$(_virtual_env_dir)/$venv_name"
         else
-            virtualenv $@ "$(_virtual_env_dir)/$venv_name" > /dev/null
+            virtualenv $params "$(_virtual_env_dir)/$venv_name" > /dev/null
         fi
 
         printf "$venv_name\n" > ".venv"
