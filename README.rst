@@ -76,14 +76,14 @@ is the directory with custom plugins of oh-my-zsh `(read more) <https://github.c
 
 ::
 
-    git clone "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git" "$ZSH_CUSTOM/plugins/autoswitch-virtualenv"
+    git clone "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git" "$ZSH_CUSTOM/plugins/autoswitch_virtualenv"
 
 
 Then add this line to your ``.zshrc``
 
 ::
 
-    plugins=(autoswitch-virtualenv $plugins)
+    plugins=(autoswitch_virtualenv $plugins)
 
 
 Pipenv Integration
