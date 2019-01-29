@@ -28,7 +28,9 @@ now activate every time you enter it.
 you to create run this command if e.g. setup.py or requirements.txt is
 found in the current directory.
 
-See the *Commands* section below for more detail.
+See the Commands_ section below for more detail.
+
+|ASCIICAST|
 
 More Details
 ------------
@@ -328,6 +330,9 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 
 .. |Release| image:: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv.svg
    :target: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv
+
+.. |ASCIICAST| image:: https://asciinema.org/a/ciDroIzqcC14VEeXMkqdRbvXf.svg
+   :target: https://asciinema.org/a/ciDroIzqcC14VEeXMkqdRbvXf
 
 .. |GPLv3| image:: https://img.shields.io/badge/License-GPL%20v3-blue.svg
    :target: https://www.gnu.org/licenses/gpl-3.0
