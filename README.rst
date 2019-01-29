@@ -3,7 +3,7 @@ Autoswitch Python Virtualenv
 
 |CircleCI| |Release| |GPLv3|
 
-*zsh-autoswitch-virtualenv* is a simple ZSH plugin that switches python
+*zsh-autoswitch-virtualenv* is a simple and quick ZSH plugin that switches python
 virtualenvs automatically as you move between directories.
 
 * `How it Works`_
@@ -23,6 +23,10 @@ How it Works
 Simply call the ``mkvenv`` command in the directory you wish to setup a
 virtual environment. A virtual environment specific to that folder will
 now activate every time you enter it.
+
+``zsh-autoswitch-virtualenv`` will try detect python projects and remind
+you to create run this command if e.g. setup.py or requirements.txt is
+found in the current directory.
 
 See the *Commands* section below for more detail.
 
