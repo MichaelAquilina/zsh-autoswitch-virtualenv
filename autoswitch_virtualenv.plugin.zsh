@@ -219,8 +219,6 @@ function install_requirements() {
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
             pip install .
-            # We probably don't want to ALSO install requirements.txt
-            return
         fi
     fi
 
