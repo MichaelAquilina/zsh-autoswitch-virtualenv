@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.0
+-----
+* Prompt to install requirements.txt even if setup dependencies installed
+
 1.7.0
 -----
 * Add option to set default python binary to use when creating virtualenvs
