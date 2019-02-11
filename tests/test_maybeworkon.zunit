@@ -2,10 +2,11 @@
 
 
 @setup {
+    TEST_VIRTUALENV="$HOME/.virtualenvs/foobar/"
 
-    if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
+    if [[ ! -d "$TEST_VIRTUALENV" ]]; then
         echo "Creating test virtualenv"
-        run python -m virtualenv "$HOME/.virtualenvs/foobar" --python=python3
+        run python -m virtualenv "$TEST_VIRTUALENV" --python=python3
     fi
 
     unset AUTOSWITCH_MESSAGE_FORMAT
@@ -23,7 +24,7 @@
 @test '_maybeworkon - error message if virtualenv can not be found' {
     VIRTUAL_ENV=""
 
-    run _maybeworkon idontexist virtualenv
+    run _maybeworkon $HOME/.virtualenvs/idontexist virtualenv
 
     assert $state equals 0
     assert "${lines[1]}" same_as "Unable to find \e[35midontexist\e[0m virtualenv"
@@ -34,7 +35,7 @@
 @test '_maybeworkon - switches virtualenv if nothing is activated' {
     VIRTUAL_ENV=""
 
-    run _maybeworkon foobar virtualenv
+    run _maybeworkon "$TEST_VIRTUALENV" virtualenv
 
     assert $state equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
@@ -44,7 +45,7 @@
     VIRTUAL_ENV=""
     AUTOSWITCH_MESSAGE_FORMAT="Hello %venv_type - this is %venv_name (%py_version)"
 
-    run _maybeworkon foobar cheese
+    run _maybeworkon "$TEST_VIRTUALENV" cheese
 
     assert $state equals 0
     assert "$output" same_as "Hello cheese - this is foobar ($PYTHON_VERSION)"
@@ -54,7 +55,7 @@
     VIRTUAL_ENV=""
     LANG="ASCII"
 
-    run _maybeworkon foobar virtualenv
+    run _maybeworkon "$TEST_VIRTUALENV" virtualenv
 
     assert $state equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
@@ -63,7 +64,7 @@
 @test '_maybeworkon - switches virtualenv if current virtualenv is different' {
     VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
 
-    run _maybeworkon foobar virtualfoo
+    run _maybeworkon "$TEST_VIRTUALENV" virtualfoo
 
     assert $state equals 0
     assert "$output" contains "Switching virtualfoo: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
@@ -73,7 +74,7 @@
     VIRTUAL_ENV="$HOME/.virtualenvs/default_venv"
     AUTOSWITCH_SILENT="1"
 
-    run _maybeworkon foobar virtualenv
+    run _maybeworkon "$TEST_VIRTUALENV" virtualenv
 
     assert $state equals 0
     assert "$output" is_empty
