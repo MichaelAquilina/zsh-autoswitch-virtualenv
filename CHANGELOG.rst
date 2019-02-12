@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.1
+-----
+* Fixes a regression in Pipenv integration
+
 1.8.0
 -----
 * Prompt to install requirements.txt even if setup dependencies installed

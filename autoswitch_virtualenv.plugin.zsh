@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.8.0'
+export AUTOSWITCH_VERSION='1.8.1'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -19,9 +19,10 @@ fi
 
 
 function _virtual_env_dir() {
+    local venv_name="$1"
     local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
     mkdir -p "$VIRTUAL_ENV_DIR"
-    printf "%s" "$VIRTUAL_ENV_DIR"
+    printf "%s/%s" "$VIRTUAL_ENV_DIR" "$venv_name"
 }
 
 
@@ -37,8 +38,9 @@ function _python_version() {
 
 
 function _maybeworkon() {
-    venv_name="$1"
+    venv_dir="$1"
     venv_type="$2"
+    venv_name="$(basename $venv_dir)"
 
     DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
@@ -47,8 +49,6 @@ function _maybeworkon() {
     fi
 
     if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
-
-        venv_dir="$(_virtual_env_dir)/$venv_name"
 
         if [[ ! -d "$venv_dir" ]]; then
             printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
@@ -67,7 +67,7 @@ function _maybeworkon() {
         fi
 
         # Much faster to source the activate file directly rather than use the `workon` command
-        source "$(_virtual_env_dir)/$venv_name/bin/activate"
+        source "$venv_dir/bin/activate"
     fi
 }
 
@@ -124,12 +124,12 @@ function check_venv()
     fi
 
     if [[ -n "$SWITCH_TO" ]]; then
-        _maybeworkon "$SWITCH_TO" "virtualenv"
+        _maybeworkon "$(_virtual_env_dir "$SWITCH_TO")" "virtualenv"
 
         # check if Pipfile exists rather than invoking pipenv as it is slow
     elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
         venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
-        _maybeworkon "$(basename "$venv_path")" "pipenv"
+        _maybeworkon "$venv_path" "pipenv"
     else
         _default_venv
     fi
@@ -139,7 +139,7 @@ function check_venv()
 function _default_venv()
 {
     if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-        _maybeworkon "$AUTOSWITCH_DEFAULTENV" "virtualenv"
+        _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "virtualenv"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate
     fi
@@ -162,7 +162,7 @@ function rmvenv()
         fi
 
         printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-        rm -rf "$(_virtual_env_dir)/$venv_name"
+        rm -rf "$(_virtual_env_dir "$venv_name")"
         rm ".venv"
     else
         printf "No .venv file in the current directory!\n"
@@ -188,15 +188,15 @@ function mkvenv()
         fi
 
         if [[ ${params[(I)--verbose]} -eq 0 ]]; then
-            virtualenv $params "$(_virtual_env_dir)/$venv_name"
+            virtualenv $params "$(_virtual_env_dir "$venv_name")"
         else
-            virtualenv $params "$(_virtual_env_dir)/$venv_name" > /dev/null
+            virtualenv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
         fi
 
         printf "$venv_name\n" > ".venv"
         chmod 600 .venv
 
-        _maybeworkon "$venv_name"
+        _maybeworkon "$(_virtual_env_dir "$venv_name")" "virtualenv"
 
         install_requirements
     fi

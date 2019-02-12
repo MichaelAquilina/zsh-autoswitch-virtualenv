@@ -4,6 +4,7 @@
 
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
+    unset AUTOSWITCH_DEFAULT_REQUIREMENTS
     TARGET="$(mktemp -d)"
     cd "$TARGET"
 }
