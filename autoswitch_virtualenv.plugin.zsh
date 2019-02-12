@@ -81,7 +81,8 @@ function _check_venv_path()
         printf "${check_dir}/.venv"
         return
     else
-        if [ "$check_dir" = "/" ]; then
+        # Abort search at file system root or HOME directory.
+        if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
             return
         fi
         _check_venv_path "$(dirname "$check_dir")"
@@ -142,6 +143,7 @@ function _default_venv()
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "virtualenv"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate
+        unset venv_dir venv_name venv_path venv_type
     fi
 }
 
