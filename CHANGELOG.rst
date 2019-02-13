@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.2
+-----
+* local variables will no longer sneak into shell environment variables (Thanks @rnc)
+
 1.8.1
 -----
 * Fixes a regression in Pipenv integration
