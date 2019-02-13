@@ -38,11 +38,11 @@ function _python_version() {
 
 
 function _maybeworkon() {
-    venv_dir="$1"
-    venv_type="$2"
-    venv_name="$(basename $venv_dir)"
+    local venv_dir="$1"
+    local venv_type="$2"
+    local venv_name="$(basename $venv_dir)"
 
-    DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
@@ -57,9 +57,8 @@ function _maybeworkon() {
         fi
 
         if [ -z "$AUTOSWITCH_SILENT" ]; then
-            py_version="$(_python_version "$venv_dir/bin/python")"
-
-            message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
+            local py_version="$(_python_version "$venv_dir/bin/python")"
+            local message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
             message="${message//\%venv_type/$venv_type}"
             message="${message//\%venv_name/$venv_name}"
             message="${message//\%py_version/$py_version}"
@@ -93,10 +92,10 @@ function _check_venv_path()
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
-    SWITCH_TO=""
+    local SWITCH_TO=""
 
     # Get the .venv file, scanning parent directories
-    venv_path=$(_check_venv_path "$PWD")
+    local venv_path=$(_check_venv_path "$PWD")
     if [[ -n "$venv_path" ]]; then
 
         stat --version &> /dev/null
@@ -143,7 +142,6 @@ function _default_venv()
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "virtualenv"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate
-        unset venv_dir venv_name venv_path venv_type
     fi
 }
 
@@ -152,12 +150,11 @@ function _default_venv()
 function rmvenv()
 {
     if [[ -f ".venv" ]]; then
-
-        venv_name="$(<.venv)"
+        local venv_name="$(<.venv)"
 
         # detect if we need to switch virtualenv first
         if [[ -n "$VIRTUAL_ENV" ]]; then
-            current_venv="$(basename $VIRTUAL_ENV)"
+            local current_venv="$(basename $VIRTUAL_ENV)"
             if [[ "$current_venv" = "$venv_name" ]]; then
                 _default_venv
             fi
@@ -178,7 +175,7 @@ function mkvenv()
     if [[ -f ".venv" ]]; then
         printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
     else
-        venv_name="$(basename $PWD)"
+        local venv_name="$(basename $PWD)"
 
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
