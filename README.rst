@@ -84,12 +84,19 @@ is the directory with custom plugins of oh-my-zsh `(read more) <https://github.c
 
     git clone "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git" "$ZSH_CUSTOM/plugins/autoswitch_virtualenv"
 
-
 Then add this line to your ``.zshrc``
 
 ::
 
     plugins=(autoswitch_virtualenv $plugins)
+
+**Manual Installation**
+
+Source the plugin shell script in your `~/.zshrc` profile. For example
+
+::
+
+   source $HOME/zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
 
 
 Pipenv Integration
