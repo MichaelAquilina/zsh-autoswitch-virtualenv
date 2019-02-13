@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.9.0
+-----
+* Show message when deactivating virtual environments
+
 1.8.2
 -----
 * local variables will no longer sneak into shell environment variables (Thanks @rnc)

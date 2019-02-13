@@ -162,13 +162,12 @@
     VIRTUAL_ENV="foo"
     unset AUTOSWITCH_DEFAULTENV
     function deactivate {
-        echo "deactivating"
     }
 
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "deactivating"
+    assert "$output" same_as "Deactivating: \e[1m\e[35mfoo\e[0m"
 }
 
 

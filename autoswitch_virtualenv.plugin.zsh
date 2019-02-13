@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.8.2'
+export AUTOSWITCH_VERSION='1.9.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -37,6 +37,13 @@ function _python_version() {
 }
 
 
+function _autoswitch_message() {
+    if [ -z "$AUTOSWITCH_SILENT" ]; then
+        printf "$@"
+    fi
+}
+
+
 function _maybeworkon() {
     local venv_dir="$1"
     local venv_type="$2"
@@ -56,14 +63,12 @@ function _maybeworkon() {
             return
         fi
 
-        if [ -z "$AUTOSWITCH_SILENT" ]; then
-            local py_version="$(_python_version "$venv_dir/bin/python")"
-            local message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
-            message="${message//\%venv_type/$venv_type}"
-            message="${message//\%venv_name/$venv_name}"
-            message="${message//\%py_version/$py_version}"
-            printf "${message}\n"
-        fi
+        local py_version="$(_python_version "$venv_dir/bin/python")"
+        local message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
+        message="${message//\%venv_type/$venv_type}"
+        message="${message//\%venv_name/$venv_name}"
+        message="${message//\%py_version/$py_version}"
+        _autoswitch_message "${message}\n"
 
         # Much faster to source the activate file directly rather than use the `workon` command
         source "$venv_dir/bin/activate"
@@ -141,6 +146,7 @@ function _default_venv()
     if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "virtualenv"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
+        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$(basename "$VIRTUAL_ENV")"
         deactivate
     fi
 }
