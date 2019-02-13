@@ -30,8 +30,6 @@ found in the current directory.
 
 See the Commands_ section below for more detail.
 
-|ASCIICAST|
-
 More Details
 ------------
 
