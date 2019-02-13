@@ -90,11 +90,13 @@ Then add this line to your ``.zshrc``
 
     plugins=(autoswitch_virtualenv $plugins)
 
-Manual Installation
+**Manual Installation**
+
+Source the plugin shell script in your `~/.zshrc` profile. For example
 
 ::
 
-   source .../zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
+   source $HOME/zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
 
 
 Pipenv Integration
