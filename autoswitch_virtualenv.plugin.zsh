@@ -80,7 +80,7 @@ function _check_venv_path()
         printf "${check_dir}/.venv"
         return
     else
-        # Abort search at file system root or HOME directory.
+        # Abort search at file system root or HOME directory (latter is a perfomance optimisation).
         if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
             return
         fi
