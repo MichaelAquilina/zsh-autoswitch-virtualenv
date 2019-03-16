@@ -167,8 +167,9 @@ function rmvenv()
         fi
 
         printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-        rm -rf "$(_virtual_env_dir "$venv_name")"
-        rm ".venv"
+        # Using explicit paths to avoid any alias interference.
+        /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
+        /bin/rm ".venv"
     else
         printf "No .venv file in the current directory!\n"
     fi
