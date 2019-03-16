@@ -128,7 +128,17 @@ Optionally, you can specify the python binary to use for this virtual environmen
 
     $ mkvenv --python=/usr/bin/python3
 
-In fact, ``mkvenv`` supports any parameters that can be passed to ``python -m virtualenv``
+
+It is also possible to inherit the system site packages (which can reduce duplication on the file system
+and download/setup time).
+
+::
+
+    $ mkvenv --system-site-packages
+
+In fact, ``mkvenv`` supports any parameters that can be passed to ``python -m virtualenv``.
+A comprehensive list of options may be found in the
+`virtualenv guide <https://virtualenv.pypa.io/en/latest/reference/#options>`__
 
 ``mkvenv`` will create a virtual environment with the same name as the
 current directory, suggest installing ``requirements.txt`` if available
