@@ -228,7 +228,7 @@ function install_requirements() {
     fi
 
     setopt nullglob
-    for requirements in *requirements.txt
+    for requirements in **/*requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
         read ans
