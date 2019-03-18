@@ -100,7 +100,7 @@
 
     assert $status equals 0
     assert "$lines[1]" same_as "Found a \e[35msetup.py\e[0m file. Install dependencies? [y/N]: y"
-    assert "$lines[2]" same_as "pip install ."
+    assert "$lines[2]" same_as "pip install -e ."
 }
 
 @test 'install_requirements - installs recursive *requirements.txt' {
@@ -124,4 +124,21 @@
     assert "$lines[4]" same_as "Found a \e[35msubdir/dev-requirements.txt\e[0m file. Install? [y/N]: y"
     assert "$lines[5]" same_as "pip install -r subdir/dev-requirements.txt"
     assert "$lines[6]" same_as "pytest"
+}
+
+@test 'install_requirements - installs setup.py' {
+    touch "setup.py"
+    echo "django" > requirements.txt
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+    }
+    local AUTOSWITCH_PIPINSTALL="FULL"
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35msetup.py\e[0m file. Install dependencies? [y/N]: y"
+    assert "$lines[2]" same_as "pip install ."
 }

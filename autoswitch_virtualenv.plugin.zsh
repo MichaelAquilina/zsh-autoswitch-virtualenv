@@ -227,7 +227,12 @@ function install_requirements() {
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
-            pip install .
+            if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
+            then
+                pip install .
+            else
+                pip install -e .
+            fi
         fi
     fi
 
