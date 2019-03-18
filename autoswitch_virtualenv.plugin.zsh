@@ -167,7 +167,10 @@ function rmvenv()
         fi
 
         printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-        # Using explicit paths to avoid any alias interference.
+        # Using explicit paths to avoid any alias/function interference.
+        # rm should always be found in this location according to
+        # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
+        # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
         /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
         /bin/rm ".venv"
     else
