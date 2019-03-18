@@ -298,7 +298,7 @@ environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
 
 **Customising pip install invocation**
 
-By default it will invoke pip install in editable (i.e. development) mode. See
+By default `mkvenv` will install setup.py via pip in editable (i.e. development) mode. See
 `here <http://codumentary.blogspot.com/2014/11/python-tip-of-year-pip-install-editable.html/>`__
 and `here <https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs/>`__ for
 further information. To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
