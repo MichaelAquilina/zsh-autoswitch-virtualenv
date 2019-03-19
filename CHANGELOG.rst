@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.10.0
+------
+* Scan for requirements files recursively when setting up a virtualenv (#88 - fix by @nrc)
+* Fix bug when `rm` was aliased to a different behaviour (#87 - fix by @rnc)
+* Invoke pip install in editable (i.e. development) mode. (#91 - fix by @rnc)
+
 1.9.0
 -----
 * Show message when deactivating virtual environments
