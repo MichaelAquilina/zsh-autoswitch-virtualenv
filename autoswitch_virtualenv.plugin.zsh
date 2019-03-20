@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.9.0'
+export AUTOSWITCH_VERSION='1.10.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -167,8 +167,12 @@ function rmvenv()
         fi
 
         printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-        rm -rf "$(_virtual_env_dir "$venv_name")"
-        rm ".venv"
+        # Using explicit paths to avoid any alias/function interference.
+        # rm should always be found in this location according to
+        # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
+        # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
+        /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
+        /bin/rm ".venv"
     else
         printf "No .venv file in the current directory!\n"
     fi
@@ -223,12 +227,17 @@ function install_requirements() {
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
-            pip install .
+            if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
+            then
+                pip install .
+            else
+                pip install -e .
+            fi
         fi
     fi
 
     setopt nullglob
-    for requirements in *requirements.txt
+    for requirements in **/*requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
         read ans

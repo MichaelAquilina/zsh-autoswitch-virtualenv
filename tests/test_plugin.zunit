@@ -14,7 +14,7 @@
     unset AUTOSWITCH_DEFAULTENV
     load ../autoswitch_virtualenv.plugin.zsh
 
-    git_version="$(git tag --list | sort | tail -1)"
+    git_version="$(git tag --list | sort -V | tail -1)"
     git tag --list
 
     assert "$AUTOSWITCH_VERSION" is_not_empty

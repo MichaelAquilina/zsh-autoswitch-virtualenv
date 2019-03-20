@@ -296,6 +296,13 @@ the same location that the ``virtualenvwrapper`` package uses.
 If you wish to change this to another location, simply set the value of the
 environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
 
+**Customising pip install invocation**
+
+By default `mkvenv` will install setup.py via pip in editable (i.e. development) mode. See
+`here <http://codumentary.blogspot.com/2014/11/python-tip-of-year-pip-install-editable.html/>`__
+and `here <https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs/>`__ for
+further information. To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
+
 Security Warnings
 -----------------
 
