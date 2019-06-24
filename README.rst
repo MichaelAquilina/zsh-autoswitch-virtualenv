@@ -25,7 +25,7 @@ virtual environment. A virtual environment specific to that folder will
 now activate every time you enter it.
 
 ``zsh-autoswitch-virtualenv`` will try detect python projects and remind
-you to create run this command if e.g. setup.py or requirements.txt is
+you to create a virtual environment if e.g. setup.py or requirements.txt is
 found in the current directory.
 
 See the Commands_ section below for more detail.
