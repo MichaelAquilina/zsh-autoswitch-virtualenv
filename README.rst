@@ -93,8 +93,8 @@ Then add this line to your ``.zshrc``
 Source the plugin shell script in your `~/.zshrc` profile. For example
 
 ::
-
-   source $HOME/zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
+   git clone "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git" "$ZSH_CUSTOM/plugins/autoswitch_virtualenv"
+   source $ZSH_CUSTOM/plugins/autoswitch_virtualenv/autoswitch_virtualenv.plugin.zsh
 
 
 Pipenv Integration
