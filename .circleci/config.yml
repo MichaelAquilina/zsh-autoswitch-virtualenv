@@ -6,7 +6,7 @@ test: &test
     - checkout
     - run:
         name: Install Dependencies
-        command: apt-get update && apt-get install -y curl python3-pip ncurses-bin python python-virtualenv git
+        command: apt-get update && apt-get install -y curl python3-pip ncurses-bin python3 python-virtualenv git
     - run:
         name: install pipenv
         command: pip3 install pipenv
