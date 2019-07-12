@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.10.1
+------
+* Fix minor bug where variables would leak into user's environment
+
 1.10.0
 ------
 * Scan for requirements files recursively when setting up a virtualenv (#88 - fix by @nrc)
