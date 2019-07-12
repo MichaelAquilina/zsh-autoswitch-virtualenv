@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.10.0'
+export AUTOSWITCH_VERSION='1.10.1'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -27,7 +27,7 @@ function _virtual_env_dir() {
 
 
 function _python_version() {
-    PYTHON_BIN="$1"
+    local PYTHON_BIN="$1"
     if [[ -f "$PYTHON_BIN" ]] then
         # For some reason python --version writes to stderr
         printf "%s" "$($PYTHON_BIN --version 2>&1)"
@@ -98,6 +98,8 @@ function _check_venv_path()
 function check_venv()
 {
     local SWITCH_TO=""
+    local file_owner
+    local file_permissions
 
     # Get the .venv file, scanning parent directories
     local venv_path=$(_check_venv_path "$PWD")
@@ -190,7 +192,7 @@ function mkvenv()
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
         # Copy parameters variable so that we can mutate it
-        params=("${@[@]}")
+        local params=("${@[@]}")
 
         if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
             params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
@@ -237,6 +239,7 @@ function install_requirements() {
     fi
 
     setopt nullglob
+    local requirements
     for requirements in **/*requirements.txt
     do
         printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
