@@ -113,19 +113,23 @@ function check_venv()
         else
             SWITCH_TO="$(<"$venv_path")"
         fi
-    elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
-        printf "Python project detected. "
-        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
 
     if [[ -n "$SWITCH_TO" ]]; then
         _maybeworkon "$(_virtual_env_dir "$SWITCH_TO")" "virtualenv"
 
-        # check if Pipfile exists rather than invoking pipenv as it is slow
+    # check if Pipfile exists rather than invoking pipenv as it is slow
     elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
         venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
         _maybeworkon "$venv_path" "pipenv"
     else
+        if [[ -f "$PWD/Pipfile" ]]; then
+            printf "Python project detected. "
+            printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
+        elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
+            printf "Python project detected. "
+            printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        fi
         _default_venv
     fi
 }
