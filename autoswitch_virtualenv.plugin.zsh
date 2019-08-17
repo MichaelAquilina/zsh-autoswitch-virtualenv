@@ -6,18 +6,6 @@ PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
 
-
-if ! type "virtualenv" > /dev/null; then
-    export DISABLE_AUTOSWITCH_VENV="1"
-    printf "${BOLD}${RED}"
-    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
-    printf "${NORMAL}"
-    printf "If this is already installed but you are still seeing this message, \n"
-    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
-    printf "\n"
-fi
-
-
 function _virtual_env_dir() {
     local venv_name="$1"
     local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
@@ -264,7 +252,14 @@ function disable_autoswitch_virtualenv() {
 }
 
 
-if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+if ! type "virtualenv" > /dev/null; then
+    printf "${BOLD}${RED}"
+    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
+    printf "${NORMAL}"
+    printf "If this is already installed but you are still seeing this message, \n"
+    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
+    printf "\n"
+else
     enable_autoswitch_virtualenv
     check_venv
 fi
