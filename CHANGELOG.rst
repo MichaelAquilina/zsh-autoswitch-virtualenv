@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.11.0
+------
+* Correct project detection behaviour when working with pipenv
+
 1.10.1
 ------
 * Fix minor bug where variables would leak into user's environment

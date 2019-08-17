@@ -1,22 +1,10 @@
-export AUTOSWITCH_VERSION='1.10.1'
+export AUTOSWITCH_VERSION='1.11.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
 PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
-
-
-if ! type "virtualenv" > /dev/null; then
-    export DISABLE_AUTOSWITCH_VENV="1"
-    printf "${BOLD}${RED}"
-    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
-    printf "${NORMAL}"
-    printf "If this is already installed but you are still seeing this message, \n"
-    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
-    printf "\n"
-fi
-
 
 function _virtual_env_dir() {
     local venv_name="$1"
@@ -125,19 +113,23 @@ function check_venv()
         else
             SWITCH_TO="$(<"$venv_path")"
         fi
-    elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
-        printf "Python project detected. "
-        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
 
     if [[ -n "$SWITCH_TO" ]]; then
         _maybeworkon "$(_virtual_env_dir "$SWITCH_TO")" "virtualenv"
 
-        # check if Pipfile exists rather than invoking pipenv as it is slow
+    # check if Pipfile exists rather than invoking pipenv as it is slow
     elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
         venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
         _maybeworkon "$venv_path" "pipenv"
     else
+        if [[ -f "$PWD/Pipfile" ]]; then
+            printf "Python project detected. "
+            printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
+        elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
+            printf "Python project detected. "
+            printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        fi
         _default_venv
     fi
 }
@@ -264,7 +256,14 @@ function disable_autoswitch_virtualenv() {
 }
 
 
-if [[ -z "$DISABLE_AUTOSWITCH_VENV" ]]; then
+if ! type "virtualenv" > /dev/null; then
+    printf "${BOLD}${RED}"
+    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
+    printf "${NORMAL}"
+    printf "If this is already installed but you are still seeing this message, \n"
+    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
+    printf "\n"
+else
     enable_autoswitch_virtualenv
     check_venv
 fi

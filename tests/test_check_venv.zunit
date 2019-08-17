@@ -45,6 +45,16 @@
     assert "$output" same_as "Python project detected. Run \e[35mmkvenv\e[0m to setup autoswitching"
 }
 
+@test 'check_venv - Displays message on project detection (Pipfile)' {
+    PWD="$TARGET"
+    touch "$TARGET/Pipfile"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Python project detected. Run \e[35mpipenv install\e[0m to setup autoswitching"
+}
+
 @test 'check_venv - Displays message on project detection (setup.py + requirements.txt)' {
     PWD="$TARGET"
     touch "$TARGET/setup.py"
