@@ -85,7 +85,6 @@ function _check_venv_path()
 # Automatically switch virtualenv when .venv file detected
 function check_venv()
 {
-    local SWITCH_TO=""
     local file_owner
     local file_permissions
 
@@ -111,27 +110,29 @@ function check_venv()
             printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
         else
-            SWITCH_TO="$(<"$venv_path")"
+            local switch_to="$(<"$venv_path")"
+            _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
+            return
         fi
     fi
-
-    if [[ -n "$SWITCH_TO" ]]; then
-        _maybeworkon "$(_virtual_env_dir "$SWITCH_TO")" "virtualenv"
 
     # check if Pipfile exists rather than invoking pipenv as it is slow
-    elif [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
-        venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"
-        _maybeworkon "$venv_path" "pipenv"
-    else
-        if [[ -f "$PWD/Pipfile" ]]; then
-            printf "Python project detected. "
-            printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
-        elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
-            printf "Python project detected. "
-            printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+    if [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
+        if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
+            _maybeworkon "$venv_path" "pipenv"
+            return
         fi
-        _default_venv
     fi
+
+    # If we still haven't got anywhere, fallback to defaults
+    if [[ -f "$PWD/Pipfile" ]]; then
+        printf "Python project detected. "
+        printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
+    elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
+        printf "Python project detected. "
+        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+    fi
+    _default_venv
 }
 
 # Switch to the default virtual environment
