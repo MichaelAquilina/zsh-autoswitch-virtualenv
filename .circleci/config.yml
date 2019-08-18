@@ -70,6 +70,11 @@ jobs:
         - image: "zshusers/zsh:5.6.2"
       <<: *test
 
+  test-zsh-5.7:
+      docker:
+        - image: "zshusers/zsh:5.7.1"
+      <<: *test
+
 workflows:
   version: 2
   test:
@@ -81,3 +86,4 @@ workflows:
       - test-zsh-5.4
       - test-zsh-5.5
       - test-zsh-5.6
+      - test-zsh-5.7

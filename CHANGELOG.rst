@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.11.1
+------
+* Fix bug with pipenv detection where extra messages would be incorrectly displayed
+* Add zsh 5.7 to the CI testing process
+
 1.11.0
 ------
 * Correct project detection behaviour when working with pipenv
