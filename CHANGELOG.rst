@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.12.0
+-----
+* Remove virtualenv requirement. This is now only needed for running mkvenv
+
 1.11.1
 ------
 * Fix bug with pipenv detection where extra messages would be incorrectly displayed
