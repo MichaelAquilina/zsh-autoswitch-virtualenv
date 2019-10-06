@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION='1.11.1'
+export AUTOSWITCH_VERSION='1.12.0'
 
 RED="\e[31m"
 GREEN="\e[32m"
@@ -177,6 +177,16 @@ function rmvenv()
 # helper function to create a virtual environment for the current directory
 function mkvenv()
 {
+    if ! type "virtualenv" > /dev/null; then
+        printf "${BOLD}${RED}"
+        printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
+        printf "${NORMAL}"
+        printf "If this is already installed but you are still seeing this message, \n"
+        printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
+        printf "\n"
+        return
+    fi
+
     if [[ -f ".venv" ]]; then
         printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
     else
@@ -257,14 +267,5 @@ function disable_autoswitch_virtualenv() {
 }
 
 
-if ! type "virtualenv" > /dev/null; then
-    printf "${BOLD}${RED}"
-    printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
-    printf "${NORMAL}"
-    printf "If this is already installed but you are still seeing this message, \n"
-    printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
-    printf "\n"
-else
-    enable_autoswitch_virtualenv
-    check_venv
-fi
+enable_autoswitch_virtualenv
+check_venv
