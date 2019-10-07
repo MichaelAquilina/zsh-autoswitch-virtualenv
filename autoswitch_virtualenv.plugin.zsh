@@ -37,6 +37,11 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(basename $venv_dir)"
 
+    # clear pipenv from the extra identifiers at the end
+    if [[ "$venv_type" == "pipenv" ]]; then
+        venv_name="${venv_name%-*}"
+    fi
+
     local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8

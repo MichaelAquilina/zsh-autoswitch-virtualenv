@@ -88,3 +88,10 @@
     assert $state equals 0
     assert "$output" is_empty
 }
+
+@test '_maybeworkon - pipenv name cleaned' [
+    run _maybeworkon hello-world-foo-de31f pipenv
+
+    assert $state equals 0
+    assert "$output" same_as "Switching pipenv: \e[1m\e[35mhello-world-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+}
