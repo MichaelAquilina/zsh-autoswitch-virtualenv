@@ -31,11 +31,36 @@ function _autoswitch_message() {
     fi
 }
 
+function _get_venv_type() {
+    local venv_dir="$1"
+    local venv_type="${2:-virtualenv}"
+    if [[ -f "$venv_dir/Pipfile" ]]; then
+        venv_type="pipenv"
+    elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
+        venv_type="virtualenv"
+    fi
+    printf "%s" "$venv_type"
+}
+
+
+function _get_venv_name() {
+    local venv_dir="$1"
+    local venv_type="$2"
+    local venv_name="$(basename "$venv_dir")"
+
+    # clear pipenv from the extra identifiers at the end
+    if [[ "$venv_type" == "pipenv" ]]; then
+        venv_name="${venv_name%-*}"
+    fi
+
+    printf "%s" "$venv_name"
+}
+
 
 function _maybeworkon() {
     local venv_dir="$1"
     local venv_type="$2"
-    local venv_name="$(basename $venv_dir)"
+    local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
     local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
@@ -90,6 +115,7 @@ function check_venv()
 
     # Get the .venv file, scanning parent directories
     local venv_path=$(_check_venv_path "$PWD")
+
     if [[ -n "$venv_path" ]]; then
 
         stat --version &> /dev/null
@@ -117,18 +143,20 @@ function check_venv()
     fi
 
     # check if Pipfile exists rather than invoking pipenv as it is slow
-    if [[ -a "Pipfile" ]] && type "pipenv" > /dev/null; then
+    if [[ -f "Pipfile" ]] && type "pipenv" > /dev/null; then
         if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
             _maybeworkon "$venv_path" "pipenv"
             return
         fi
     fi
 
+    local venv_type="$(_get_venv_type "$PWD" "unknown")"
+
     # If we still haven't got anywhere, fallback to defaults
-    if [[ -f "$PWD/Pipfile" ]]; then
+    if [[ "$venv_type" == "pipenv" ]]; then
         printf "Python project detected. "
         printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
-    elif [[ -f "$PWD/requirements.txt" || -f "$PWD/setup.py" ]]; then
+    elif [[ "$venv_type" == "virtualenv" ]]; then
         printf "Python project detected. "
         printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
@@ -138,10 +166,12 @@ function check_venv()
 # Switch to the default virtual environment
 function _default_venv()
 {
+    local venv_type="$(_get_venv_type "$OLDPWD")"
     if [[ -n "$AUTOSWITCH_DEFAULTENV" ]]; then
-        _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "virtualenv"
+        _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "$venv_type"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
-        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$(basename "$VIRTUAL_ENV")"
+        local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
+        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
         deactivate
     fi
 }

@@ -17,11 +17,13 @@
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
     TARGET="$(mktemp -d)"
+    OLDPWD="$(mktemp -d)"
 }
 
 
 @teardown {
     rm -rf "$TARGET"
+    rm -rf "$OLDPWD"
     rm -rf Pipfile
 }
 
@@ -180,6 +182,20 @@
     assert "$output" same_as "Deactivating: \e[1m\e[35mfoo\e[0m"
 }
 
+@test 'check_venv - deactivate if neither .venv nor pipenv available (previous dir is pipenv)' {
+    PWD="$TARGET"
+    touch "$OLDPWD/Pipfile"
+
+    VIRTUAL_ENV="foo-bar-defa23"
+    unset AUTOSWITCH_DEFAULTENV
+    function deactivate {
+    }
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Deactivating: \e[1m\e[35mfoo-bar\e[0m"
+}
 
 @test 'check_venv - works as intended with .venv available' {
     PWD="$TARGET"
