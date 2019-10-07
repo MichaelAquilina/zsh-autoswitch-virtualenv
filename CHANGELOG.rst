@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.13.0
+------
+* Clean up pipenv names when displaying them
+
 1.12.0
 ------
 * Remove virtualenv requirement. This is now only needed for running mkvenv

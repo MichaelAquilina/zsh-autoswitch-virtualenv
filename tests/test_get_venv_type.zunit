@@ -1,0 +1,52 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+@test '_get_venv_type pipenv' {
+    touch "$TARGET/Pipfile"
+
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "pipenv"
+}
+
+
+@test '_get_venv_type virtualenv (requirements.txt)' {
+    touch "$TARGET/requirements.txt"
+
+    run _get_venv_type "$TARGET" "unknown"
+
+    assert $state equals 0
+    assert "$output" same_as "virtualenv"
+}
+
+@test '_get_venv_type virtualenv (setup.py)' {
+    touch "$TARGET/setup.py"
+
+    run _get_venv_type "$TARGET" "unknown"
+
+    assert $state equals 0
+    assert "$output" same_as "virtualenv"
+}
+
+@test '_get_venv_type virtualenv (default)' {
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "virtualenv"
+}
+
+@test '_get_venv_type virtualenv (default specified)' {
+    run _get_venv_type "$TARGET" "foobar"
+
+    assert $state equals 0
+    assert "$output" same_as "foobar"
+}
