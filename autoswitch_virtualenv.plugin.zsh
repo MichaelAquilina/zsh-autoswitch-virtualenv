@@ -83,6 +83,12 @@ function _maybeworkon() {
         message="${message//\%py_version/$py_version}"
         _autoswitch_message "${message}\n"
 
+        # If we are using pipenv and activate its virtual environment - turn down its verbosity
+        # to prevent users seeing " Pipenv found itself running within a virtual environment" warning
+        if [[ "$venv_type" == "pipenv" && "$PIPENV_VERBOSITY" != -1 ]]; then
+            export PIPENV_VERBOSITY=-1
+        fi
+
         # Much faster to source the activate file directly rather than use the `workon` command
         source "$venv_dir/bin/activate"
     fi
