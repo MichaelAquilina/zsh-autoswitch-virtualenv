@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.14.0
+------
+* Prevent pipenv from showing its courtesy because we activated its virtualenv
+
 1.13.0
 ------
 * Clean up pipenv names when displaying them
