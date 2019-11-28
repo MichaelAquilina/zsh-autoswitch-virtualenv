@@ -1,10 +1,12 @@
 export AUTOSWITCH_VERSION='1.14.0'
+export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
 GREEN="\e[32m"
 PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
+
 
 function _virtual_env_dir() {
     local venv_name="$1"
@@ -95,16 +97,16 @@ function _maybeworkon() {
 }
 
 
-# Gives the path to the nearest parent .venv file or nothing if it gets to root
+# Gives the path to the nearest parent $AUTOSWITCH_FILE or nothing if it gets to root
 function _check_venv_path()
 {
     local check_dir="$1"
 
-    if [[ -f "${check_dir}/.venv" ]]; then
-        printf "${check_dir}/.venv"
+    if [[ -f "${check_dir}/$AUTOSWITCH_FILE" ]]; then
+        printf "${check_dir}/$AUTOSWITCH_FILE"
         return
     else
-        # Abort search at file system root or HOME directory (latter is a perfomance optimisation).
+        # Abort search at file system root or HOME directory (latter is a performance optimisation).
         if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
             return
         fi
@@ -113,13 +115,13 @@ function _check_venv_path()
 }
 
 
-# Automatically switch virtualenv when .venv file detected
+# Automatically switch virtualenv when $AUTOSWITCH_FILE file detected
 function check_venv()
 {
     local file_owner
     local file_permissions
 
-    # Get the .venv file, scanning parent directories
+    # Get the $AUTOSWITCH_FILE, scanning parent directories
     local venv_path=$(_check_venv_path "$PWD")
 
     if [[ -n "$venv_path" ]]; then
@@ -135,11 +137,11 @@ function check_venv()
 
         if [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a .venv file but it is not owned by the current user\n"
+            printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
             printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
         elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a .venv file with weak permission settings ($file_permissions).\n"
+            printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
         else
             local switch_to="$(<"$venv_path")"
@@ -186,8 +188,8 @@ function _default_venv()
 # remove virtual environment for current directory
 function rmvenv()
 {
-    if [[ -f ".venv" ]]; then
-        local venv_name="$(<.venv)"
+    if [[ -f "$AUTOSWITCH_FILE" ]]; then
+        local venv_name="$(<$AUTOSWITCH_FILE)"
 
         # detect if we need to switch virtualenv first
         if [[ -n "$VIRTUAL_ENV" ]]; then
@@ -203,9 +205,9 @@ function rmvenv()
         # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
         # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
         /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
-        /bin/rm ".venv"
+        /bin/rm "$AUTOSWITCH_FILE"
     else
-        printf "No .venv file in the current directory!\n"
+        printf "No $AUTOSWITCH_FILE file in the current directory!\n"
     fi
 }
 
@@ -223,8 +225,8 @@ function mkvenv()
         return
     fi
 
-    if [[ -f ".venv" ]]; then
-        printf ".venv file already exists. If this is a mistake use the rmvenv command\n"
+    if [[ -f "$AUTOSWITCH_FILE" ]]; then
+        printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
     else
         local venv_name="$(basename $PWD)"
 
@@ -243,8 +245,8 @@ function mkvenv()
             virtualenv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
         fi
 
-        printf "$venv_name\n" > ".venv"
-        chmod 600 .venv
+        printf "$venv_name\n" > "$AUTOSWITCH_FILE"
+        chmod 600 "$AUTOSWITCH_FILE"
 
         _maybeworkon "$(_virtual_env_dir "$venv_name")" "virtualenv"
 
