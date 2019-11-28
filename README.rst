@@ -273,6 +273,18 @@ by setting the value of ``AUTOSWITCH_DEFAULT_PYTHON``. For example:
 You may still override this default as usual by passing the --python parameter to
 the mkvenv command.
 
+**Autoswitch file name**
+
+By default, the `.venv` file is searched for in each directory in order to tell if
+a virtualenv should be automatically activated.
+
+If this needs to be changed (e.g. it conflicts with something else) then it may be
+changed by setting the value of ``AUTOSWITCH_FILE``. For example:
+
+::
+
+    export AUTOSWITCH_FILE=".autoswitch"
+
 **Default requirements file**
 
 You may specify a default requirements file to use when creating a virtualenv by

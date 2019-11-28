@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.0
+------
+* Add AUTOSWITCH_FILE configuration option
+
 1.14.0
 ------
 * Prevent pipenv from showing its courtesy because we activated its virtualenv
