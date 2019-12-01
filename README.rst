@@ -312,6 +312,13 @@ the same location that the ``virtualenvwrapper`` package uses.
 If you wish to change this to another location, simply set the value of the
 environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
 
+If you wish for virtual environments to be stored within each project directory
+then you can set the variable to use a relative path. For example:
+
+```
+export AUTOSWITCH_VIRTUAL_ENV_DIR=".virtualenv"
+```
+
 **Customising pip install invocation**
 
 By default `mkvenv` will install setup.py via pip in editable (i.e. development) mode. See
