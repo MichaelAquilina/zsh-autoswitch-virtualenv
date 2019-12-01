@@ -315,9 +315,9 @@ environment variable ``AUTOSWITCH_VIRTUAL_ENV_DIR``.
 If you wish for virtual environments to be stored within each project directory
 then you can set the variable to use a relative path. For example:
 
-```
-export AUTOSWITCH_VIRTUAL_ENV_DIR=".virtualenv"
-```
+::
+
+    export AUTOSWITCH_VIRTUAL_ENV_DIR=".virtualenv"
 
 **Customising pip install invocation**
 
