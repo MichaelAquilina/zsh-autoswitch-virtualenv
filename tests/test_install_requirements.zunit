@@ -4,7 +4,8 @@
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
     unset AUTOSWITCH_DEFAULT_REQUIREMENTS
-
+    unset AUTOSWITCH_PIPINSTALL
+    
     function read {
         eval $1=\"y\"
         echo y
