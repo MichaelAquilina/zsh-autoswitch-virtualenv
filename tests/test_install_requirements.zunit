@@ -103,6 +103,21 @@
     assert "$lines[2]" same_as "pip install -e ."
 }
 
+@test 'install_requirements - installs pyproject.toml' {
+    touch "pyproject.toml"
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+    }
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35mpyproject.toml\e[0m file. Install dependencies? [y/N]: y"
+    assert "$lines[2]" same_as "Found a pyproject.toml file, but editable mode currently requires a setup.py based build.\n"
+}
+
 @test 'install_requirements - installs recursive *requirements.txt' {
     echo "django" > requirements.txt
     mkdir subdir
@@ -140,5 +155,21 @@
 
     assert $status equals 0
     assert "$lines[1]" same_as "Found a \e[35msetup.py\e[0m file. Install dependencies? [y/N]: y"
+    assert "$lines[2]" same_as "pip install ."
+}
+
+@test 'install_requirements - installs pyproject.toml - full' {
+    touch "pyproject.toml"
+
+    # mock pip to make it testable
+    function pip {
+        echo "pip $@"
+    }
+    local AUTOSWITCH_PIPINSTALL="FULL"
+
+    run install_requirements
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "Found a \e[35mpyproject.toml\e[0m file. Install dependencies? [y/N]: y"
     assert "$lines[2]" same_as "pip install ."
 }

@@ -37,6 +37,15 @@
     assert "$output" same_as "virtualenv"
 }
 
+@test '_get_venv_type virtualenv (pyproject.toml)' {
+    touch "$TARGET/pyproject.toml"
+
+    run _get_venv_type "$TARGET" "unknown"
+
+    assert $state equals 0
+    assert "$output" same_as "virtualenv"
+}
+
 @test '_get_venv_type virtualenv (default)' {
     run _get_venv_type "$TARGET"
 

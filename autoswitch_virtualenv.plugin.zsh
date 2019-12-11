@@ -18,7 +18,7 @@ function _virtual_env_dir() {
 
 function _python_version() {
     local PYTHON_BIN="$1"
-    if [[ -f "$PYTHON_BIN" ]] then
+    if [[ -f "$PYTHON_BIN" ]]; then
         # For some reason python --version writes to stderr
         printf "%s" "$($PYTHON_BIN --version 2>&1)"
     else
@@ -38,7 +38,7 @@ function _get_venv_type() {
     local venv_type="${2:-virtualenv}"
     if [[ -f "$venv_dir/Pipfile" ]]; then
         venv_type="pipenv"
-    elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
+    elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" || -f "$venv_dir/pyproject.toml" ]]; then
         venv_type="virtualenv"
     fi
     printf "%s" "$venv_type"
@@ -62,7 +62,7 @@ function _get_venv_name() {
 function _maybeworkon() {
     local venv_dir="$1"
     local venv_type="$2"
-    local venv_name="$(_get_venv_name $venv_dir $venv_type)"
+    local venv_name="$(_get_venv_name "$venv_dir" "$venv_type")"
 
     local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
@@ -70,7 +70,7 @@ function _maybeworkon() {
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
     fi
 
-    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
+    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename "$VIRTUAL_ENV")" ]]; then
 
         if [[ ! -d "$venv_dir" ]]; then
             printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
@@ -83,7 +83,7 @@ function _maybeworkon() {
         message="${message//\%venv_type/$venv_type}"
         message="${message//\%venv_name/$venv_name}"
         message="${message//\%py_version/$py_version}"
-        _autoswitch_message "${message}\n"
+        _autoswitch_message "${message}"
 
         # If we are using pipenv and activate its virtual environment - turn down its verbosity
         # to prevent users seeing " Pipenv found itself running within a virtual environment" warning
@@ -103,7 +103,7 @@ function _check_venv_path()
     local check_dir="$1"
 
     if [[ -f "${check_dir}/$AUTOSWITCH_FILE" ]]; then
-        printf "${check_dir}/$AUTOSWITCH_FILE"
+        printf "%s/$AUTOSWITCH_FILE" "${check_dir}"
         return
     else
         # Abort search at file system root or HOME directory (latter is a performance optimisation).
@@ -179,7 +179,7 @@ function _default_venv()
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "$venv_type"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
-        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
+        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}$venv_name${NORMAL}"
         deactivate
     fi
 }
@@ -228,7 +228,7 @@ function mkvenv()
     if [[ -f "$AUTOSWITCH_FILE" ]]; then
         printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
     else
-        local venv_name="$(basename $PWD)"
+        local venv_name="$(basename "$PWD")"
 
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
@@ -275,6 +275,23 @@ function install_requirements() {
                 pip install .
             else
                 pip install -e .
+            fi
+        fi
+    fi
+
+    if [[ -f "$PWD/pyproject.toml" ]]; then
+        printf "Found a ${PURPLE}pyproject.toml${NORMAL} file. Install dependencies? [y/N]: "
+        read ans
+
+        if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
+            if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
+            then
+                pip install .
+            else
+                printf "Found a pyproject.toml file, but editable mode currently requires a setup.py based build.\n"
+                printf "Set AUTOSWITCH_PIPINSTALL to FULL to disable editable mode.\n"
+                printf "\n"
+                return
             fi
         fi
     fi
