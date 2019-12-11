@@ -126,7 +126,7 @@
     assert "$lines[6]" same_as "pytest"
 }
 
-@test 'install_requirements - installs setup.py' {
+@test 'install_requirements - installs setup.py (FULL)' {
     touch "setup.py"
     echo "django" > requirements.txt
 
