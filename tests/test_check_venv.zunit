@@ -18,6 +18,8 @@
     load "../autoswitch_virtualenv.plugin.zsh"
     TARGET="$(mktemp -d)"
     OLDPWD="$(mktemp -d)"
+
+    LANG=".UTF-8"
 }
 
 

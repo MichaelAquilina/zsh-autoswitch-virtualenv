@@ -8,6 +8,8 @@
     unset VIRTUAL_ENV
     unset AUTOSWITCH_MESSAGE_FORMAT
     PYTHON_VERSION="$(python3 --version)"
+
+    LANG=".UTF-8"
 }
 
 @test 'correct version exported' {
