@@ -179,7 +179,7 @@ function _default_venv()
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "$venv_type"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
-        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}$venv_name${NORMAL}"
+        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}$venv_name${NORMAL}\n"
         deactivate
     fi
 }
@@ -284,15 +284,7 @@ function install_requirements() {
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
-            if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
-            then
-                pip install .
-            else
-                printf "Found a pyproject.toml file, but editable mode currently requires a setup.py based build.\n"
-                printf "Set AUTOSWITCH_PIPINSTALL to FULL to disable editable mode.\n"
-                printf "\n"
-                return
-            fi
+            pip install .
         fi
     fi
 
