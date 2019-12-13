@@ -115,7 +115,7 @@
 
     assert $status equals 0
     assert "$lines[1]" same_as "Found a \e[35mpyproject.toml\e[0m file. Install dependencies? [y/N]: y"
-    assert "$lines[2]" same_as "Found a pyproject.toml file, but editable mode currently requires a setup.py based build.\n"
+    assert "$lines[2]" same_as "pip install ."
 }
 
 @test 'install_requirements - installs recursive *requirements.txt' {
