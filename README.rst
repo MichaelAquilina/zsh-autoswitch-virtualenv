@@ -31,6 +31,8 @@ now activate every time you enter it.
 you to create a virtual environment if e.g. setup.py or requirements.txt is
 found in the current directory.
 
+**NOTE: Pipenv projects should not use ``mkvenv``. Use ``pipenv install`` instead**
+
 See the Commands_ section below for more detail.
 
 More Details
@@ -46,6 +48,9 @@ which contains the name of the virtual environment created (which is the
 same name as the current directory but can be edited if needed). There
 is then a precommand hook that looks for a ``.venv`` file and switches
 to the name specified if one is found.
+
+For the case of pipenv projects, the plugin will look for a ``Pipfile``
+and activate pipenv if it detects an existing virtual environment for it.
 
 **NOTE**: you may want to add ``.venv`` to your ``.gitignore`` in git
 projects (or equivalent file for the Version Control you are using).
