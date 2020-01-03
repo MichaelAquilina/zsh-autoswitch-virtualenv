@@ -156,9 +156,8 @@
 
 
 @test 'check_venv - activate if .venv unavailable but pipenv available' {
-    PWD="$TARGET"
-    VIRTUAL_ENV="foo"
-    touch "Pipfile"
+    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where Pipfile is found
+    touch "$TARGET/Pipfile"
 
     function pipenv {
         echo "$HOME/.virtualenvs/foobar"
