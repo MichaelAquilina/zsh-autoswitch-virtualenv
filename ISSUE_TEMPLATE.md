@@ -6,9 +6,14 @@ Please provide the following details when opening an issue:
 
 ## zsh version (zsh --version)
 
-## autoswitch-virtualenv version (echo "$AUTOSWITCH_VERSION")
+## autoswitch-virtualenv version
 
-## How is zsh-you-should-use installed?
+```
+echo "$AUTOSWITCH_VERSION")
+<your version here>
+```
+
+## How is zsh-autoswitch-virtualenv installed?
 
 - [ ] zplug
 - [ ] oh-my-zsh
