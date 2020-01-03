@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="1.15.0"
+export AUTOSWITCH_VERSION="1.15.1"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -70,7 +70,8 @@ function _maybeworkon() {
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
     fi
 
-    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(basename $VIRTUAL_ENV)" ]]; then
+    # Don't reactivate an already activated virtual environment
+    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(_get_venv_name $VIRTUAL_ENV $venv_type)" ]]; then
 
         if [[ ! -d "$venv_dir" ]]; then
             printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
@@ -97,20 +98,21 @@ function _maybeworkon() {
 }
 
 
-# Gives the path to the nearest parent $AUTOSWITCH_FILE or nothing if it gets to root
-function _check_venv_path()
+# Gives the path to the nearest target file
+function _check_path()
 {
     local check_dir="$1"
+    local check_file="$2"
 
-    if [[ -f "${check_dir}/$AUTOSWITCH_FILE" ]]; then
-        printf "${check_dir}/$AUTOSWITCH_FILE"
+    if [[ -f "${check_dir}/$check_file" ]]; then
+        printf "${check_dir}/$check_file"
         return
     else
         # Abort search at file system root or HOME directory (latter is a performance optimisation).
         if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
             return
         fi
-        _check_venv_path "$(dirname "$check_dir")"
+        _check_path "$(dirname "$check_dir")" "$check_file"
     fi
 }
 
@@ -122,7 +124,7 @@ function check_venv()
     local file_permissions
 
     # Get the $AUTOSWITCH_FILE, scanning parent directories
-    local venv_path=$(_check_venv_path "$PWD")
+    local venv_path="$(_check_path "$PWD" "$AUTOSWITCH_FILE")"
 
     if [[ -n "$venv_path" ]]; then
 
@@ -151,7 +153,9 @@ function check_venv()
     fi
 
     # check if Pipfile exists rather than invoking pipenv as it is slow
-    if [[ -f "Pipfile" ]] && type "pipenv" > /dev/null; then
+    local pipfile_path="$(_check_path "$PWD" "Pipfile")"
+
+    if [[ -n "$pipfile_path" ]] && type "pipenv" > /dev/null; then
         if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
             _maybeworkon "$venv_path" "pipenv"
             return

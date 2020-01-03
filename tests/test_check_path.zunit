@@ -11,34 +11,34 @@
     rm -rf "$TARGET"
 }
 
-@test '_check_venv_path - test finds in base directory' {
+@test '_check_path - test finds in base directory' {
     touch "$TARGET/.venv"
 
-    run _check_venv_path "$TARGET"
+    run _check_path "$TARGET" ".venv"
 
     assert $state equals 0
     assert "$output" same_as "$TARGET/.venv"
 }
 
-@test '_check_venv_path - returns nothing if not found' {
-   run _check_venv_path "$TARGET"
+@test '_check_path - returns nothing if not found' {
+   run _check_path "$TARGET" ".venv"
 
    assert $state equals 0
    assert "$output" is_empty
 }
 
-@test '_check_venv_path - finds .venv in parent directories' {
-    touch "$TARGET/.venv"
+@test '_check_path - finds in parent directories' {
+    touch "$TARGET/Pipfile"
     mkdir "$TARGET/foo"
 
-    run _check_venv_path "$TARGET/foo"
+    run _check_path "$TARGET/foo" "Pipfile"
 
     assert $state equals 0
-    assert "$output" same_as "$TARGET/.venv"
+    assert "$output" same_as "$TARGET/Pipfile"
 }
 
-@test '_check_venv_path - returns nothing with root path' {
-    run _check_venv_path '/'
+@test '_check_path - returns nothing with root path' {
+    run _check_path '/' ".venv"
 
     assert $state equals 0
     assert "$output" is_empty
