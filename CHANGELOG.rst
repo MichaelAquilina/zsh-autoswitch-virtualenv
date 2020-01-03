@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.2
+------
+* Use absolute path for ``/usr/bin/stat`` to prevent conflicts with other ``stat`` binaries. Fixes #110
+
 1.15.1
 ------
 * Fix detection of pipenv projects from subdirectories

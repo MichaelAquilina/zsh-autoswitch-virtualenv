@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="1.15.1"
+export AUTOSWITCH_VERSION="1.15.2"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -128,13 +128,13 @@ function check_venv()
 
     if [[ -n "$venv_path" ]]; then
 
-        stat --version &> /dev/null
+        /usr/bin/stat --version &> /dev/null
         if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
-            file_owner="$(stat -c %u "$venv_path")"
-            file_permissions="$(stat -c %a "$venv_path")"
+            file_owner="$(/usr/bin/stat -c %u "$venv_path")"
+            file_permissions="$(/usr/bin/stat -c %a "$venv_path")"
         else                      # macOS, or FreeBSD stat
-            file_owner="$(stat -f %u "$venv_path")"
-            file_permissions="$(stat -f %OLp "$venv_path")"
+            file_owner="$(/usr/bin/stat -f %u "$venv_path")"
+            file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
         fi
 
         if [[ "$file_owner" != "$(id -u)" ]]; then
