@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.15.1
+------
+* Fix detection of pipenv projects from subdirectories
+
 1.15.0
 ------
 * Add AUTOSWITCH_FILE configuration option
