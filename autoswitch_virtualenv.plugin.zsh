@@ -156,6 +156,7 @@ function check_venv()
     local pipfile_path="$(_check_path "$PWD" "Pipfile")"
 
     if [[ -n "$pipfile_path" ]] && type "pipenv" > /dev/null; then
+        # unfortunately running pipenv each time we are in a pipenv project directory is slow :(
         if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
             _maybeworkon "$venv_path" "pipenv"
             return
