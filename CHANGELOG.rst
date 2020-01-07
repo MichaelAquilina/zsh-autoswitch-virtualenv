@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.16.0
+------
+* Fix insecure activation of virtualenvs (#122)
+
 1.15.2
 ------
 * Use absolute path for ``/usr/bin/stat`` to prevent conflicts with other ``stat`` binaries. Fixes #110
