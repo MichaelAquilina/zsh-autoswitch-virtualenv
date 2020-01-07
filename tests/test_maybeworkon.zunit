@@ -23,6 +23,18 @@
     rm -rf "$TARGET"
 }
 
+@test '_maybeworkon - do not activate paths which are potentially inscure' {
+    VIRTUAL_ENV=""
+
+    run _maybeworkon "$TARGET/../../../" virtualenv
+
+    assert $state equals 0
+
+    # first line would be the "switching virtualenv: ...."
+    assert "${lines[2]}" same_as "AUTOSWITCH WARNING: target virtualenv contains invalid characters"
+    assert "${lines[3]}" same_as "virtualenv activation cancelled"
+}
+
 @test '_maybeworkon - error message if virtualenv can not be found' {
     VIRTUAL_ENV=""
 

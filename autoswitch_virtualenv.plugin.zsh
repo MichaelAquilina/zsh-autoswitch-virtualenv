@@ -8,6 +8,20 @@ BOLD="\e[1m"
 NORMAL="\e[0m"
 
 
+function _validated_source() {
+    local target_path="$1"
+
+    if [[ "$target_path" == *'..'* ]]; then
+        printf "AUTOSWITCH WARNING: "
+        printf "target virtualenv contains invalid characters\n"
+        printf "virtualenv activation cancelled\n"
+        return
+    else
+        source "$target_path"
+    fi
+}
+
+
 function _virtual_env_dir() {
     local venv_name="$1"
     local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
@@ -93,7 +107,9 @@ function _maybeworkon() {
         fi
 
         # Much faster to source the activate file directly rather than use the `workon` command
-        source "$venv_dir/bin/activate"
+        local activate_script="$venv_dir/bin/activate"
+
+        _validated_source "$activate_script"
     fi
 }
 
