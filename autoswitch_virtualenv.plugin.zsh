@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="1.16.0"
+export AUTOSWITCH_VERSION="1.16.1"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -254,7 +254,9 @@ function mkvenv()
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
         # Copy parameters variable so that we can mutate it
-        local params=("${@[@]}")
+        # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
+        local params
+        params=("${@[@]}")
 
         if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
             params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
