@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.16.1
+------
+* Small improvement to zsh 5.0 compatibility
+
 1.16.0
 ------
 * Fix insecure activation of virtualenvs (#122)
