@@ -254,6 +254,7 @@ function mkvenv()
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
         # Copy parameters variable so that we can mutate it
+        # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
         local params
         params=("${@[@]}")
 
