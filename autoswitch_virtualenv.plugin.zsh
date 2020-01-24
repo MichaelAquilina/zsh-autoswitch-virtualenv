@@ -254,7 +254,8 @@ function mkvenv()
         printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
         # Copy parameters variable so that we can mutate it
-        local params=("${@[@]}")
+        local params
+        params=("${@[@]}")
 
         if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
             params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
