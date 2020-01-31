@@ -320,13 +320,14 @@ function enable_autoswitch_virtualenv() {
     autoload -Uz add-zsh-hook
     disable_autoswitch_virtualenv
     add-zsh-hook chpwd check_venv
+    add-zsh-hook precmd check_venv
 }
 
 
 function disable_autoswitch_virtualenv() {
     add-zsh-hook -D chpwd check_venv
+    add-zsh-hook -D precmd check_venv
 }
 
 
 enable_autoswitch_virtualenv
-check_venv
