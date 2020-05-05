@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.16.2
+------
+* Output messages to stderr instead of stdout
+
 1.16.1
 ------
 * Small improvement to zsh 5.0 compatibility
