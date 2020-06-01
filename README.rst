@@ -31,7 +31,7 @@ now activate every time you enter it.
 you to create a virtual environment if e.g. setup.py or requirements.txt is
 found in the current directory.
 
-**NOTE: Pipenv and Poetry projects should not use 'mkvenv'. **
+**NOTE: Pipenv and Poetry projects should not use 'mkvenv'.**
 
 **Use 'pipenv install' or 'poetry install' respectively instead**
 
