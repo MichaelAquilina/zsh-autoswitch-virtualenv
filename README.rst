@@ -6,7 +6,7 @@ Autoswitch Python Virtualenv
 *zsh-autoswitch-virtualenv* is a simple and quick ZSH plugin that switches python
 virtualenvs automatically as you move between directories.
 
-*zsh-autoswitch-virtualenv* also automatically detects and activates your **Pipenv** projects
+*zsh-autoswitch-virtualenv* also automatically detects and activates your **Pipenv** and **Poetry** projects
 without any setup necessary.
 
 * `How it Works`_
@@ -31,7 +31,9 @@ now activate every time you enter it.
 you to create a virtual environment if e.g. setup.py or requirements.txt is
 found in the current directory.
 
-**NOTE: Pipenv projects should not use 'mkvenv'. Use 'pipenv install' instead**
+**NOTE: Pipenv and Poetry projects should not use 'mkvenv'.**
+
+**Use 'pipenv install' or 'poetry install' respectively instead**
 
 See the Commands_ section below for more detail.
 
@@ -50,7 +52,10 @@ is then a precommand hook that looks for a ``.venv`` file and switches
 to the name specified if one is found.
 
 For the case of pipenv projects, the plugin will look for a ``Pipfile``
-and activate pipenv if it detects an existing virtual environment for it.
+and activates pipenv if it detects an existing virtual environment for it.
+
+For the case of poetry projects, the plugin will look for a ``pyproject.toml``
+and activates poetry if it detects an existing virtual environment for it.
 
 **NOTE**: you may want to add ``.venv`` to your ``.gitignore`` in git
 projects (or equivalent file for the Version Control you are using).
@@ -232,7 +237,7 @@ By default, the following message is displayed in bold when an alias is found:
 
 Where the following variables represent:
 
-* ``%venv_type`` - the type of virtualenv being activated (virtualenv, pipenv)
+* ``%venv_type`` - the type of virtualenv being activated (virtualenv, pipenv, poetry)
 * ``%venv_name`` - the name of the virtualenv being activated
 * ``%py_version`` - the version of python used by the virtualenv being activated
 

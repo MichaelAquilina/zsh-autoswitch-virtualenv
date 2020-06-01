@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="1.16.2"
+export AUTOSWITCH_VERSION="2.0.0"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -54,6 +54,10 @@ function _get_venv_type() {
         venv_type="pipenv"
     elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
         venv_type="virtualenv"
+    # TODO: this is not technically correct as lots of tools use pyproject.toml
+    # however it's probably a good enough approximation for this function
+    elif [[ -f "$venv_dir/pyproject.toml" ]]; then
+        venv_type="poetry"
     fi
     printf "%s" "$venv_type"
 }
@@ -170,11 +174,19 @@ function check_venv()
 
     # check if Pipfile exists rather than invoking pipenv as it is slow
     local pipfile_path="$(_check_path "$PWD" "Pipfile")"
+    # Same logic applies to poetry
+    local pyproject_path="$(_check_path "$PWD" "pyproject.toml")"
 
     if [[ -n "$pipfile_path" ]] && type "pipenv" > /dev/null; then
         # unfortunately running pipenv each time we are in a pipenv project directory is slow :(
         if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
             _maybeworkon "$venv_path" "pipenv"
+            return
+        fi
+    elif [[ -n "$pyproject_path" ]] && type "poetry" > /dev/null; then
+        # we need to infer the target virtualenv directory based on poetry's data
+        if venv_path="$(dirname $(dirname $(poetry run which python)))"; then
+            _maybeworkon "$venv_path" "poetry"
             return
         fi
     fi
