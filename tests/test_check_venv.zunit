@@ -154,6 +154,25 @@
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoodefault\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
+@test 'check_venv - activate if .venv unavailable but poetry available' {
+    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where pyproject.toml is found
+    touch "$TARGET/pyproject.toml"
+
+    # Mimic poetry run which python
+    function poetry {
+        if [[ "$@" == "run which python" ]]; then
+            echo "$HOME/.virtualenvs/foobar/bin/python"
+        else
+            echo "ERROR - wrong command from what was expected ran!"
+        fi
+    }
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching poetry: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+}
+
 
 @test 'check_venv - activate if .venv unavailable but pipenv available' {
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where Pipfile is found
