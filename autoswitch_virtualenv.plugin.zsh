@@ -185,6 +185,8 @@ function check_venv()
         fi
     elif [[ -n "$pyproject_path" ]] && type "poetry" > /dev/null; then
         # we need to infer the target virtualenv directory based on poetry's data
+        # to easiest way is to actually get the location of the python binary and
+        # infer the location of the virtualenv from there.
         if venv_path="$(dirname $(dirname $(poetry run which python)))"; then
             _maybeworkon "$venv_path" "poetry"
             return
