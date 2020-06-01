@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.0
+-----
+* Support autoswitching of poetry projects
+
 1.16.2
 ------
 * Output messages to stderr instead of stdout
