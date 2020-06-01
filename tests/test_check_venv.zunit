@@ -4,11 +4,11 @@
 
     if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
         echo "Creating test virtualenv"
-        run python -m virtualenv "$HOME/.virtualenvs/foobar" --python=python3
+        run virtualenv "$HOME/.virtualenvs/foobar" --python=python3
     fi
     if [[ ! -d "$HOME/.virtualenvs/foodefault/" ]]; then
         echo "Creating default test virtualenv"
-        run python -m virtualenv "$HOME/.virtualenvs/foodefault" --python=python3
+        run virtualenv "$HOME/.virtualenvs/foodefault" --python=python3
     fi
 
     unset AUTOSWITCH_MESSAGE_FORMAT
@@ -158,13 +158,9 @@
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where pyproject.toml is found
     touch "$TARGET/pyproject.toml"
 
-    # Mimic poetry run which python
+    # Mimic "poetry run which python"
     function poetry {
-        if [[ "$@" == "run which python" ]]; then
-            echo "$HOME/.virtualenvs/foobar/bin/python"
-        else
-            echo "ERROR - wrong command from what was expected ran!"
-        fi
+        echo "$HOME/.virtualenvs/foobar/bin/python"
     }
 
     run check_venv
