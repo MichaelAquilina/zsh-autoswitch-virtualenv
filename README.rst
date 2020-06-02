@@ -12,7 +12,7 @@ without any setup necessary.
 * `How it Works`_
 * `More Details`_
 * Installing_
-* `Pipenv Integration`_
+* `Pipenv and Poetry Integration`_
 * Commands_
 * `Customising Messages`_
 * Options_
@@ -111,10 +111,11 @@ Source the plugin shell script in your `~/.zshrc` profile. For example
    source $HOME/zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
 
 
-Pipenv Integration
+Pipenv and Poetry Integration
 ------------------
 
-This plugin will also detect and auto activate virtualenvs made with ``pipenv``.
+This plugin will also detect and auto activate virtualenvs made with ``pipenv`` or ``poetry``.
+No action needs to be performed in projects where a poetry/pipenv project has already been setup.
 
 Commands
 --------
