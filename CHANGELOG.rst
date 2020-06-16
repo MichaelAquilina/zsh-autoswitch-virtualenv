@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.1
+-----
+* Fix issue where poetry would incorrectly try activate in projects with pyproject.toml but no poetry setup (Issue #130) (Thanks @hauntsaninja)
+
 2.0.0
 -----
 * Support autoswitching of poetry projects
