@@ -168,7 +168,10 @@
     assert $status equals 0
     assert "$output" same_as "Switching poetry: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 
-    # poetry available, but "poetry run which python" fails because pyproject.toml doesn't use poetry
+@test 'check_venv - poetry available but pyproject.toml is not setup for poetry' {
+    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where pyproject.toml is found
+    touch "$TARGET/pyproject.toml"
+
     function poetry {
         return 1
     }
