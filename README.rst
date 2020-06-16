@@ -112,7 +112,7 @@ Source the plugin shell script in your `~/.zshrc` profile. For example
 
 
 Pipenv and Poetry Integration
-------------------
+-----------------------------
 
 This plugin will also detect and auto activate virtualenvs made with ``pipenv`` or ``poetry``.
 No action needs to be performed in projects where a poetry/pipenv project has already been setup.
