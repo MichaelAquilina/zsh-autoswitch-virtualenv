@@ -167,6 +167,15 @@
 
     assert $status equals 0
     assert "$output" same_as "Switching poetry: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+
+    # poetry available, but "poetry run which python" fails because pyproject.toml doesn't use poetry
+    function poetry {
+        return 1
+    }
+
+    run check_venv
+    assert $status equals 0
+    assert "$output" is_empty
 }
 
 
