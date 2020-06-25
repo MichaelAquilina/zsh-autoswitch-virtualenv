@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.0.0
+-----
+* Improve integration support for poetry and pipenv. The ``mkvenv`` and ``rmvenv`` commands work as expected.
+* Improve detection of poetry projects by looking for "poetry.lock" rather than "pyproject.toml"
+
 2.0.1
 -----
 * Fix issue where poetry would incorrectly try activate in projects with pyproject.toml but no poetry setup (Issue #130) (Thanks @hauntsaninja)

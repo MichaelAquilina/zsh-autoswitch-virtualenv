@@ -18,6 +18,14 @@
     assert "$output" same_as "pipenv"
 }
 
+@test '_get_venv_type poetry' {
+    touch "$TARGET/poetry.lock"
+
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "poetry"
+}
 
 @test '_get_venv_type virtualenv (requirements.txt)' {
     touch "$TARGET/requirements.txt"

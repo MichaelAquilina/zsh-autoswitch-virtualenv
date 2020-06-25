@@ -10,6 +10,22 @@
     unset AUTOSWITCH_DEFAULT_REQUIREMENTS
     TARGET="$(mktemp -d)"
     cd "$TARGET"
+
+    function poetry {
+        echo "poetry" $@
+    }
+
+    function _activate_poetry {
+        echo "activating poetry"
+    }
+
+    function pipenv {
+        echo "pipenv" $@
+    }
+
+    function _activate_pipenv {
+        echo "activating pipenv"
+    }
 }
 
 @teardown {
@@ -40,6 +56,30 @@
 
     assert $status equals 0
     assert "$output" same_as "myproject"
+}
+
+@test 'mkvenv - (poetry project) runs correct command' {
+    mkdir myproject
+    cd myproject
+    touch "poetry.lock"
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "poetry install"
+    assert "$lines[2]" same_as "activating poetry"
+}
+
+@test 'mkvenv - (pipenv project) runs correct command' {
+    mkdir myproject
+    cd myproject
+    touch "Pipfile"
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "pipenv install --dev"
+    assert "$lines[2]" same_as "activating pipenv"
 }
 
 @test 'mkvenv - uses default python if set and not specified' {
@@ -95,10 +135,54 @@
     run mkvenv
 
     assert $status equals 0
-    assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires virtualenv to be installed!"
+    assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires 'virtualenv' to install this project!"
     assert "$lines[2]" is_empty
     assert "$lines[3]" contains "If this is already installed but you are still seeing this message,"
     assert "$lines[4]" contains "then make sure the \e[1mvirtualenv\e[0m command is in your PATH.\n"
+    assert "$lines[5]" is_empty
+    assert ${#lines} equals 4
+}
+
+@test 'prints help message and disables plugin if poetry not setup' {
+    touch "poetry.lock"
+
+    # Mock type to fail
+    function type() {
+        if [[ "$1" == "poetry" ]]; then
+            return 1
+        fi
+        return 0
+    }
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires 'poetry' to install this project!"
+    assert "$lines[2]" is_empty
+    assert "$lines[3]" contains "If this is already installed but you are still seeing this message,"
+    assert "$lines[4]" contains "then make sure the \e[1mpoetry\e[0m command is in your PATH.\n"
+    assert "$lines[5]" is_empty
+    assert ${#lines} equals 4
+}
+
+@test 'prints help message and disables plugin if pipenv not setup' {
+    touch "Pipfile"
+
+    # Mock type to fail
+    function type() {
+        if [[ "$1" == "pipenv" ]]; then
+            return 1
+        fi
+        return 0
+    }
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires 'pipenv' to install this project!"
+    assert "$lines[2]" is_empty
+    assert "$lines[3]" contains "If this is already installed but you are still seeing this message,"
+    assert "$lines[4]" contains "then make sure the \e[1mpipenv\e[0m command is in your PATH.\n"
     assert "$lines[5]" is_empty
     assert ${#lines} equals 4
 }

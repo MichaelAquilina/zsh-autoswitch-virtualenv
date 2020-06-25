@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="2.0.1"
+export AUTOSWITCH_VERSION="3.0.0"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -47,17 +47,16 @@ function _autoswitch_message() {
     fi
 }
 
+
 function _get_venv_type() {
     local venv_dir="$1"
     local venv_type="${2:-virtualenv}"
     if [[ -f "$venv_dir/Pipfile" ]]; then
         venv_type="pipenv"
+    elif [[ -f "$venv_dir/poetry.lock" ]]; then
+        venv_type="poetry"
     elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
         venv_type="virtualenv"
-    # TODO: this is not technically correct as lots of tools use pyproject.toml
-    # however it's probably a good enough approximation for this function
-    elif [[ -f "$venv_dir/pyproject.toml" ]]; then
-        venv_type="poetry"
     fi
     printf "%s" "$venv_type"
 }
@@ -137,6 +136,34 @@ function _check_path()
 }
 
 
+function _activate_poetry() {
+    # check if any environments exist before trying to activate
+    # if env list is empty, then no environment exists that can be activated
+    if [[ -n "$(poetry env list)" ]]; then
+        # we need to infer the target virtualenv directory based on poetry's data
+        # to easiest way is to actually get the location of the python binary and
+        # infer the location of the virtualenv from there.
+        if poetry_python=$(poetry run which python); then
+            if venv_path="$(dirname $(dirname $poetry_python))"; then
+                _maybeworkon "$venv_path" "poetry"
+                return 0
+            fi
+        fi
+    fi
+    return 1
+}
+
+
+function _activate_pipenv() {
+    # unfortunately running pipenv each time we are in a pipenv project directory is slow :(
+    if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
+        _maybeworkon "$venv_path" "pipenv"
+        return 0
+    fi
+    return 1
+}
+
+
 # Automatically switch virtualenv when $AUTOSWITCH_FILE file detected
 function check_venv()
 {
@@ -175,38 +202,28 @@ function check_venv()
     # check if Pipfile exists rather than invoking pipenv as it is slow
     local pipfile_path="$(_check_path "$PWD" "Pipfile")"
     # Same logic applies to poetry
-    local pyproject_path="$(_check_path "$PWD" "pyproject.toml")"
+    local poetry_lock="$(_check_path "$PWD" "poetry.lock")"
 
     if [[ -n "$pipfile_path" ]] && type "pipenv" > /dev/null; then
-        # unfortunately running pipenv each time we are in a pipenv project directory is slow :(
-        if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
-            _maybeworkon "$venv_path" "pipenv"
+        if _activate_pipenv; then
             return
         fi
-    elif [[ -n "$pyproject_path" ]] && type "poetry" > /dev/null; then
-        # we need to infer the target virtualenv directory based on poetry's data
-        # to easiest way is to actually get the location of the python binary and
-        # infer the location of the virtualenv from there.
-        if poetry_python=$(poetry run which python); then
-            if venv_path="$(dirname $(dirname $poetry_python))"; then
-                _maybeworkon "$venv_path" "poetry"
-                return
-            fi
+    elif [[ -n "$poetry_lock" ]] && type "poetry" > /dev/null; then
+        if _activate_poetry; then
+            return
         fi
     fi
 
     local venv_type="$(_get_venv_type "$PWD" "unknown")"
 
     # If we still haven't got anywhere, fallback to defaults
-    if [[ "$venv_type" == "pipenv" ]]; then
-        printf "Python project detected. "
-        printf "Run ${PURPLE}pipenv install${NORMAL} to setup autoswitching\n"
-    elif [[ "$venv_type" == "virtualenv" ]]; then
-        printf "Python project detected. "
+    if [[ "$venv_type" != "unknown" ]]; then
+        printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
         printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
     fi
     _default_venv
 }
+
 
 # Switch to the default virtual environment
 function _default_venv()
@@ -222,74 +239,112 @@ function _default_venv()
 }
 
 
-# remove virtual environment for current directory
+# remove project environment for current directory
 function rmvenv()
 {
-    if [[ -f "$AUTOSWITCH_FILE" ]]; then
-        local venv_name="$(<$AUTOSWITCH_FILE)"
+    local venv_type="$(_get_venv_type "$PWD" "unknown")"
 
-        # detect if we need to switch virtualenv first
-        if [[ -n "$VIRTUAL_ENV" ]]; then
-            local current_venv="$(basename $VIRTUAL_ENV)"
-            if [[ "$current_venv" = "$venv_name" ]]; then
-                _default_venv
-            fi
-        fi
-
-        printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
-        # Using explicit paths to avoid any alias/function interference.
-        # rm should always be found in this location according to
-        # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
-        # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
-        /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
-        /bin/rm "$AUTOSWITCH_FILE"
+    if [[ "$venv_type" == "pipenv" ]]; then
+        deactivate
+        pipenv --rm
+    elif [[ "$venv_type" == "poetry" ]]; then
+        deactivate
+        poetry env remove "$(poetry run which python)"
     else
-        printf "No $AUTOSWITCH_FILE file in the current directory!\n"
+        if [[ -f "$AUTOSWITCH_FILE" ]]; then
+            local venv_name="$(<$AUTOSWITCH_FILE)"
+
+            # detect if we need to switch virtualenv first
+            if [[ -n "$VIRTUAL_ENV" ]]; then
+                local current_venv="$(basename $VIRTUAL_ENV)"
+                if [[ "$current_venv" = "$venv_name" ]]; then
+                    _default_venv
+                fi
+            fi
+
+            printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
+            # Using explicit paths to avoid any alias/function interference.
+            # rm should always be found in this location according to
+            # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
+            # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
+            /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
+            /bin/rm "$AUTOSWITCH_FILE"
+        else
+            printf "No $AUTOSWITCH_FILE file in the current directory!\n"
+        fi
     fi
 }
 
 
-# helper function to create a virtual environment for the current directory
+function _missing_error_message() {
+    local command="$1"
+    printf "${BOLD}${RED}"
+    printf "zsh-autoswitch-virtualenv requires '%s' to install this project!\n\n" "$command"
+    printf "${NORMAL}"
+    printf "If this is already installed but you are still seeing this message, \n"
+    printf "then make sure the ${BOLD}$command${NORMAL} command is in your PATH.\n" $command
+    printf "\n"
+}
+
+
+# helper function to create a project environment for the current directory
 function mkvenv()
 {
-    if ! type "virtualenv" > /dev/null; then
-        printf "${BOLD}${RED}"
-        printf "zsh-autoswitch-virtualenv requires virtualenv to be installed!\n\n"
-        printf "${NORMAL}"
-        printf "If this is already installed but you are still seeing this message, \n"
-        printf "then make sure the ${BOLD}virtualenv${NORMAL} command is in your PATH.\n"
-        printf "\n"
+    local venv_type="$(_get_venv_type "$PWD" "unknown")"
+    # Copy parameters variable so that we can mutate it
+    # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
+    local params
+    params=("${@[@]}")
+
+    if [[ "$venv_type" == "pipenv" ]]; then
+        if ! type "pipenv" > /dev/null; then
+            _missing_error_message pipenv
+            return
+        fi
+        # TODO: detect if this is already installed
+        pipenv install --dev $params
+        _activate_pipenv
         return
-    fi
-
-    if [[ -f "$AUTOSWITCH_FILE" ]]; then
-        printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
+    elif [[ "$venv_type" == "poetry" ]]; then
+        if ! type "poetry" > /dev/null; then
+            _missing_error_message poetry
+            return
+        fi
+        # TODO: detect if this is already installed
+        poetry install $params
+        _activate_poetry
+        return
     else
-        local venv_name="$(basename $PWD)"
-
-        printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
-
-        # Copy parameters variable so that we can mutate it
-        # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
-        local params
-        params=("${@[@]}")
-
-        if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
-            params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
+        if ! type "virtualenv" > /dev/null; then
+            _missing_error_message virtualenv
+            return
         fi
 
-        if [[ ${params[(I)--verbose]} -eq 0 ]]; then
-            virtualenv $params "$(_virtual_env_dir "$venv_name")"
+        if [[ -f "$AUTOSWITCH_FILE" ]]; then
+            printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            virtualenv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
+            local venv_name="$(basename $PWD)"
+
+            printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
+
+
+            if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
+                params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
+            fi
+
+            if [[ ${params[(I)--verbose]} -eq 0 ]]; then
+                virtualenv $params "$(_virtual_env_dir "$venv_name")"
+            else
+                virtualenv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
+            fi
+
+            printf "$venv_name\n" > "$AUTOSWITCH_FILE"
+            chmod 600 "$AUTOSWITCH_FILE"
+
+            _maybeworkon "$(_virtual_env_dir "$venv_name")" "virtualenv"
+
+            install_requirements
         fi
-
-        printf "$venv_name\n" > "$AUTOSWITCH_FILE"
-        chmod 600 "$AUTOSWITCH_FILE"
-
-        _maybeworkon "$(_virtual_env_dir "$venv_name")" "virtualenv"
-
-        install_requirements
     fi
 }
 

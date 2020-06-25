@@ -27,13 +27,18 @@ Simply call the ``mkvenv`` command in the directory you wish to setup a
 virtual environment. A virtual environment specific to that folder will
 now activate every time you enter it.
 
-``zsh-autoswitch-virtualenv`` will try detect python projects and remind
-you to create a virtual environment if e.g. setup.py or requirements.txt is
-found in the current directory.
+``zsh-autoswitch-virtualenv`` will detect python projects and remind
+you to create a virtual environment. This mainly occurs if one of the following
+is found in current the directory:
 
-**NOTE: Pipenv and Poetry projects should not use 'mkvenv'.**
+* setup.py
+* requirements.txt
+* Pipfile
+* poetry.lock
 
-**Use 'pipenv install' or 'poetry install' respectively instead**
+To create a virtual environment for that project, simply run ``mkvenv``.
+This command works as expected for all popular python project types
+(virtualenvs, pipenv and poetry).
 
 See the Commands_ section below for more detail.
 
@@ -123,7 +128,7 @@ Commands
 mkvenv
 ''''''
 
-Setup a new project with virtualenv autoswitching using the ``mkvenv``
+Setup a new python project with autoswitching using the ``mkvenv``
 helper command.
 
 ::
@@ -137,6 +142,8 @@ helper command.
     Installing collected packages: requests
     Successfully installed requests-2.11.1
 
+This command also works as expected with both ``poetry`` and ``pipenv``.
+
 Optionally, you can specify the python binary to use for this virtual environment
 
 ::
@@ -144,40 +151,8 @@ Optionally, you can specify the python binary to use for this virtual environmen
     $ mkvenv --python=/usr/bin/python3
 
 
-It is also possible to inherit the system site packages (which can reduce duplication on the file system
-and download/setup time).
-
-::
-
-    $ mkvenv --system-site-packages
-
-In fact, ``mkvenv`` supports any parameters that can be passed to ``python -m virtualenv``.
-A comprehensive list of options may be found in the
-`virtualenv guide <https://virtualenv.pypa.io/en/latest/reference/#options>`__
-
-``mkvenv`` will create a virtual environment with the same name as the
-current directory, suggest installing ``requirements.txt`` if available
-and create the relevant ``.venv`` file for you.
-
-Next time you switch to that folder, you'll see the following message
-
-::
-
-    $ cd my-python-project
-    Switching virtualenv: my-python-project  [Python 3.4.3+]
-    $
-
-If you have set the ``AUTOSWITCH_DEFAULTENV`` environment variable,
-exiting that directory will switch back to the value set.
-
-::
-
-    $ cd ..
-    Switching virtualenv: mydefaultenv  [Python 3.4.3+]
-    $
-
-Otherwise, ``deactivate`` will simply be called on the virtualenv to
-switch back to the global python environment.
+In fact any parameters passed to mkvenv will be passed to the relevant setup command.
+The same applies to passing additional parameters to ``pipenv install`` and ``poetry install``.
 
 Autoswitching is smart enough to detect that you have traversed to a
 project subdirectory. So your virtualenv will not be deactivated if you
@@ -215,6 +190,9 @@ This will delete the virtual environment in ``.venv`` and remove the
     $ cd my-non-python-project
     $ rmvenv
     No .venv file in the current directory!
+
+Similar to ``mkvenv``, the ``rmvenv`` command also works as you would
+expect with removing ``poetry`` and ``pipenv`` projects.
 
 disable_autoswitch_virtualenv
 '''''''''''''''''''''''''''''
