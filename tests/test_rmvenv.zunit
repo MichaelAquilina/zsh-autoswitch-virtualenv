@@ -7,6 +7,18 @@
     unset AUTOSWITCH_DEFAULT_REQUIREMENTS
     TARGET="$(mktemp -d)"
     cd "$TARGET"
+
+    function poetry {
+        echo 'poetry' $@
+    }
+
+    function pipenv {
+        echo 'pipenv' $@
+    }
+
+    function deactivate {
+        echo 'deactivate'
+    }
 }
 
 @teardown {
@@ -63,4 +75,25 @@
     assert "$output" same_as "Removing \e[35m$test_venv\e[0m..."
     test ! -f .venv
     test ! -d "$HOME/.virtualenvs/$test_venv"
+}
+
+@test 'rmvenv - uninstalls poetry project' {
+    touch "poetry.lock"
+
+    run rmvenv
+
+    assert $state equals 0
+    assert "$lines[1]" same_as "deactivate"
+    assert "$lines[2]" same_as "poetry env remove poetry run which python"
+}
+
+
+@test 'rmvenv - uninstalls pipenv project' {
+    touch "Pipfile"
+
+    run rmvenv
+
+    assert $state equals 0
+    assert "$lines[1]" same_as "deactivate"
+    assert "$lines[2]" same_as "pipenv --rm"
 }
