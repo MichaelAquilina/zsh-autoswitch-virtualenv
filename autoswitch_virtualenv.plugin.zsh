@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="3.0.0"
+export AUTOSWITCH_VERSION="3.0.1"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -121,17 +121,20 @@ function _maybeworkon() {
 function _check_path()
 {
     local check_dir="$1"
-    local check_file="$2"
 
-    if [[ -f "${check_dir}/$check_file" ]]; then
-        printf "${check_dir}/$check_file"
+    if [[ -f "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
+        printf "${check_dir}/${AUTOSWITCH_FILE}"
         return
+    elif [[ -f "${check_dir}/poetry.lock" ]]; then
+        printf "${check_dir}/poetry.lock"
+    elif [[ -f "${check_dir}/Pipfile" ]]; then
+        printf "${check_dir}/Pipfile"
     else
         # Abort search at file system root or HOME directory (latter is a performance optimisation).
         if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
             return
         fi
-        _check_path "$(dirname "$check_dir")" "$check_file"
+        _check_path "$(dirname "$check_dir")"
     fi
 }
 
@@ -139,16 +142,11 @@ function _check_path()
 function _activate_poetry() {
     # check if any environments exist before trying to activate
     # if env list is empty, then no environment exists that can be activated
-    if [[ -n "$(poetry env list)" ]]; then
-        # we need to infer the target virtualenv directory based on poetry's data
-        # to easiest way is to actually get the location of the python binary and
-        # infer the location of the virtualenv from there.
-        if poetry_python=$(poetry run which python); then
-            if venv_path="$(dirname $(dirname $poetry_python))"; then
-                _maybeworkon "$venv_path" "poetry"
-                return 0
-            fi
-        fi
+    name="$(poetry env list | cut -d' ' -f1)"
+    if [[ -n "$name" ]]; then
+        local venv_path="$HOME/.cache/pypoetry/virtualenvs/$name"
+        _maybeworkon "$venv_path" "poetry"
+        return 0
     fi
     return 1
 }
@@ -171,7 +169,7 @@ function check_venv()
     local file_permissions
 
     # Get the $AUTOSWITCH_FILE, scanning parent directories
-    local venv_path="$(_check_path "$PWD" "$AUTOSWITCH_FILE")"
+    local venv_path="$(_check_path "$PWD")"
 
     if [[ -n "$venv_path" ]]; then
 
@@ -193,24 +191,19 @@ function check_venv()
             printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
         else
-            local switch_to="$(<"$venv_path")"
-            _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
-            return
-        fi
-    fi
-
-    # check if Pipfile exists rather than invoking pipenv as it is slow
-    local pipfile_path="$(_check_path "$PWD" "Pipfile")"
-    # Same logic applies to poetry
-    local poetry_lock="$(_check_path "$PWD" "poetry.lock")"
-
-    if [[ -n "$pipfile_path" ]] && type "pipenv" > /dev/null; then
-        if _activate_pipenv; then
-            return
-        fi
-    elif [[ -n "$poetry_lock" ]] && type "poetry" > /dev/null; then
-        if _activate_poetry; then
-            return
+            if [[ "$venv_path" == *"/Pipfile" ]] && type "pipenv" > /dev/null; then
+                if _activate_pipenv; then
+                    return
+                fi
+            elif [[ "$venv_path" == *"/poetry.lock" ]] && type "poetry" > /dev/null; then
+                if _activate_poetry; then
+                    return
+                fi
+            else
+                local switch_to="$(<"$venv_path")"
+                _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
+                return
+            fi
         fi
     fi
 

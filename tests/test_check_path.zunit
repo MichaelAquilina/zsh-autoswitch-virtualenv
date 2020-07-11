@@ -11,17 +11,17 @@
     rm -rf "$TARGET"
 }
 
-@test '_check_path - test finds in base directory' {
+@test '_check_path - finds .venv in base directory' {
     touch "$TARGET/.venv"
 
-    run _check_path "$TARGET" ".venv"
+    run _check_path "$TARGET"
 
     assert $state equals 0
     assert "$output" same_as "$TARGET/.venv"
 }
 
 @test '_check_path - returns nothing if not found' {
-   run _check_path "$TARGET" ".venv"
+   run _check_path "$TARGET"
 
    assert $state equals 0
    assert "$output" is_empty
@@ -31,10 +31,20 @@
     touch "$TARGET/Pipfile"
     mkdir "$TARGET/foo"
 
-    run _check_path "$TARGET/foo" "Pipfile"
+    run _check_path "$TARGET/foo"
 
     assert $state equals 0
     assert "$output" same_as "$TARGET/Pipfile"
+}
+
+@test '_check_path - finds in parent directories' {
+    touch "$TARGET/poetry.lock"
+    mkdir "$TARGET/foo"
+
+    run _check_path "$TARGET/foo"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/poetry.lock"
 }
 
 @test '_check_path - returns nothing with root path' {
