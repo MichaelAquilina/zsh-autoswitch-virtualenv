@@ -2,6 +2,10 @@
 
 @setup {
 
+    if [[ ! -d "$HOME/.cache/pypoetry/virtualenvs/poetry-foo" ]]; then
+        echo "Creating poetry test virtualenv"
+        run virtualenv "$HOME/.cache/pypoetry/virtualenvs/poetry-foo" --python=python3
+    fi
     if [[ ! -d "$HOME/.virtualenvs/foobar/" ]]; then
         echo "Creating test virtualenv"
         run virtualenv "$HOME/.virtualenvs/foobar" --python=python3
@@ -62,6 +66,10 @@
 @test 'check_venv - Displays message on project detection (poetry.lock)' {
     PWD="$TARGET"
     touch "$TARGET/poetry.lock"
+
+    function poetry {
+        echo ""
+    }
 
     run check_venv
 
@@ -165,32 +173,19 @@
 }
 
 @test 'check_venv - activate if .venv unavailable but poetry available' {
-    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where pyproject.toml is found
+    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where poetry.lock is found
     touch "$TARGET/poetry.lock"
 
-    # Mimic "poetry run which python"
+    # Mimic "poetry env list"
     function poetry {
-        echo "$HOME/.virtualenvs/foobar/bin/python"
+        echo "poetry-foo (activated)"
     }
 
     run check_venv
 
     assert $status equals 0
-    assert "$output" same_as "Switching poetry: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
-
-@test 'check_venv - poetry available but pyproject.toml is not setup for poetry' {
-    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where pyproject.toml is found
-    touch "$TARGET/pyproject.toml"
-
-    function poetry {
-        return 1
-    }
-
-    run check_venv
-    assert $status equals 0
-    assert "$output" is_empty
+    assert "$output" same_as "Switching poetry: \e[1m\e[35mpoetry-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
-
 
 @test 'check_venv - activate if .venv unavailable but pipenv available' {
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where Pipfile is found
