@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.0.1
+-----
+* Fix issue where poetry projects would not activate if another virtualenv is already activated (#134)
+
 3.0.0
 -----
 * Improve integration support for poetry and pipenv. The ``mkvenv`` and ``rmvenv`` commands work as expected.
