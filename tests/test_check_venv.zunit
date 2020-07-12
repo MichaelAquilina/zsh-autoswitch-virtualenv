@@ -15,6 +15,15 @@
         run virtualenv "$HOME/.virtualenvs/foodefault" --python=python3
     fi
 
+    # Mimic poetry commands
+    function poetry {
+        if [[ "$1" == "env" ]]; then
+            echo "poetry-foo (activated)"
+        elif [[ "$1" == "config" ]]; then
+            echo "$HOME/.cache/pypoetry"
+        fi
+    }
+
     unset AUTOSWITCH_MESSAGE_FORMAT
     PYTHON_VERSION="$(python3 --version 2>&1)"
 
@@ -176,10 +185,6 @@
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where poetry.lock is found
     touch "$TARGET/poetry.lock"
 
-    # Mimic "poetry env list"
-    function poetry {
-        echo "poetry-foo (activated)"
-    }
 
     run check_venv
 
