@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="3.0.1"
+export AUTOSWITCH_VERSION="3.0.2"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
