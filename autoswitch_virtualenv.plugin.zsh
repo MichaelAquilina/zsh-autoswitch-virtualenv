@@ -169,7 +169,7 @@ function check_venv()
 
     # Get the $AUTOSWITCH_FILE, scanning parent directories
     local venv_path="$(_check_path "$PWD")"
-    
+
     if [[ -n "$venv_path" ]]; then
 
         /usr/bin/stat --version &> /dev/null
