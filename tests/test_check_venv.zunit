@@ -176,9 +176,9 @@
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where poetry.lock is found
     touch "$TARGET/poetry.lock"
 
-    # Mimic "poetry env list"
+    # Mimic "poetry env list --full-path"
     function poetry {
-        echo "poetry-foo (activated)"
+        echo "$HOME/.cache/pypoetry/virtualenvs/poetry-foo (Activated)"
     }
 
     run check_venv
