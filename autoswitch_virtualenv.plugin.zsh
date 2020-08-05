@@ -142,17 +142,9 @@ function _check_path()
 function _activate_poetry() {
     # check if any environments exist before trying to activate
     # if env list is empty, then no environment exists that can be activated
-    name="$(poetry env list | cut -d' ' -f1)"
+    local name="$(poetry env list --full-path | cut -d' ' -f1)"
     if [[ -n "$name" ]]; then
-        local venv_path
-        # Temporary work around until we figure out a better way to
-        # correctly determine the location of virtualenvs in poetry
-        if [[ "$(uname)" == "Darwin" ]]; then
-            venv_path="$HOME/Library/Caches/pypoetry/virtualenvs/$name"
-        else
-            venv_path="$HOME/.cache/pypoetry/virtualenvs/$name"
-        fi
-        _maybeworkon "$venv_path" "poetry"
+        _maybeworkon "$name" "poetry"
         return 0
     fi
     return 1
