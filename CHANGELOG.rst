@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.1.0
+-----
+* Correctly determine location of poetry virtualenvs based on configuration
+
 3.0.2
 -----
 * Correctly determine virtualenv paths for poetry on Mac OSX
