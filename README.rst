@@ -277,7 +277,7 @@ changed by setting the value of ``AUTOSWITCH_FILE``. For example:
 **Default requirements file**
 
 You may specify a default requirements file to use when creating a virtualenv by
-setting the value of ``AUTOSWTICH_DEFAULT_REQUIREMENTS``. For example:
+setting the value of ``AUTOSWITCH_DEFAULT_REQUIREMENTS``. For example:
 
 ::
 
@@ -319,7 +319,7 @@ Security Warnings
 -----------------
 
 zsh-autoswitch-virtualenv will warn you and refuse to activate a virtual
-envionrment automatically in the following situations:
+environment automatically in the following situations:
 
 -  You are not the owner of the ``.venv`` file found in a directory.
 -  The ``.venv`` file has weak permissions. I.e. it is writable by other users on the system.
