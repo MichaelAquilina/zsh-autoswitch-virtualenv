@@ -88,7 +88,7 @@ function _maybeworkon() {
     fi
 
     # Don't reactivate an already activated virtual environment
-    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(_get_venv_name $VIRTUAL_ENV $venv_type)" ]]; then
+    if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(_get_venv_name $VIRTUAL_ENV $venv_type)" || "${+functions[deactivate]}" -eq 0 ]]; then
 
         if [[ ! -d "$venv_dir" ]]; then
             printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
