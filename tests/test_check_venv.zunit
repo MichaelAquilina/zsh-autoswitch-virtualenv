@@ -178,7 +178,7 @@
 
     # Mimic "poetry env list --full-path"
     function poetry {
-        echo "$HOME/.cache/pypoetry/virtualenvs/poetry-foo (Activated)"
+        echo "$HOME/.cache/pypoetry/virtualenvs/some-other-env\n$HOME/.cache/pypoetry/virtualenvs/poetry-foo (Activated)"
     }
 
     run check_venv
