@@ -142,7 +142,7 @@ function _check_path()
 function _activate_poetry() {
     # check if any environments exist before trying to activate
     # if env list is empty, then no environment exists that can be activated
-    local name="$(poetry env list --full-path | cut -d' ' -f1)"
+    local name="$(poetry env list --full-path | sort -k 2 | tail -n 1 | cut -d' ' -f1)"
     if [[ -n "$name" ]]; then
         _maybeworkon "$name" "poetry"
         return 0
