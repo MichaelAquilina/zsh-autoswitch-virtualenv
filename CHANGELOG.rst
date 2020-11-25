@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.1.1
+-----
+* Fix poetry switching when multiple venvs are available (#144) (Thanks @hauntsaninja)
+
 3.1.0
 -----
 * Correctly determine location of poetry virtualenvs based on configuration
