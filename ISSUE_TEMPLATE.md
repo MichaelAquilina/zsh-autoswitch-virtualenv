@@ -9,7 +9,7 @@ Please provide the following details when opening an issue:
 ## autoswitch-virtualenv version
 
 ```
-echo "$AUTOSWITCH_VERSION")
+echo "$AUTOSWITCH_VERSION"
 <your version here>
 ```
 
