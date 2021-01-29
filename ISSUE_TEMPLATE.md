@@ -15,10 +15,12 @@ echo "$AUTOSWITCH_VERSION"
 
 ## How is zsh-autoswitch-virtualenv installed?
 
-- [ ] zplug
-- [ ] oh-my-zsh
-- [ ] Antigen
-- [ ] Other (please specify)
+<!-- Remove the ones that do not apply !-->
+
+- zplug
+- oh-my-zsh
+- Antigen
+- Other (please specify)
 
 ## Steps to reproduce the issue
 
