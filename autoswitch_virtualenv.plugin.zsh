@@ -283,6 +283,8 @@ function _missing_error_message() {
 function mkvenv()
 {
     local venv_type="$(_get_venv_type "$PWD" "unknown")"
+    local -A flags
+    zparseopts -D -A flags -M -- n:
     # Copy parameters variable so that we can mutate it
     # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
     local params
@@ -315,7 +317,7 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name="$(basename $PWD)"
+            local venv_name=${flags[-n]:-$(basename $PWD)}
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
