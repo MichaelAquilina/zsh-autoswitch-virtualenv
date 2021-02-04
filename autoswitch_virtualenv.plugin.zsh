@@ -43,7 +43,9 @@ function _python_version() {
 
 function _autoswitch_message() {
     if [ -z "$AUTOSWITCH_SILENT" ]; then
-        (>&2 printf "$@")
+        # Insert message prefix
+        local msg=(${AUTOSWITCH_VIRTUAL_ENV_MESSAGE_PREFIX}$1 ${@[2,-1]})
+        (>&2 printf "${msg[@]}")
     fi
 }
 
@@ -81,8 +83,7 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT=${AUTOSWITCH_VIRTUAL_ENV_MESSAGE_PREFIX}
-    DEFAULT_MESSAGE_FORMAT+="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
