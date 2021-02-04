@@ -81,7 +81,8 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT=${AUTOSWITCH_VIRTUAL_ENV_MESSAGE_PREFIX}
+    DEFAULT_MESSAGE_FORMAT+="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
@@ -283,8 +284,6 @@ function _missing_error_message() {
 function mkvenv()
 {
     local venv_type="$(_get_venv_type "$PWD" "unknown")"
-    local -A flags
-    zparseopts -D -A flags -M -- n:
     # Copy parameters variable so that we can mutate it
     # NOTE: Keep declaration of variable and assignment separate for zsh 5.0 compatibility
     local params
@@ -317,7 +316,7 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name=${flags[-n]:-$(basename $PWD)}
+            local venv_name=${CUSTOM_VENV_NAME:-$(basename $PWD)}
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
