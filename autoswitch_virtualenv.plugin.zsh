@@ -1,11 +1,11 @@
 export AUTOSWITCH_VERSION="3.1.0"
 export AUTOSWITCH_FILE=".venv"
 
-RED="\e[31m"
-GREEN="\e[32m"
-PURPLE="\e[35m"
-BOLD="\e[1m"
-NORMAL="\e[0m"
+AUTOSWITCH_VIRTUALENV_RED="\e[31m"
+AUTOSWITCH_VIRTUALENV_GREEN="\e[32m"
+AUTOSWITCH_VIRTUALENV_PURPLE="\e[35m"
+AUTOSWITCH_VIRTUALENV_BOLD="\e[1m"
+AUTOSWITCH_VIRTUALENV_NORMAL="\e[0m"
 
 
 function _validated_source() {
@@ -83,7 +83,7 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${AUTOSWITCH_VIRTUALENV_BOLD}${AUTOSWITCH_VIRTUALENV_PURPLE}%venv_name${AUTOSWITCH_VIRTUALENV_NORMAL} ${AUTOSWITCH_VIRTUALENV_GREEN}[🐍%py_version]${AUTOSWITCH_VIRTUALENV_NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
@@ -93,8 +93,8 @@ function _maybeworkon() {
     if [[ -z "$VIRTUAL_ENV" || "$venv_name" != "$(_get_venv_name $VIRTUAL_ENV $venv_type)" || "${+functions[deactivate]}" -eq 0 ]]; then
 
         if [[ ! -d "$venv_dir" ]]; then
-            printf "Unable to find ${PURPLE}$venv_name${NORMAL} virtualenv\n"
-            printf "If the issue persists run ${PURPLE}rmvenv && mkvenv${NORMAL} in this directory\n"
+            printf "Unable to find ${AUTOSWITCH_VIRTUALENV_PURPLE}$venv_name${AUTOSWITCH_VIRTUALENV_NORMAL} virtualenv\n"
+            printf "If the issue persists run ${AUTOSWITCH_VIRTUALENV_PURPLE}rmvenv && mkvenv${AUTOSWITCH_VIRTUALENV_NORMAL} in this directory\n"
             return
         fi
 
@@ -186,11 +186,11 @@ function check_venv()
         if [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
-            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
+            printf "Change ownership of ${AUTOSWITCH_VIRTUALENV_PURPLE}$venv_path${AUTOSWITCH_VIRTUALENV_NORMAL} to ${PURPLE}'$USER'${AUTOSWITCH_VIRTUALENV_NORMAL} to fix this\n"
         elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
+            printf "Run the following command to fix this: ${AUTOSWITCH_VIRTUALENV_PURPLE}\"chmod 600 $venv_path\"${AUTOSWITCH_VIRTUALENV_NORMAL}\n"
         else
             if [[ "$venv_path" == *"/Pipfile" ]] && type "pipenv" > /dev/null; then
                 if _activate_pipenv; then
@@ -212,8 +212,8 @@ function check_venv()
 
     # If we still haven't got anywhere, fallback to defaults
     if [[ "$venv_type" != "unknown" ]]; then
-        printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
-        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        printf "Python ${AUTOSWITCH_VIRTUALENV_PURPLE}$venv_type${AUTOSWITCH_VIRTUALENV_NORMAL} project detected. "
+        printf "Run ${AUTOSWITCH_VIRTUALENV_PURPLE}mkvenv${AUTOSWITCH_VIRTUALENV_NORMAL} to setup autoswitching\n"
     fi
     _default_venv
 }
@@ -227,7 +227,7 @@ function _default_venv()
         _maybeworkon "$(_virtual_env_dir "$AUTOSWITCH_DEFAULTENV")" "$venv_type"
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
-        _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
+        _autoswitch_message "Deactivating: ${AUTOSWITCH_VIRTUALENV_BOLD}${AUTOSWITCH_VIRTUALENV_PURPLE}%s${AUTOSWITCH_VIRTUALENV_NORMAL}\n" "$venv_name"
         deactivate
     fi
 }
@@ -256,7 +256,7 @@ function rmvenv()
                 fi
             fi
 
-            printf "Removing ${PURPLE}%s${NORMAL}...\n" "$venv_name"
+            printf "Removing ${AUTOSWITCH_VIRTUALENV_PURPLE}%s${AUTOSWITCH_VIRTUALENV_NORMAL}...\n" "$venv_name"
             # Using explicit paths to avoid any alias/function interference.
             # rm should always be found in this location according to
             # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
@@ -272,11 +272,11 @@ function rmvenv()
 
 function _missing_error_message() {
     local command="$1"
-    printf "${BOLD}${RED}"
+    printf "${AUTOSWITCH_VIRTUALENV_BOLD}${AUTOSWITCH_VIRTUALENV_RED}"
     printf "zsh-autoswitch-virtualenv requires '%s' to install this project!\n\n" "$command"
-    printf "${NORMAL}"
+    printf "${AUTOSWITCH_VIRTUALENV_NORMAL}"
     printf "If this is already installed but you are still seeing this message, \n"
-    printf "then make sure the ${BOLD}$command${NORMAL} command is in your PATH.\n" $command
+    printf "then make sure the ${AUTOSWITCH_VIRTUALENV_BOLD}$command${AUTOSWITCH_VIRTUALENV_NORMAL} command is in your PATH.\n" $command
     printf "\n"
 }
 
@@ -319,7 +319,7 @@ function mkvenv()
         else
             local venv_name=${CUSTOM_VENV_NAME:-$(basename $PWD)}
 
-            printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
+            printf "Creating ${AUTOSWITCH_VIRTUALENV_PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
 
             if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
@@ -345,7 +345,7 @@ function mkvenv()
 
 function install_requirements() {
     if [[ -f "$AUTOSWITCH_DEFAULT_REQUIREMENTS" ]]; then
-        printf "Install default requirements? (${PURPLE}$AUTOSWITCH_DEFAULT_REQUIREMENTS${NORMAL}) [y/N]: "
+        printf "Install default requirements? (${AUTOSWITCH_VIRTUALENV_PURPLE}$AUTOSWITCH_DEFAULT_REQUIREMENTS${AUTOSWITCH_VIRTUALENV_NORMAL}) [y/N]: "
         read ans
 
         if [[ "$ans" = "y" || "$ans" == "Y" ]]; then
@@ -354,7 +354,7 @@ function install_requirements() {
     fi
 
     if [[ -f "$PWD/setup.py" ]]; then
-        printf "Found a ${PURPLE}setup.py${NORMAL} file. Install dependencies? [y/N]: "
+        printf "Found a ${AUTOSWITCH_VIRTUALENV_PURPLE}setup.py${AUTOSWITCH_VIRTUALENV_NORMAL} file. Install dependencies? [y/N]: "
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
@@ -371,7 +371,7 @@ function install_requirements() {
     local requirements
     for requirements in **/*requirements.txt
     do
-        printf "Found a ${PURPLE}%s${NORMAL} file. Install? [y/N]: " "$requirements"
+        printf "Found a ${AUTOSWITCH_VIRTUALENV_PURPLE}%s${AUTOSWITCH_VIRTUALENV_NORMAL} file. Install? [y/N]: " "$requirements"
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
