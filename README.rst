@@ -205,7 +205,7 @@ enable_autoswitch_virtualenv
 
 Re-enable autoswitching of virtualenvs (if it was previously disabled).
 
-Customising Messages
+Customizing Messages
 --------------------
 
 By default, the following message is displayed in bold when an alias is found:
@@ -329,6 +329,25 @@ In both cases, the warnings should explain how to fix the problem.
 These are security measures that prevents other, potentially malicious
 users, from switching you to a virtual environment you did not want to
 switch to.
+
+**Disabling security warnings**
+
+However, on some environments where you where might not have the correct rights,
+we included a flag to allow you to disable these warnings.
+
+To do so, just add the setting ``AUTOSWITCH_DISABLE_WARNING`` to
+a non-null value within your ``~/.zshrc`` file.
+::
+
+    AUTOSWITCH_DISABLE_WARNING=1
+
+The rights on the ``.venv`` file won't be checked anymore, and the venv will
+be activated.
+
+Since this might cause a security issue, the default behavior, unless overwritten,
+is to enable these warnings and block the activation of the ``.venv`` if the file
+parameters are not correct.
+
 
 Running Tests
 -------------

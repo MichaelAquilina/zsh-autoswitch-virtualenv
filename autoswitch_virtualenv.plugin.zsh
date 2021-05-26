@@ -81,7 +81,7 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${BOLD}${PURPLE}%venv_name${NORMAL} ${GREEN}[ 🐍 %py_version ]${NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
@@ -166,6 +166,7 @@ function check_venv()
 {
     local file_owner
     local file_permissions
+    local security_is_on
 
     # Get the $AUTOSWITCH_FILE, scanning parent directories
     local venv_path="$(_check_path "$PWD")"
@@ -181,11 +182,19 @@ function check_venv()
             file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
         fi
 
-        if [[ "$file_owner" != "$(id -u)" ]]; then
+        if [[ -z $AUTOSWITCH_DISABLE_WARNING ]] || [ "$AUTOSWITCH_DISABLE_WARNING" = 0 ]; then
+            # Security not disabled
+            security_is_on=1
+        else
+           # Security disabled
+            security_is_on=0
+        fi
+
+        if [[ "$file_owner" != "$(id -u)" ]] && [ "$security_is_on" = 1 ]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
             printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-        elif ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
+        elif ! { [[ "$file_permissions" =~ ^[64][04][04]$ ]] || [ "$security_is_on" = 0 ]; }; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
