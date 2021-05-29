@@ -315,7 +315,9 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name="$(basename $PWD)"
+            # If the mkvenv command is executed in '/home/user/my-project', the name of the virtualenv
+            # will be 'my-project-wyUf‘ where the last 4 characters are random letters of mixed case
+            local venv_name="$(basename $PWD)-$(base64 </dev/urandom | tr -dc 'a-zA-Z' | head -c4)"
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
