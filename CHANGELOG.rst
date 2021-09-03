@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.2.0
+-----
+* Fix case where autoswitch would not activate correctly when starting in a directory which has a .venv set
+
 3.1.1
 -----
 * Fix poetry switching when multiple venvs are available (#144) (Thanks @hauntsaninja)
