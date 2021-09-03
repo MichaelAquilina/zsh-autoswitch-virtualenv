@@ -3,14 +3,14 @@
 
 @setup {
     TEST_VIRTUALENV="$HOME/.virtualenvs/foobar/"
+    PYTHON_VERSION="$(python3 --version 2>&1)"
 
     if [[ ! -d "$TEST_VIRTUALENV" ]]; then
-        echo "Creating test virtualenv"
+        printf "Creating test virtualenv: %s" % "$PYTHON_VERSION"
         run python -m virtualenv "$TEST_VIRTUALENV" --python=python3
     fi
 
     unset AUTOSWITCH_MESSAGE_FORMAT
-    PYTHON_VERSION="$(python3 --version 2>&1)"
 
     export DISABLE_AUTOSWITCH_VENV="1"
     load "../autoswitch_virtualenv.plugin.zsh"
@@ -23,7 +23,7 @@
     rm -rf "$TARGET"
 }
 
-@test '_maybeworkon - do not activate paths which are potentially inscure' {
+@test '_maybeworkon - do not activate paths which are potentially insecure' {
     VIRTUAL_ENV=""
 
     run _maybeworkon "$TARGET/../../../" virtualenv
