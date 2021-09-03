@@ -390,6 +390,15 @@ function disable_autoswitch_virtualenv() {
     add-zsh-hook -D chpwd check_venv
 }
 
+# This function is only used to startup zsh-autoswitch-virtualenv
+# the first time a terminal is started up
+# it waits for the terminal to be ready using precmd and then
+# imediately removes itself from the zsh-hook
+function _autoswitch_startup() {
+    add-zsh-hook -D precmd _startup
+    check_venv
+}
+
 
 enable_autoswitch_virtualenv
-check_venv
+add-zsh-hook precmd _autoswitch_startup
