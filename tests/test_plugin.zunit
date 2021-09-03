@@ -24,23 +24,6 @@
 }
 
 
-@test 'plugin - does nothing on load if no default set' {
-    unset AUTOSWITCH_DEFAULTENV
-
-    run load ../autoswitch_virtualenv.plugin.zsh
-
-    assert $status equals 0
-    assert "$output" is_empty
-}
-
-@test 'plugin - runs default env on load' {
-    AUTOSWITCH_DEFAULTENV="foobar"
-    run load ../autoswitch_virtualenv.plugin.zsh
-
-    assert $status equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
-}
-
 @test 'plugin - does nothing if switching to directory without .venv' {
     unset AUTOSWITCH_DEFAULTENV
     load ../autoswitch_virtualenv.plugin.zsh
