@@ -315,7 +315,7 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name="$(basename $PWD)"
+            local venv_name="$(basename $PWD)-$(pwgen 8 1)"
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 

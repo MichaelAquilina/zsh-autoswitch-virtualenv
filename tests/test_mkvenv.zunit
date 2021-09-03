@@ -50,12 +50,11 @@
 
     assert $status equals 0
     assert "$TARGET/myproject/.venv" exists
-    # assert "$lines[1]" same_as "Creating \e[35mmyproject\e[0m virtualenv"
 
     run cat "$TARGET/myproject/.venv"
 
     assert $status equals 0
-    assert "$output" same_as "myproject"
+    assert "$output" matches "myproject-[a-zA-Z0-9]{8}"
 }
 
 @test 'mkvenv - (poetry project) runs correct command' {
@@ -92,12 +91,14 @@
     assert $status equals 0
     assert "$TARGET/myproject/.venv" exists
     # Assert mock output
-    assert "$lines[2]" same_as "virtualenv --python=python_foo $HOME/.virtualenvs/myproject"
+
+    expected="virtualenv --python=python_foo $HOME/.virtualenvs/myproject-"
+    assert "$lines[2]" contains "$expected"
 
     run cat "$TARGET/myproject/.venv"
 
     assert $status equals 0
-    assert "$output" same_as "myproject"
+    assert "$output" matches "myproject-[a-zA-Z0-9]{8}"
 }
 
 @test 'mkvenv - uses specified python if default set' {
@@ -115,12 +116,12 @@
     assert $status equals 0
     assert "$TARGET/myproject/.venv" exists
     # Assert mock output
-    assert "$lines[2]" same_as "virtualenv --python=python_bar $HOME/.virtualenvs/myproject"
+    assert "$lines[2]" contains "virtualenv --python=python_bar $HOME/.virtualenvs/myproject-"
 
     run cat "$TARGET/myproject/.venv"
 
     assert $status equals 0
-    assert "$output" same_as "myproject"
+    assert "$output" matches "myproject-[a-zA-Z0-9]{8}"
 }
 
 @test 'prints help message and disables plugin if virtualenv not setup' {
