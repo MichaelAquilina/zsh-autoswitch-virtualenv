@@ -321,6 +321,10 @@ function mkvenv()
 
 
             if [[ -n "$AUTOSWITCH_DEFAULT_PYTHON" && ${params[(I)--python*]} -eq 0 ]]; then
+                printf "${PURPLE}"
+                printf 'Using $AUTOSWITCH_DEFAULT_PYTHON='
+                printf "$AUTOSWITCH_DEFAULT_PYTHON"
+                printf "${NONE}\n"
                 params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
             fi
 

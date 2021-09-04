@@ -92,8 +92,10 @@
     assert "$TARGET/myproject/.venv" exists
     # Assert mock output
 
-    expected="virtualenv --python=python_foo $HOME/.virtualenvs/myproject-"
+    expected='Using $AUTOSWITCH_DEFAULT_PYTHON=python_foo'
     assert "$lines[2]" contains "$expected"
+    expected="virtualenv --python=python_foo $HOME/.virtualenvs/myproject-"
+    assert "$lines[3]" contains "$expected"
 
     run cat "$TARGET/myproject/.venv"
 
