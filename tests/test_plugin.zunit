@@ -39,6 +39,9 @@
 @test 'plugin - switches env when .venv found' {
     unset AUTOSWITCH_DEFAULTENV
     load ../autoswitch_virtualenv.plugin.zsh
+    # zsh-hook precmd does not seem to work correctly in tests
+    # so we need to manually enable the plugin
+    enable_autoswitch_virtualenv
 
     TEMP_DIR="$(mktemp -d)"
     echo "foobar" > "$TEMP_DIR/.venv"

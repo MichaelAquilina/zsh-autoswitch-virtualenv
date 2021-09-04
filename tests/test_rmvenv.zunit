@@ -68,11 +68,12 @@
 @test 'rmvenv - removes .venv and deactivates if currently active' {
     test_venv="$(basename $PWD)"
     run mkvenv
+    target_venv="$(<.venv)"
 
     run rmvenv
 
     assert $state equals 0
-    assert "$output" same_as "Removing \e[35m$test_venv\e[0m..."
+    assert "$output" same_as "Removing \e[35m$target_venv\e[0m..."
     test ! -f .venv
     test ! -d "$HOME/.virtualenvs/$test_venv"
 }
