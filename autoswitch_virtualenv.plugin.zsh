@@ -7,7 +7,6 @@ PURPLE="\e[35m"
 BOLD="\e[1m"
 NORMAL="\e[0m"
 
-
 function _validated_source() {
     local target_path="$1"
 
@@ -384,7 +383,6 @@ function install_requirements() {
 
 
 function enable_autoswitch_virtualenv() {
-    autoload -Uz add-zsh-hook
     disable_autoswitch_virtualenv
     add-zsh-hook chpwd check_venv
 }
@@ -397,12 +395,18 @@ function disable_autoswitch_virtualenv() {
 # This function is only used to startup zsh-autoswitch-virtualenv
 # the first time a terminal is started up
 # it waits for the terminal to be ready using precmd and then
-# imediately removes itself from the zsh-hook
+# immediately removes itself from the zsh-hook.
+# This seems important for "instant prompt" zsh themes like powerlevel10k
 function _autoswitch_startup() {
     add-zsh-hook -D precmd _startup
-    check_venv
+
+    if ! type pwgen 1>/dev/null; then
+        printf "${PURPLE}pwgen is required for zsh-autoswitch-virtualenv to run${NONE}\n"
+    else
+        enable_autoswitch_virtualenv
+        check_venv
+    fi
 }
 
-
-enable_autoswitch_virtualenv
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd _autoswitch_startup
