@@ -1,6 +1,12 @@
 Changelog
 =========
 
+3.3.0
+-----
+* virtualenv names are now generated with a random prefixed string. This will prevent multiple directories which share the same name from causing conflicts.
+* pwgen is now a requirement for running zsh-autoswitch-virtualenv
+* display if AUTOSWITCH_DEFAULT_PYTHON is used during mkvenv command
+
 3.2.0
 -----
 * Fix case where autoswitch would not activate correctly when starting in a directory which has a .venv set
