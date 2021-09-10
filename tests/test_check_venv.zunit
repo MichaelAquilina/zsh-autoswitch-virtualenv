@@ -187,6 +187,31 @@
     assert "$output" same_as "Switching poetry: \e[1m\e[35mpoetry-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
+@test 'check_venv - bypass poetry call because already activated and VIRTUAL_ENV is set' {
+    PWD="$TARGET/sub-directory"  # Should also work in subdirectories where poetry.lock is found
+    touch "$TARGET/poetry.lock"
+
+    function poetry {
+        echo "$HOME/.cache/pypoetry/virtualenvs/some-other-env\n$HOME/.cache/pypoetry/virtualenvs/poetry-foo (Activated)"
+    }
+
+    # when check_venv is successful, then the variable VIRTUAL_ENV should be set and should be used intended
+    # subsequent calls to check_venv
+    run check_venv
+    assert $status equals 0
+    assert "$output" same_as "Switching poetry: \e[1m\e[35mpoetry-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+
+    # unset poetry function because it should no longer be needed because VIRUAL_ENV is set
+    # will fail here and not find the poetry command if VIRTUAL_ENV isn't set
+    unset -f poetry
+    for i in {1..3}; do
+        run check_venv
+        assert $status equals 0
+        assert "$output" is_empty
+    done
+}
+
+
 @test 'check_venv - activate if .venv unavailable but pipenv available' {
     PWD="$TARGET/sub-directory"  # Should also work in subdirectories where Pipfile is found
     touch "$TARGET/Pipfile"
@@ -200,8 +225,6 @@
     assert $status equals 0
     assert "$output" same_as "Switching pipenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
-
-
 @test 'check_venv - deactivate if neither .venv nor pipenv available' {
     PWD="$TARGET"
     VIRTUAL_ENV="foo"
