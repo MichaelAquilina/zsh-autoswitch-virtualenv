@@ -398,7 +398,7 @@ function disable_autoswitch_virtualenv() {
 # immediately removes itself from the zsh-hook.
 # This seems important for "instant prompt" zsh themes like powerlevel10k
 function _autoswitch_startup() {
-    add-zsh-hook -D precmd _startup
+    add-zsh-hook -D precmd _autoswitch_startup
 
     if ! type pwgen 1>/dev/null; then
         printf "${PURPLE}pwgen is required for zsh-autoswitch-virtualenv to run${NONE}\n"
