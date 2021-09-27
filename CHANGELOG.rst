@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.3.1
+-----
+* Fixed a bug where shell enviroments would become slow after autoswitching (#159 Thanks @yut13)
+
 3.3.0
 -----
 * virtualenv names are now generated with a random prefixed string. This will prevent multiple directories which share the same name from causing conflicts.
