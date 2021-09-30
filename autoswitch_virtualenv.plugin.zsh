@@ -189,12 +189,12 @@ function check_venv()
             printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
             printf "Run the following command to fix this: ${PURPLE}\"chmod 600 $venv_path\"${NORMAL}\n"
         else
-            if [[ "$venv_path" == *"/Pipfile" ]] && type "pipenv" > /dev/null; then
-                if _activate_pipenv; then
+            if [[ "$venv_path" == *"/Pipfile" ]]; then
+                if type "pipenv" > /dev/null && _activate_pipenv; then
                     return
                 fi
-            elif [[ "$venv_path" == *"/poetry.lock" ]] && type "poetry" > /dev/null; then
-                if _activate_poetry; then
+            elif [[ "$venv_path" == *"/poetry.lock" ]]; then
+                if type "poetry" > /dev/null && _activate_poetry; then
                     return
                 fi
             else
