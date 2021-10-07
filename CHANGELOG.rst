@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.3.2
+-----
+* Dont attempt to activate a Pipenv or Poetry project if they are not installed (#161 thanks @stevenxxiu)
+
 3.3.1
 -----
 * Fixed a bug where shell enviroments would become slow after autoswitching (#159 Thanks @yut13)
