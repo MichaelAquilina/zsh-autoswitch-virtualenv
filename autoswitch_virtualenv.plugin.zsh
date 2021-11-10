@@ -277,6 +277,21 @@ function _missing_error_message() {
     printf "\n"
 }
 
+function randstr()
+{
+    local strlen="${1:=8}"
+    local str
+    local i
+
+    strchars="abcdefghijklmnopqrstuvwxyz123456789"
+
+    for ((i=0; i<strlen; i++)); do
+        str="$str${strchars:$(( $RANDOM % ${#strchars} )):1}"
+    done
+
+    printf "%s" "$str"
+}
+
 
 # helper function to create a project environment for the current directory
 function mkvenv()
@@ -314,7 +329,7 @@ function mkvenv()
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             printf "$AUTOSWITCH_FILE file already exists. If this is a mistake use the rmvenv command\n"
         else
-            local venv_name="$(basename $PWD)-$(pwgen 8 1)"
+            local venv_name="$(basename $PWD)-$(randstr)"
 
             printf "Creating ${PURPLE}%s${NONE} virtualenv\n" "$venv_name"
 
@@ -399,13 +414,8 @@ function disable_autoswitch_virtualenv() {
 # This seems important for "instant prompt" zsh themes like powerlevel10k
 function _autoswitch_startup() {
     add-zsh-hook -D precmd _autoswitch_startup
-
-    if ! type pwgen 1>/dev/null; then
-        printf "${PURPLE}pwgen is required for zsh-autoswitch-virtualenv to run${NONE}\n"
-    else
-        enable_autoswitch_virtualenv
-        check_venv
-    fi
+    enable_autoswitch_virtualenv
+    check_venv
 }
 
 autoload -Uz add-zsh-hook
