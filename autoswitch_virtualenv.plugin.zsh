@@ -279,17 +279,8 @@ function _missing_error_message() {
 
 function randstr()
 {
-    local strlen="${1:=8}"
-    local str
-    local i
-
-    strchars="abcdefghijklmnopqrstuvwxyz123456789"
-
-    for ((i=0; i<strlen; i++)); do
-        str="$str${strchars:$(( $RANDOM % ${#strchars} )):1}"
-    done
-
-    printf "%s" "$str"
+    local strlen="${1:=4}"
+    python -c "import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range($strlen)))"
 }
 
 
