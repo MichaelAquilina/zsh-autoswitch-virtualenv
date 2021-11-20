@@ -68,7 +68,6 @@
 
     # check that $(randstr n) returns a string of length n
     assert "${#$(randstr)}" equals 4
-    assert "${#$(randstr 19)}" equals 19
 
     assert "$(randstr)" different_to "$(randstr)"
 }
