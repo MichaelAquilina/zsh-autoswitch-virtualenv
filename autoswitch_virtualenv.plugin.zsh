@@ -280,7 +280,7 @@ function _missing_error_message() {
 function randstr()
 {
     local strlen="${1:=4}"
-    python -c "import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range($strlen)))"
+    python -c "from __future__ import print_function; import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range($strlen)))"
 }
 
 
