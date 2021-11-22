@@ -68,7 +68,7 @@ projects (or equivalent file for the Version Control you are using).
 Installing
 ----------
 
-``autoswitch-virtualenv`` requires `virtualenv <https://pypi.org/project/virtualenv/>`__ and ``pwgen`` to be installed.
+``autoswitch-virtualenv`` requires `virtualenv <https://pypi.org/project/virtualenv/>`__ to be installed.
 
 Once ``virtualenv`` is installed, add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:

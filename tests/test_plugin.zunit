@@ -60,3 +60,14 @@
     assert $status equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
+
+
+@test 'plugin - check randstr' {
+    unset AUTOSWITCH_DEFAULTENV
+    load ../autoswitch_virtualenv.plugin.zsh
+
+    # check that $(randstr n) returns a string of length n
+    assert "${#$(randstr)}" equals 4
+
+    assert "$(randstr)" different_to "$(randstr)"
+}
