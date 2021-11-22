@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.4.0
+-----
+* Remove `pwgen` dependency. Thanks (#166 @hauntsaninja)
+
 3.3.2
 -----
 * Dont attempt to activate a Pipenv or Poetry project if they are not installed (#161 thanks @stevenxxiu)
