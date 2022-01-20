@@ -322,7 +322,7 @@ supported project without an initialized virtual environment:
 
 ::
 
-    Python virtualenv project detected. Run mkvenv to setup autoswitching
+    Python $venv_type project detected. Run mkvenv to setup autoswitching
 
 This can be silenced by setting the environment variable
 ``AUTOSWITCH_HIDE_MKVENV_SUGGESTION``:
