@@ -31,7 +31,6 @@ function _virtual_env_dir() {
 
 function _python_version() {
     local PYTHON_BIN="$1"
-
     if [[ -f "$PYTHON_BIN" ]]; then
         # For some reason python --version writes to stderr
         printf "%s" "$($PYTHON_BIN --version 2>&1)"
