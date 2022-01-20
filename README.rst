@@ -315,6 +315,22 @@ By default `mkvenv` will install setup.py via pip in editable (i.e. development)
 and `here <https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs/>`__ for
 further information. To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
 
+**Disabling the suggestion to run mkvenv**
+
+By default, this plugin prints a suggestion to run `mkvenv` when it detects a
+supported project without an initialized virtual environment:
+
+::
+
+    Python virtualenv project detected. Run mkvenv to setup autoswitching
+
+This can be silenced by setting the environment variable
+``AUTOSWITCH_HIDE_MKVENV_SUGGESTION``:
+
+::
+
+    export AUTOSWITCH_HIDE_MKVENV_SUGGESTION=1
+
 Security Warnings
 -----------------
 
