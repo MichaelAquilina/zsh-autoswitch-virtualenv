@@ -1,3 +1,5 @@
+# TODO: document AUTOSWITCH_HIDE_MKVENV_SUGGESTION variable
+
 export AUTOSWITCH_VERSION="3.4.0"
 export AUTOSWITCH_FILE=".venv"
 
@@ -31,6 +33,10 @@ function _virtual_env_dir() {
 
 function _python_version() {
     local PYTHON_BIN="$1"
+
+    # TODO: is the lack of a semicolon after the ]] OK style-wise?
+    # I know it's valid in ZSH because the [[ ]] is grammar, but it's not
+    # portable. E.g. it breaks bash it seems.
     if [[ -f "$PYTHON_BIN" ]] then
         # For some reason python --version writes to stderr
         printf "%s" "$($PYTHON_BIN --version 2>&1)"
@@ -209,8 +215,10 @@ function check_venv()
 
     # If we still haven't got anywhere, fallback to defaults
     if [[ "$venv_type" != "unknown" ]]; then
-        printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
-        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        if (( !AUTOSWITCH_HIDE_MKVENV_SUGGESTION )); then
+            printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
+            printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        fi
     fi
     _default_venv
 }
