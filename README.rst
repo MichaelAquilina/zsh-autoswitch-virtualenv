@@ -56,6 +56,9 @@ same name as the current directory but can be edited if needed). There
 is then a precommand hook that looks for a ``.venv`` file and switches
 to the name specified if one is found.
 
+Autoswitch virtualenv also works automatically with projects which contains
+a ``.venv`` virtualenv directly created by the ``python -m venv`` command.
+
 For the case of pipenv projects, the plugin will look for a ``Pipfile``
 and activates pipenv if it detects an existing virtual environment for it.
 
@@ -264,8 +267,8 @@ the mkvenv command.
 
 **Autoswitch file name**
 
-By default, the `.venv` file is searched for in each directory in order to tell if
-a virtualenv should be automatically activated.
+By default, the `.venv` file (or virtualenv directory) is searched for in each
+directory in order to tell if a virtualenv should be automatically activated.
 
 If this needs to be changed (e.g. it conflicts with something else) then it may be
 changed by setting the value of ``AUTOSWITCH_FILE``. For example:
