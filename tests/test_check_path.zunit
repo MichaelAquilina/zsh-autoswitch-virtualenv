@@ -11,8 +11,17 @@
     rm -rf "$TARGET"
 }
 
-@test '_check_path - finds .venv in base directory' {
+@test '_check_path - finds .venv file in base directory' {
     touch "$TARGET/.venv"
+
+    run _check_path "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/.venv"
+}
+
+@test '_check_path - finds .venv directory in base directory' {
+    mkdir "$TARGET/.venv"
 
     run _check_path "$TARGET"
 

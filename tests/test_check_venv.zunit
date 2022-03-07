@@ -230,7 +230,7 @@
     assert "$output" same_as "Deactivating: \e[1m\e[35mfoo-bar\e[0m"
 }
 
-@test 'check_venv - works as intended with .venv available' {
+@test 'check_venv - works as intended with .venv file available' {
     PWD="$TARGET"
 
     echo "foobar" > "$TARGET/.venv"
@@ -240,4 +240,24 @@
 
     assert $status equals 0
     assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+}
+
+@test 'check_venv - works as intended with .venv directory available' {
+    PWD="$TARGET"
+    run virtualenv "$TARGET/.venv" --python=python3
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as "Switching virtualenv: \e[1m\e[35m.venv\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+}
+
+@test 'check_venv - works as intended with .venv directory not being virtualenv' {
+    PWD="$TARGET"
+    mkdir "$TARGET/.venv"
+
+    run check_venv
+
+    assert $status equals 0
+    assert "$output" same_as ""
 }
