@@ -313,10 +313,9 @@ then you can set the variable to use a relative path. For example:
 
 **Customising pip install invocation**
 
-By default `mkvenv` will install setup.py via pip in editable (i.e. development) mode. See
-`here <http://codumentary.blogspot.com/2014/11/python-tip-of-year-pip-install-editable.html/>`__
-and `here <https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs/>`__ for
-further information. To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
+By default `mkvenv` will install setup.py via pip in `editable (i.e. development) mode
+<https://pip.pypa.io/en/stable/cli/pip_install/#editable-installs>`__.
+To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
 
 Security Warnings
 -----------------
