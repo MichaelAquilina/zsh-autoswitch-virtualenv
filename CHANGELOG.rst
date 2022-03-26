@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.6.0
+------
+* Display warning in terminal if python is not in PATH
+
 3.5.0
 -----
 * Add support for virtualenv directories created by `python -m venv` (#168 thanks @afeblot)
