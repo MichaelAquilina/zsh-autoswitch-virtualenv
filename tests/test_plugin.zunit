@@ -12,6 +12,43 @@
     LANG=".UTF-8"
 }
 
+@test 'disabled if python not in path' {
+    # Fake type failing on checking python
+    function type {
+      if [[ "$1" == "python" ]]; then
+        return 1;
+      fi
+    }
+
+    # use run the first time to capture output
+    run load ../autoswitch_virtualenv.plugin.zsh
+
+    assert "$lines[1]" same_as "WARNING: python binary not found on PATH."
+    assert "$lines[2]" same_as "zsh-autoswitch-virtualenv plugin will be disabled."
+
+    # use load the next time to check its loaded into hooks correctly
+    load ../autoswitch_virtualenv.plugin.zsh
+
+    assert '_autoswitch_startup' not_in $precmd_functions
+}
+
+@test 'enabled correctly' {
+  function type {
+    return 0
+  }
+
+  # use run the first time to capture output
+  run load ../autoswitch_virtualenv.plugin.zsh
+
+  assert "$output" is_empty
+
+  # use load the next time to check its loaded into hooks correctly
+  load ../autoswitch_virtualenv.plugin.zsh
+
+  assert $output is_empty
+  assert '_autoswitch_startup' in $precmd_functions
+}
+
 @test 'correct version exported' {
     unset AUTOSWITCH_DEFAULTENV
     load ../autoswitch_virtualenv.plugin.zsh
