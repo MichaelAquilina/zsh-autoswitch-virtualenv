@@ -1,4 +1,4 @@
-export AUTOSWITCH_VERSION="3.5.0"
+export AUTOSWITCH_VERSION="3.6.0"
 export AUTOSWITCH_FILE=".venv"
 
 RED="\e[31m"
@@ -413,5 +413,10 @@ function _autoswitch_startup() {
     check_venv
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _autoswitch_startup
+if ! type "python" > /dev/null; then
+    printf "WARNING: python binary not found on PATH.\n"
+    printf "zsh-autoswitch-virtualenv plugin will be disabled.\n"
+else
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd _autoswitch_startup
+fi
