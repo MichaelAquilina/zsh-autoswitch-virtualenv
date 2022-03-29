@@ -72,6 +72,7 @@ Installing
 ----------
 
 ``autoswitch-virtualenv`` requires `virtualenv <https://pypi.org/project/virtualenv/>`__ to be installed.
+You will also need to make sure that ``python`` (without a suffix; both Python 2 and 3 are supported) is available in your ``$PATH``.
 
 Once ``virtualenv`` is installed, add one of the following lines to your ``.zshrc`` file depending on the
 package manager you are using:
