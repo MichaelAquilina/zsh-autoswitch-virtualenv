@@ -95,7 +95,7 @@ function _maybeworkon() {
             return
         fi
 
-        if [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
+        if [[ ! -z "$AUTOSWITCH_DEACTIVATE_CONDA" ]] && [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
             _autoswitch_message "Deactivating Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$CONDA_DEFAULT_ENV"
             export AUTOSWITCH_DEACTIVATED_CONDA_ENV=$CONDA_DEFAULT_ENV
             conda deactivate
@@ -238,7 +238,7 @@ function _default_venv()
         _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
         deactivate
 
-        if [[ ! -z "$AUTOSWITCH_DEACTIVATED_CONDA_ENV" ]]; then
+        if [[ ! -z "$AUTOSWITCH_DEACTIVATE_CONDA" ]] && [[ ! -z "$AUTOSWITCH_DEACTIVATED_CONDA_ENV" ]]; then
             _autoswitch_message "Switching Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$AUTOSWITCH_DEACTIVATED_CONDA_ENV"
             conda activate $AUTOSWITCH_DEACTIVATED_CONDA_ENV
             unset AUTOSWITCH_DEACTIVATED_CONDA_ENV

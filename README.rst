@@ -318,6 +318,16 @@ By default `mkvenv` will install setup.py via pip in `editable (i.e. development
 <https://pip.pypa.io/en/stable/cli/pip_install/#editable-installs>`__.
 To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
 
+**Deactivating active Conda environment**
+
+By default, virtual environments are activated without checking if any Conda environment is active.
+When one is, your prompt may display information about virtualenv being active, but in reality
+the Conda environment will still be used.
+
+To avoid such confusing behaviour, you can have the Conda environment deactivated automatically
+(and then switched back when leaving the directory), set the value of the environment variable
+``AUTOSWITCH_DEACTIVATE_CONDA`` to a non-empty value.
+
 Security Warnings
 -----------------
 
