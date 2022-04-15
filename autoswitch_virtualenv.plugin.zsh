@@ -95,6 +95,12 @@ function _maybeworkon() {
             return
         fi
 
+        if [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
+            _autoswitch_message "Deactivating Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$CONDA_DEFAULT_ENV"
+            export AUTOSWITCH_DEACTIVATED_CONDA_ENV=$CONDA_DEFAULT_ENV
+            conda deactivate
+        fi
+
         local py_version="$(_python_version "$venv_dir/bin/python")"
         local message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
         message="${message//\%venv_type/$venv_type}"
@@ -106,11 +112,6 @@ function _maybeworkon() {
         # to prevent users seeing " Pipenv found itself running within a virtual environment" warning
         if [[ "$venv_type" == "pipenv" && "$PIPENV_VERBOSITY" != -1 ]]; then
             export PIPENV_VERBOSITY=-1
-        fi
-
-        if [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
-            export AUTOSWITCH_DEACTIVATED_CONDA_ENV=$CONDA_DEFAULT_ENV
-            conda deactivate
         fi
 
         # Much faster to source the activate file directly rather than use the `workon` command
@@ -236,8 +237,9 @@ function _default_venv()
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
         deactivate
-        
+
         if [[ ! -z "$AUTOSWITCH_DEACTIVATED_CONDA_ENV" ]]; then
+            _autoswitch_message "Switching Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$AUTOSWITCH_DEACTIVATED_CONDA_ENV"
             conda activate $AUTOSWITCH_DEACTIVATED_CONDA_ENV
             unset AUTOSWITCH_DEACTIVATED_CONDA_ENV
         fi
