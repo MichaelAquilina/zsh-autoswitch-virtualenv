@@ -236,6 +236,11 @@ function _default_venv()
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${BOLD}${PURPLE}%s${NORMAL}\n" "$venv_name"
         deactivate
+        
+        if [[ ! -z "$AUTOSWITCH_DEACTIVATED_CONDA_ENV" ]]; then
+            conda activate $AUTOSWITCH_DEACTIVATED_CONDA_ENV
+            unset AUTOSWITCH_DEACTIVATED_CONDA_ENV
+        fi
     fi
 }
 
