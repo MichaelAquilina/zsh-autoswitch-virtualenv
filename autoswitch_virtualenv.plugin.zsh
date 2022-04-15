@@ -108,6 +108,11 @@ function _maybeworkon() {
             export PIPENV_VERBOSITY=-1
         fi
 
+        if [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
+            export AUTOSWITCH_DEACTIVATED_CONDA_ENV=$CONDA_DEFAULT_ENV
+            conda deactivate
+        fi
+
         # Much faster to source the activate file directly rather than use the `workon` command
         local activate_script="$venv_dir/bin/activate"
 
