@@ -95,6 +95,16 @@ Zgen_
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
 
+Fig_
+
+Fig adds apps, shortcuts, and autocomplete to your existing terminal.
+
+Install ``zsh-autoswitch-virtualenv`` in just one click.
+
+.. image:: https://fig.io/badges/install-with-fig.svg
+  :target: https://fig.io/plugins/other/zsh-autoswitch-virtualenv_MichaelAquilina
+  :alt: Install with Fig
+
 oh-my-zsh_
 
 Copy this repository to ``$ZSH_CUSTOM/plugins``, where ``$ZSH_CUSTOM``
@@ -359,6 +369,8 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. _Antigen: https://github.com/zsh-users/antigen
 
 .. _ZGen: https://github.com/tarjoilija/zgen
+
+.. _Fig: https://fig.io
 
 .. _oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh
 
