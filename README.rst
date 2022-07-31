@@ -95,6 +95,14 @@ Zgen_
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
 
+zinit
+    
+    zinit wait lucid for MichaelAquilina/zsh-autoswitch-virtualenv
+
+::
+
+    zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
+
 Fig_
 
 Install ``zsh-autoswitch-virtualenv`` with Fig in just one click.
