@@ -284,7 +284,7 @@ function _missing_error_message() {
 
 function randstr()
 {
-    python -c "from __future__ import print_function; import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range(4)))"
+    ${AUTOSWITCH_DEFAULT_PYTHON:-python} -c "from __future__ import print_function; import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range(4)))"
 }
 
 
@@ -413,7 +413,7 @@ function _autoswitch_startup() {
     check_venv
 }
 
-if ! type "python" > /dev/null; then
+if ! type "${AUTOSWITCH_DEFAULT_PYTHON:-python}" > /dev/null; then
     printf "WARNING: python binary not found on PATH.\n"
     printf "zsh-autoswitch-virtualenv plugin will be disabled.\n"
 else
