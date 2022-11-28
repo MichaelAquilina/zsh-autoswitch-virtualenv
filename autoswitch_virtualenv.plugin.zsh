@@ -413,7 +413,7 @@ function _autoswitch_startup() {
     check_venv
 }
 
-if ! type "python" > /dev/null; then
+if ! type "${AUTOSWITCH_DEFAULT_PYTHON:-python}" > /dev/null; then
     printf "WARNING: python binary not found on PATH.\n"
     printf "zsh-autoswitch-virtualenv plugin will be disabled.\n"
 else
