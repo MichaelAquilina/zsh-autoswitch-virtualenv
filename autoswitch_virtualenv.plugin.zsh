@@ -31,7 +31,7 @@ function _virtual_env_dir() {
 
 function _python_version() {
     local PYTHON_BIN="$1"
-    if [[ -f "$PYTHON_BIN" ]] then
+    if [[ -f "$PYTHON_BIN" ]]; then
         # For some reason python --version writes to stderr
         printf "%s" "$($PYTHON_BIN --version 2>&1)"
     else
@@ -214,8 +214,10 @@ function check_venv()
 
     # If we still haven't got anywhere, fallback to defaults
     if [[ "$venv_type" != "unknown" ]]; then
-        printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
-        printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        if (( !AUTOSWITCH_HIDE_MKVENV_SUGGESTION )); then
+            printf "Python ${PURPLE}$venv_type${NORMAL} project detected. "
+            printf "Run ${PURPLE}mkvenv${NORMAL} to setup autoswitching\n"
+        fi
     fi
     _default_venv
 }
