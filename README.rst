@@ -95,6 +95,12 @@ Zgen_
 
     zgen load "MichaelAquilina/zsh-autoswitch-virtualenv"
 
+zinit_
+    
+::
+
+    zinit wait lucid for MichaelAquilina/zsh-autoswitch-virtualenv
+
 Fig_
 
 Install ``zsh-autoswitch-virtualenv`` with Fig in just one click.
@@ -367,6 +373,8 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. _Antigen: https://github.com/zsh-users/antigen
 
 .. _ZGen: https://github.com/tarjoilija/zgen
+
+.. _zinit: https://github.com/zdharma-continuum/zinit
 
 .. _Fig: https://fig.io
 
