@@ -23,9 +23,13 @@ function _validated_source() {
 
 function _virtual_env_dir() {
     local venv_name="$1"
-    local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
-    mkdir -p "$VIRTUAL_ENV_DIR"
-    printf "%s/%s" "$VIRTUAL_ENV_DIR" "$venv_name"
+    if [[ "$venv_name" = /* ]]; then
+        printf "$venv_name"
+    else
+        local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+        mkdir -p "$VIRTUAL_ENV_DIR"
+        printf "%s/%s" "$VIRTUAL_ENV_DIR" "$venv_name"
+    fi
 }
 
 
