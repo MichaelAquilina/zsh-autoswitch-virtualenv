@@ -7,6 +7,8 @@ AUTOSWITCH_PURPLE="\e[35m"
 AUTOSWITCH_BOLD="\e[1m"
 AUTOSWITCH_NORMAL="\e[0m"
 
+VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+
 function _validated_source() {
     local target_path="$1"
 
@@ -23,8 +25,6 @@ function _validated_source() {
 
 function _virtual_env_dir() {
     local venv_name="$1"
-    local VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
-    mkdir -p "$VIRTUAL_ENV_DIR"
     printf "%s/%s" "$VIRTUAL_ENV_DIR" "$venv_name"
 }
 
@@ -264,6 +264,9 @@ function rmvenv()
             # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html
             # https://www.freedesktop.org/wiki/Software/systemd/TheCaseForTheUsrMerge/
             /bin/rm -rf "$(_virtual_env_dir "$venv_name")"
+            if [[ -z "$(/bin/ls -A $VIRTUAL_ENV_DIR)" ]]; then
+                /bin/rm -rf "$VIRTUAL_ENV_DIR"
+            fi
             /bin/rm "$AUTOSWITCH_FILE"
         else
             printf "No $AUTOSWITCH_FILE file in the current directory!\n"
@@ -336,6 +339,8 @@ function mkvenv()
                 printf "${NONE}\n"
                 params+="--python=$AUTOSWITCH_DEFAULT_PYTHON"
             fi
+
+            /bin/mkdir -p "$VIRTUAL_ENV_DIR"
 
             if [[ ${params[(I)--verbose]} -eq 0 ]]; then
                 virtualenv $params "$(_virtual_env_dir "$venv_name")"
