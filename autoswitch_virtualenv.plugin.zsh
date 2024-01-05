@@ -7,7 +7,7 @@ AUTOSWITCH_PURPLE="\e[35m"
 AUTOSWITCH_BOLD="\e[1m"
 AUTOSWITCH_NORMAL="\e[0m"
 
-VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+export VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
 
 function _validated_source() {
     local target_path="$1"
