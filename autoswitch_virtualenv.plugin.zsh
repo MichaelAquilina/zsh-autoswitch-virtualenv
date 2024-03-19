@@ -418,10 +418,10 @@ function _autoswitch_startup() {
         printf "WARNING: python binary '${python_bin}' not found on PATH.\n"
         printf "zsh-autoswitch-virtualenv plugin will be disabled.\n"
     else
-        add-zsh-hook -D precmd _autoswitch_startup
         enable_autoswitch_virtualenv
         check_venv
     fi
+    add-zsh-hook -D precmd _autoswitch_startup
 }
 
 autoload -Uz add-zsh-hook
