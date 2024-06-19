@@ -80,7 +80,7 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%venv_name${AUTOSWITCH_NORMAL} ${AUTOSWITCH_GREEN}[🐍%py_version]${NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%venv_name${AUTOSWITCH_NORMAL} ${AUTOSWITCH_GREEN}[🐍%py_version]${AUTOSWITCH_NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
