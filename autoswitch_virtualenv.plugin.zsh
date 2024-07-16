@@ -1,6 +1,11 @@
 export AUTOSWITCH_VERSION="3.7.1"
 export AUTOSWITCH_FILE=".venv"
 
+# Arrays to store hook functions
+typeset -a AUTOSWITCH_PRE_HOOKS
+typeset -a AUTOSWITCH_POST_HOOKS
+
+
 AUTOSWITCH_RED="\e[31m"
 AUTOSWITCH_GREEN="\e[32m"
 AUTOSWITCH_PURPLE="\e[35m"
@@ -8,6 +13,36 @@ AUTOSWITCH_BOLD="\e[1m"
 AUTOSWITCH_NORMAL="\e[0m"
 
 VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
+
+# Function to add pre-hook
+autoswitch_add_pre_hook() {
+    local hook_name="AUTOSWITCH_PRE_HOOK_${#AUTOSWITCH_PRE_HOOKS[@]}"
+    eval "$hook_name() { $@ }"
+    AUTOSWITCH_PRE_HOOKS+=("$hook_name")
+}
+
+# Function to add post-hook
+autoswitch_add_post_hook() {
+    local hook_name="AUTOSWITCH_POST_HOOK_${#AUTOSWITCH_POST_HOOKS[@]}"
+    eval "$hook_name() { $@ }"
+    AUTOSWITCH_POST_HOOKS+=("$hook_name")
+}
+
+# Function to execute pre-hooks
+_execute_pre_hooks() {
+    local hook
+    for hook in "${AUTOSWITCH_PRE_HOOKS[@]}"; do
+        $hook
+    done
+}
+
+# Function to execute post-hooks
+_execute_post_hooks() {
+    local hook
+    for hook in "${AUTOSWITCH_POST_HOOKS[@]}"; do
+        $hook
+    done
+}
 
 function _validated_source() {
     local target_path="$1"
@@ -190,22 +225,36 @@ function check_venv()
             printf "Run the following command to fix this: ${AUTOSWITCH_PURPLE}\"chmod 600 $venv_path\"${AUTOSWITCH_NORMAL}\n"
         else
             if [[ "$venv_path" == *"/Pipfile" ]]; then
-                if type "pipenv" > /dev/null && _activate_pipenv; then
-                    return
+                if type "pipenv" > /dev/null; then
+                    _execute_pre_hooks
+                    if _activate_pipenv; then
+                        _execute_post_hooks
+                        return
+                    fi
                 fi
             elif [[ "$venv_path" == *"/poetry.lock" ]]; then
-                if type "poetry" > /dev/null && _activate_poetry; then
-                    return
+                if type "poetry" > /dev/null; then
+                    _execute_pre_hooks
+                    if _activate_poetry; then
+                        _execute_post_hooks
+                        return
+                    fi
                 fi
             # standard use case: $venv_path is a file containing a virtualenv name
             elif [[ -f "$venv_path" ]]; then
                 local switch_to="$(<"$venv_path")"
-                _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
-                return
+                _execute_pre_hooks
+                if _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"; then
+                    _execute_post_hooks
+                    return
+                fi
             # $venv_path actually is itself a virtualenv
             elif [[ -d "$venv_path" ]] && [[ -f "$venv_path/bin/activate" ]]; then
-                _maybeworkon "$venv_path" "virtualenv"
-                return
+                _execute_pre_hooks
+                if _maybeworkon "$venv_path" "virtualenv"; then
+                    _execute_post_hooks
+                    return
+                fi
             fi
         fi
     fi
