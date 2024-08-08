@@ -1,3 +1,9 @@
+LICENSE TRANSITION
+
+Contributors agree to have their commits after November 2nd, 2022 licensed under MIT.
+To follow progress of the transition from GPL to MIT, see:
+https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv/issues/185.
+
 GNU GENERAL PUBLIC LICENSE
 
 Version 3, 29 June 2007
