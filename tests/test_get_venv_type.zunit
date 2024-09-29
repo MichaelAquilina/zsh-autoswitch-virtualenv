@@ -27,6 +27,33 @@
     assert "$output" same_as "poetry"
 }
 
+@test '_get_venv_type uv not found' {
+    touch "$TARGET/pyproject.toml"
+
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "virtualenv"
+}
+
+@test '_get_venv_type uv found from pyproject.toml' {
+    echo "[uv.tool]" > "$TARGET/pyproject.toml"
+
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "uv"
+}
+
+@test '_get_venv_type uv found from uv.lock' {
+    touch "$TARGET/uv.lock"
+
+    run _get_venv_type "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "uv"
+}
+
 @test '_get_venv_type virtualenv (requirements.txt)' {
     touch "$TARGET/requirements.txt"
 
