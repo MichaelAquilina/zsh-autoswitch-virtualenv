@@ -230,7 +230,7 @@ function _default_venv()
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%s${AUTOSWITCH_NORMAL}\n" "$venv_name"
-        deactivate
+        source deactivate
     fi
 }
 
@@ -241,10 +241,10 @@ function rmvenv()
     local venv_type="$(_get_venv_type "$PWD" "unknown")"
 
     if [[ "$venv_type" == "pipenv" ]]; then
-        deactivate
+        source deactivate
         pipenv --rm
     elif [[ "$venv_type" == "poetry" ]]; then
-        deactivate
+        source deactivate
         poetry env remove "$(poetry run which python)"
     else
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
