@@ -2,8 +2,10 @@ export AUTOSWITCH_VERSION="3.7.1"
 export AUTOSWITCH_FILE=".venv"
 
 # Arrays to store hook functions
-typeset -a AUTOSWITCH_PRE_HOOKS
-typeset -a AUTOSWITCH_POST_HOOKS
+typeset -a AUTOSWITCH_PRE_HOOKS_ON_ACTIVATE
+typeset -a AUTOSWITCH_POST_HOOKS_ON_ACTIVATE
+typeset -a AUTOSWITCH_PRE_HOOKS_ON_DEACTIVATE
+typeset -a AUTOSWITCH_POST_HOOKS_ON_DEACTIVATE
 
 
 AUTOSWITCH_RED="\e[31m"
@@ -14,32 +16,62 @@ AUTOSWITCH_NORMAL="\e[0m"
 
 VIRTUAL_ENV_DIR="${AUTOSWITCH_VIRTUAL_ENV_DIR:-$HOME/.virtualenvs}"
 
-# Function to add pre-hook
-autoswitch_add_pre_hook() {
-    local hook_name="AUTOSWITCH_PRE_HOOK_${#AUTOSWITCH_PRE_HOOKS[@]}"
+# Function to add pre-hook for activation
+autoswitch_add_pre_hook_on_activate() {
+    local hook_name="AUTOSWITCH_PRE_HOOK_ON_ACTIVATE_${#AUTOSWITCH_PRE_HOOKS_ON_ACTIVATE[@]}"
     eval "$hook_name() { $@ }"
-    AUTOSWITCH_PRE_HOOKS+=("$hook_name")
+    AUTOSWITCH_PRE_HOOKS_ON_ACTIVATE+=("$hook_name")
 }
 
-# Function to add post-hook
-autoswitch_add_post_hook() {
-    local hook_name="AUTOSWITCH_POST_HOOK_${#AUTOSWITCH_POST_HOOKS[@]}"
+# Function to add post-hook for activation
+autoswitch_add_post_hook_on_activate() {
+    local hook_name="AUTOSWITCH_POST_HOOK_ON_ACTIVATE_${#AUTOSWITCH_POST_HOOKS_ON_ACTIVATE[@]}"
     eval "$hook_name() { $@ }"
-    AUTOSWITCH_POST_HOOKS+=("$hook_name")
+    AUTOSWITCH_POST_HOOKS_ON_ACTIVATE+=("$hook_name")
 }
 
-# Function to execute pre-hooks
-_execute_pre_hooks() {
+# Function to add pre-hook for deactivation
+autoswitch_add_pre_hook_on_deactivate() {
+    local hook_name="AUTOSWITCH_PRE_HOOK_ON_DEACTIVATE_${#AUTOSWITCH_PRE_HOOKS_ON_DEACTIVATE[@]}"
+    eval "$hook_name() { $@ }"
+    AUTOSWITCH_PRE_HOOKS_ON_DEACTIVATE+=("$hook_name")
+}
+
+# Function to add post-hook for deactivation
+autoswitch_add_post_hook_on_deactivate() {
+    local hook_name="AUTOSWITCH_POST_HOOK_ON_DEACTIVATE_${#AUTOSWITCH_POST_HOOKS_ON_DEACTIVATE[@]}"
+    eval "$hook_name() { $@ }"
+    AUTOSWITCH_POST_HOOKS_ON_DEACTIVATE+=("$hook_name")
+}
+
+# Function to execute pre-hooks on activation
+_execute_pre_hooks_on_activate() {
     local hook
-    for hook in "${AUTOSWITCH_PRE_HOOKS[@]}"; do
+    for hook in "${AUTOSWITCH_PRE_HOOKS_ON_ACTIVATE[@]}"; do
         $hook
     done
 }
 
-# Function to execute post-hooks
-_execute_post_hooks() {
+# Function to execute post-hooks on activation
+_execute_post_hooks_on_activate() {
     local hook
-    for hook in "${AUTOSWITCH_POST_HOOKS[@]}"; do
+    for hook in "${AUTOSWITCH_POST_HOOKS_ON_ACTIVATE[@]}"; do
+        $hook
+    done
+}
+
+# Function to execute pre-hooks on deactivation
+_execute_pre_hooks_on_deactivate() {
+    local hook
+    for hook in "${AUTOSWITCH_PRE_HOOKS_ON_DEACTIVATE[@]}"; do
+        $hook
+    done
+}
+
+# Function to execute post-hooks on deactivation
+_execute_post_hooks_on_deactivate() {
+    local hook
+    for hook in "${AUTOSWITCH_POST_HOOKS_ON_DEACTIVATE[@]}"; do
         $hook
     done
 }
@@ -226,33 +258,33 @@ function check_venv()
         else
             if [[ "$venv_path" == *"/Pipfile" ]]; then
                 if type "pipenv" > /dev/null; then
-                    _execute_pre_hooks
+                    _execute_pre_hooks_on_activate
                     if _activate_pipenv; then
-                        _execute_post_hooks
+                        _execute_post_hooks_on_activate
                         return
                     fi
                 fi
             elif [[ "$venv_path" == *"/poetry.lock" ]]; then
                 if type "poetry" > /dev/null; then
-                    _execute_pre_hooks
+                    _execute_pre_hooks_on_activate
                     if _activate_poetry; then
-                        _execute_post_hooks
+                        _execute_post_hooks_on_activate
                         return
                     fi
                 fi
             # standard use case: $venv_path is a file containing a virtualenv name
             elif [[ -f "$venv_path" ]]; then
                 local switch_to="$(<"$venv_path")"
-                _execute_pre_hooks
+                _execute_pre_hooks_on_activate
                 if _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"; then
-                    _execute_post_hooks
+                    _execute_post_hooks_on_activate
                     return
                 fi
             # $venv_path actually is itself a virtualenv
             elif [[ -d "$venv_path" ]] && [[ -f "$venv_path/bin/activate" ]]; then
-                _execute_pre_hooks
+                _execute_pre_hooks_on_activate
                 if _maybeworkon "$venv_path" "virtualenv"; then
-                    _execute_post_hooks
+                    _execute_post_hooks_on_activate
                     return
                 fi
             fi
@@ -266,6 +298,7 @@ function check_venv()
         printf "Python ${AUTOSWITCH_PURPLE}$venv_type${AUTOSWITCH_NORMAL} project detected. "
         printf "Run ${AUTOSWITCH_PURPLE}mkvenv${AUTOSWITCH_NORMAL} to setup autoswitching\n"
     fi
+    
     _default_venv
 }
 
@@ -279,7 +312,11 @@ function _default_venv()
     elif [[ -n "$VIRTUAL_ENV" ]]; then
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%s${AUTOSWITCH_NORMAL}\n" "$venv_name"
+
+        # Execute deactivation hooks 
+        _execute_pre_hooks_on_deactivate
         deactivate
+        _execute_post_hooks_on_deactivate
     fi
 }
 
