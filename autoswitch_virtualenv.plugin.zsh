@@ -74,6 +74,18 @@ function _get_venv_name() {
     printf "%s" "$venv_name"
 }
 
+# Function to ensure virtualenv bin is at the start of PATH
+function _ensure_virtualenv_path() {
+    # Remove the current virtualenv from PATH if it exists
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        PATH=:$PATH:
+        PATH=${PATH//:$VIRTUAL_ENV\/bin:/:}
+        PATH=${PATH#:}
+        PATH=${PATH%:}
+    fi
+    # Add the new virtualenv to the start of PATH
+    PATH="$venv_dir/bin:$PATH"
+}
 
 function _maybeworkon() {
     local venv_dir="$1"
@@ -87,7 +99,7 @@ function _maybeworkon() {
     fi
 
     # Don't reactivate an already activated virtual environment
-    if [[ -z "$VIRTUAL_ENV" || "$venv_dir" != "$VIRTUAL_ENV" ]]; then
+    if [[ -z "$VIRTUAL_ENV" || "$venv_dir" != "$VIRTUAL_ENV" || "$PATH" != "$venv_dir/bin"* ]]; then
 
         if [[ ! -d "$venv_dir" ]]; then
             printf "Unable to find ${AUTOSWITCH_PURPLE}$venv_name${AUTOSWITCH_NORMAL} virtualenv\n"
@@ -112,6 +124,9 @@ function _maybeworkon() {
         local activate_script="$venv_dir/bin/activate"
 
         _validated_source "$activate_script"
+
+        # Ensure the virtualenv's bin directory is at the start of PATH
+        _ensure_virtualenv_path
     fi
 }
 
