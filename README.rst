@@ -368,8 +368,6 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 
 .. _zinit: https://github.com/zdharma-continuum/zinit
 
-.. _Fig: https://fig.io
-
 .. _oh-my-zsh: https://github.com/robbyrussell/oh-my-zsh
 
 .. |CircleCI| image:: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv.svg?style=svg
