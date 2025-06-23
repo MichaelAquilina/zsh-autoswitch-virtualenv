@@ -56,6 +56,10 @@ function _get_venv_type() {
         venv_type="poetry"
     elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
         venv_type="virtualenv"
+    elif [[ -f "$venv_dir/uv.lock" ]]; then
+        venv_type="uv"
+    elif [[ -f "$venv_dir/pyproject.toml" && $(grep -c '[tool.uv]' "$venv_dir/pyproject.toml") -gt 0 ]]; then
+        venv_type="uv"
     fi
     printf "%s" "$venv_type"
 }
@@ -157,6 +161,12 @@ function _activate_pipenv() {
         return 0
     fi
     return 1
+}
+
+
+function _activate_uv() {
+    _maybeworkon ".venv" "virtualenv"
+    return 0
 }
 
 
@@ -317,6 +327,14 @@ function mkvenv()
         # TODO: detect if this is already installed
         poetry install $params
         _activate_poetry
+        return
+    elif [[ "$venv_type" == "uv" ]]; then
+        if ! type "uv" > /dev/null; then
+            _missing_error_message uv
+            return
+        fi
+        uv sync $params
+        _activate_uv
         return
     else
         if ! type "virtualenv" > /dev/null; then

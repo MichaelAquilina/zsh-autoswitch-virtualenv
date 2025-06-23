@@ -26,6 +26,14 @@
     function _activate_pipenv {
         echo "activating pipenv"
     }
+
+    function uv {
+        echo "uv" $@
+    }
+
+    function _activate_uv {
+        echo "activating uv"
+    }
 }
 
 @teardown {
@@ -79,6 +87,18 @@
     assert $status equals 0
     assert "$lines[1]" same_as "pipenv install --dev"
     assert "$lines[2]" same_as "activating pipenv"
+}
+
+@test 'mkvenv - (uv project) runs correct command' {
+    mkdir myproject
+    cd myproject
+    touch "uv.lock"
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" same_as "uv sync"
+    assert "$lines[2]" same_as "activating uv"
 }
 
 @test 'mkvenv - uses default python if set and not specified' {
@@ -186,6 +206,28 @@
     assert "$lines[2]" is_empty
     assert "$lines[3]" contains "If this is already installed but you are still seeing this message,"
     assert "$lines[4]" contains "then make sure the \e[1mpipenv\e[0m command is in your PATH.\n"
+    assert "$lines[5]" is_empty
+    assert ${#lines} equals 4
+}
+
+@test 'prints help message and disables plugin if uv not setup' {
+    touch "uv.lock"
+
+    # Mock type to fail
+    function type() {
+        if [[ "$1" == "uv" ]]; then
+            return 1
+        fi
+        return 0
+    }
+
+    run mkvenv
+
+    assert $status equals 0
+    assert "$lines[1]" contains "zsh-autoswitch-virtualenv requires 'uv' to install this project!"
+    assert "$lines[2]" is_empty
+    assert "$lines[3]" contains "If this is already installed but you are still seeing this message,"
+    assert "$lines[4]" contains "then make sure the \e[1muv\e[0m command is in your PATH.\n"
     assert "$lines[5]" is_empty
     assert ${#lines} equals 4
 }
