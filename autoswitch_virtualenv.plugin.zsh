@@ -19,6 +19,7 @@ function _validated_source() {
         return
     else
         source "$target_path"
+        export UV_PROJECT_ENVIRONMENT=$VIRTUAL_ENV
     fi
 }
 
@@ -141,7 +142,7 @@ function _check_path()
 function _activate_poetry() {
     # check if any environments exist before trying to activate
     # if env list is empty, then no environment exists that can be activated
-    local name="$(poetry env list --full-path | sort -k 2 | tail -n 1 | cut -d' ' -f1)"
+    local name="$(uvx poetry env list --full-path | sort -k 2 | tail -n 1 | cut -d' ' -f1)"
     if [[ -n "$name" ]]; then
         _maybeworkon "$name" "poetry"
         return 0
@@ -231,6 +232,7 @@ function _default_venv()
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%s${AUTOSWITCH_NORMAL}\n" "$venv_name"
         deactivate
+        unset UV_PROJECT_ENVIRONMENT
     fi
 }
 
@@ -245,7 +247,7 @@ function rmvenv()
         pipenv --rm
     elif [[ "$venv_type" == "poetry" ]]; then
         deactivate
-        poetry env remove "$(poetry run which python)"
+        uvx poetry env remove "$(uvx poetry run which python)"
     else
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             local venv_name="$(<$AUTOSWITCH_FILE)"
@@ -315,7 +317,7 @@ function mkvenv()
             return
         fi
         # TODO: detect if this is already installed
-        poetry install $params
+        uvx poetry install $params
         _activate_poetry
         return
     else
@@ -343,9 +345,9 @@ function mkvenv()
             /bin/mkdir -p "$VIRTUAL_ENV_DIR"
 
             if [[ ${params[(I)--verbose]} -eq 0 ]]; then
-                virtualenv $params "$(_virtual_env_dir "$venv_name")"
+                uv venv $params "$(_virtual_env_dir "$venv_name")"
             else
-                virtualenv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
+                uv venv $params "$(_virtual_env_dir "$venv_name")" > /dev/null
             fi
 
             printf "$venv_name\n" > "$AUTOSWITCH_FILE"
@@ -369,16 +371,16 @@ function install_requirements() {
         fi
     fi
 
-    if [[ -f "$PWD/setup.py" ]]; then
+    if [[ -f "$PWD/setup.py" || -f "$PWD/pyproject.toml" ]]; then
         printf "Found a ${AUTOSWITCH_PURPLE}setup.py${AUTOSWITCH_NORMAL} file. Install dependencies? [y/N]: "
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
             if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
             then
-                pip install .
+                uv pip install .
             else
-                pip install -e .
+                uv pip install -e .
             fi
         fi
     fi
@@ -391,7 +393,7 @@ function install_requirements() {
         read ans
 
         if [[ "$ans" = "y" || "$ans" = "Y" ]]; then
-            pip install -r "$requirements"
+            uv pip install -r "$requirements"
         fi
     done
 }
