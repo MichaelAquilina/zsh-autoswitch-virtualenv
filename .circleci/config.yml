@@ -40,7 +40,7 @@ test: &test
 jobs:
   lint:
     docker:
-      - image: "python:3.7-stretch"
+      - image: "python:3.14"
     steps:
       - checkout
       - run:
