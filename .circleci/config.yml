@@ -17,6 +17,7 @@ test: &test
           apt-get update &&
           apt-get install -y
           zsh
+          pipx
           python3-pip
           python3-virtualenv
           curl
@@ -25,7 +26,7 @@ test: &test
           pwgen
     - run:
         name: install pipenv
-        command: pip3 install pipenv
+        command: pipx install pipenv
     - run:
         name: Download Zunit
         command: |
