@@ -287,7 +287,7 @@ function _missing_error_message() {
 
 function randstr()
 {
-    ${AUTOSWITCH_DEFAULT_PYTHON:-python} -c "from __future__ import print_function; import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range(4)))"
+    ${AUTOSWITCH_DEFAULT_PYTHON:-python3} -c "from __future__ import print_function; import string, random; print(''.join(random.choice(string.ascii_lowercase) for _ in range(4)))"
 }
 
 
