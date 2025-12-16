@@ -59,11 +59,4 @@ workflows:
   test:
     jobs:
       - lint
-      - test-zsh-5.1
-      - test-zsh-5.2
-      - test-zsh-5.3
-      - test-zsh-5.4
-      - test-zsh-5.5
-      - test-zsh-5.6
-      - test-zsh-5.7
-      - test-zsh-5.8
+      - test-zsh
