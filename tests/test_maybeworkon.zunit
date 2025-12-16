@@ -52,7 +52,7 @@
     run _maybeworkon "$TEST_VIRTUALENV" virtualenv
 
     assert $state equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching to \e[1mvirtualenv\e[0m project: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - custom message' {
@@ -72,7 +72,7 @@
     run _maybeworkon "$TEST_VIRTUALENV" virtualenv
 
     assert $state equals 0
-    assert "$output" same_as "Switching virtualenv: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching to \e[1mvirtualenv\e[0m project: \e[1m\e[35mfoobar\e[0m \e[32m[$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different' {
@@ -81,7 +81,7 @@
     run _maybeworkon "$TEST_VIRTUALENV" virtualfoo
 
     assert $state equals 0
-    assert "$output" contains "Switching virtualfoo: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+    assert "$output" contains "Switching to \e[1mvirtualfoo\e[0m project: \e[1m\e[35mfoobar\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
 }
 
 @test '_maybeworkon - switches virtualenv if current virtualenv is different (silent)' {
@@ -107,5 +107,6 @@
     run _maybeworkon hello-world-foo-de31f pipenv
 
     assert $state equals 0
-    assert "$output" same_as "Switching pipenv: \e[1m\e[35mhello-world-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+    assert "$output" same_as "Switching to \e[1mpipenv\e[0m project: \e[1m\e[35mhello-world-foo\e[0m \e[32m[🐍$PYTHON_VERSION]\e[0m"
+
 }

@@ -54,6 +54,8 @@ function _get_venv_type() {
         venv_type="pipenv"
     elif [[ -f "$venv_dir/poetry.lock" ]]; then
         venv_type="poetry"
+    elif [[ -f "$venv_dir/uv.lock" ]]; then
+        venv_type="uv"
     elif [[ -f "$venv_dir/requirements.txt" || -f "$venv_dir/setup.py" ]]; then
         venv_type="virtualenv"
     fi
@@ -80,7 +82,7 @@ function _maybeworkon() {
     local venv_type="$2"
     local venv_name="$(_get_venv_name $venv_dir $venv_type)"
 
-    local DEFAULT_MESSAGE_FORMAT="Switching %venv_type: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%venv_name${AUTOSWITCH_NORMAL} ${AUTOSWITCH_GREEN}[🐍%py_version]${AUTOSWITCH_NORMAL}"
+    local DEFAULT_MESSAGE_FORMAT="Switching to ${AUTOSWITCH_BOLD}%venv_type${AUTOSWITCH_NORMAL} project: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%venv_name${AUTOSWITCH_NORMAL} ${AUTOSWITCH_GREEN}[🐍%py_version]${AUTOSWITCH_NORMAL}"
     if [[ "$LANG" != *".UTF-8" ]]; then
         # Remove multibyte characters if the terminal does not support utf-8
         DEFAULT_MESSAGE_FORMAT="${DEFAULT_MESSAGE_FORMAT/🐍/}"
@@ -121,13 +123,15 @@ function _check_path()
 {
     local check_dir="$1"
 
-    if [[ -e "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
+    if [[ -f "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
         printf "${check_dir}/${AUTOSWITCH_FILE}"
         return
     elif [[ -f "${check_dir}/poetry.lock" ]]; then
         printf "${check_dir}/poetry.lock"
     elif [[ -f "${check_dir}/Pipfile" ]]; then
         printf "${check_dir}/Pipfile"
+    elif [[ -f "${check_dir}/uv.lock" ]]; then
+        printf "${check_dir}/uv.lock"
     else
         # Abort search at file system root or HOME directory (latter is a performance optimisation).
         if [[ "$check_dir" = "/" || "$check_dir" = "$HOME" ]]; then
@@ -154,6 +158,14 @@ function _activate_pipenv() {
     # unfortunately running pipenv each time we are in a pipenv project directory is slow :(
     if venv_path="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null)"; then
         _maybeworkon "$venv_path" "pipenv"
+        return 0
+    fi
+    return 1
+}
+
+function _activate_uv() {
+    if [[ -d ".venv" ]]; then
+        _maybeworkon ".venv" "uv"
         return 0
     fi
     return 1
@@ -195,6 +207,10 @@ function check_venv()
                 fi
             elif [[ "$venv_path" == *"/poetry.lock" ]]; then
                 if type "poetry" > /dev/null && _activate_poetry; then
+                    return
+                fi
+            elif [[ "$venv_path" == *"/uv.lock" ]]; then
+                if type "uv" > /dev/null && _activate_uv; then
                     return
                 fi
             # standard use case: $venv_path is a file containing a virtualenv name
@@ -246,6 +262,9 @@ function rmvenv()
     elif [[ "$venv_type" == "poetry" ]]; then
         deactivate
         poetry env remove "$(poetry run which python)"
+    elif [[ "$venv_type" == "uv" ]]; then
+        deactivate
+        rm -rf ".venv"
     else
         if [[ -f "$AUTOSWITCH_FILE" ]]; then
             local venv_name="$(<$AUTOSWITCH_FILE)"
@@ -317,6 +336,14 @@ function mkvenv()
         # TODO: detect if this is already installed
         poetry install $params
         _activate_poetry
+        return
+    elif [[ "$venv_type" == "uv" ]]; then
+        if ! type "uv" > /dev/null; then
+            _missing_error_message uv
+            return
+        fi
+        uv sync $params
+        _activate_uv
         return
     else
         if ! type "virtualenv" > /dev/null; then

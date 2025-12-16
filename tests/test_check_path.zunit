@@ -20,15 +20,6 @@
     assert "$output" same_as "$TARGET/.venv"
 }
 
-@test '_check_path - finds .venv directory in base directory' {
-    mkdir "$TARGET/.venv"
-
-    run _check_path "$TARGET"
-
-    assert $state equals 0
-    assert "$output" same_as "$TARGET/.venv"
-}
-
 @test '_check_path - returns nothing if not found' {
    run _check_path "$TARGET"
 

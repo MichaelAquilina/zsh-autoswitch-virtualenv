@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.8.0
+-----
+* Better support for uv projects
+* minor tweaks to default autoswitch message template
+
 3.7.1
 -----
 * only check python on precmd. Fixes issues with plugins like pyenv that load in PATH later to work correctly (#175)
