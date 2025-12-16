@@ -10,8 +10,7 @@ test: &test
           apt-get update &&
           apt-get install -y
           python3-pip
-          python
-          python-virtualenv
+          python3-virtualenv
           curl
           ncurses-bin
           git
