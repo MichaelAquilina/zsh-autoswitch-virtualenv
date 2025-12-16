@@ -8,6 +8,7 @@ test: &test
         name: Install Dependencies
         command: >
           DEBIAN_FRONTEND=noninteractive
+          TZ=Etc/UTC
           apt-get update &&
           apt-get install -y
           zsh
