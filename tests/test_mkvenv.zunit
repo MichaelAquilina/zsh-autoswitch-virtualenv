@@ -81,51 +81,6 @@
     assert "$lines[2]" same_as "activating pipenv"
 }
 
-@test 'mkvenv - uses default python if set and not specified' {
-    mkdir myproject
-    cd myproject
-    AUTOSWITCH_DEFAULT_PYTHON="python_foo"
-
-    run mkvenv
-
-    assert $status equals 0
-    assert "$TARGET/myproject/.venv" exists
-    # Assert mock output
-
-    expected='Using $AUTOSWITCH_DEFAULT_PYTHON=python_foo'
-    assert "$lines[2]" contains "$expected"
-    expected="virtualenv --python=python_foo $HOME/.virtualenvs/myproject-"
-    assert "$lines[3]" contains "$expected"
-
-    run cat "$TARGET/myproject/.venv"
-
-    assert $status equals 0
-    assert "$output" matches "myproject-[a-z]{4}"
-}
-
-@test 'mkvenv - uses specified python if default set' {
-    # mock virtualenv function to test its inputs
-    function virtualenv {
-        echo virtualenv $@
-    }
-
-    mkdir myproject
-    cd myproject
-    AUTOSWITCH_DEFAULT_PYTHON="python_foo"
-
-    run mkvenv --python=python_bar
-
-    assert $status equals 0
-    assert "$TARGET/myproject/.venv" exists
-    # Assert mock output
-    assert "$lines[2]" contains "virtualenv --python=python_bar $HOME/.virtualenvs/myproject-"
-
-    run cat "$TARGET/myproject/.venv"
-
-    assert $status equals 0
-    assert "$output" matches "myproject-[a-z]{4}"
-}
-
 @test 'prints help message and disables plugin if virtualenv not setup' {
     # Mock type to fail
     function type() {

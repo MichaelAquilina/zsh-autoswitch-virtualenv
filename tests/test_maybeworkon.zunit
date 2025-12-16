@@ -97,7 +97,7 @@
 @test '_maybeworkon - does not switch to already activated virtualenv' {
     VIRTUAL_ENV="$HOME/.virtualenvs/bwaaah"
 
-    run _maybeworkon bwaaah virtualenv
+    run _maybeworkon "$VIRTUAL_ENV" virtualenv
 
     assert $state equals 0
     assert "$output" is_empty
