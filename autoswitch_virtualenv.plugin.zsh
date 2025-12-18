@@ -325,7 +325,12 @@ function mkvenv()
             return
         fi
         # TODO: detect if this is already installed
-        pipenv install --dev $params
+        if [[ "$AUTOSWITCH_PIPINSTALL" = "FULL" ]]
+        then
+            pipenv install --dev $params
+        else
+            pipenv install --dev --editable . $params
+        fi
         _activate_pipenv
         return
     elif [[ "$venv_type" == "poetry" ]]; then
