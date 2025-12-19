@@ -88,7 +88,7 @@
     assert "$output" same_as "Python \e[35mvirtualenv\e[0m project detected. Run \e[35mmkvenv\e[0m to setup autoswitching"
 }
 
-@test 'check_venv - Security warning for weak writeable by group permissions' {
+@test 'check_venv - Security warning for unexpected writeable by group permissions' {
     PWD="$TARGET"
 
     echo "foobar" > "$TARGET/.venv"
@@ -100,11 +100,10 @@
     assert $status equals 0
     assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
     assert "$lines[2]" is_empty
-    assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (620)."
-    assert "$lines[4]" same_as "Run the following command to fix this: \e[35m\"chmod 600 $TARGET/.venv\"\e[0m"
+    assert "$lines[3]" same_as "Reason: Found a .venv file with unexpected permission settings (620)."
 }
 
-@test 'check_venv - Security warning for weak writeable by everyone permissions' {
+@test 'check_venv - Security warning for unexpected writeable by everyone permissions' {
     PWD="$TARGET"
 
     echo "foobar" > "$TARGET/.venv"
@@ -116,8 +115,7 @@
     assert $status equals 0
     assert "$lines[1]" same_as "AUTOSWITCH WARNING: Virtualenv will not be activated"
     assert "$lines[2]" is_empty
-    assert "$lines[3]" same_as "Reason: Found a .venv file with weak permission settings (622)."
-    assert "$lines[4]" same_as "Run the following command to fix this: \e[35m\"chmod 600 $TARGET/.venv\"\e[0m"
+    assert "$lines[3]" same_as "Reason: Found a .venv file with unexpected permission settings (622)."
 }
 
 @test 'check_venv - No security warning for readable by everyone permission' {
