@@ -192,14 +192,23 @@ function check_venv()
             file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
         fi
 
+        # determine the expected permissions based on whether the venv path
+        # is a file (e.g. default virtualenv) or folder (e.g. uv/poetry)
+        if [[ -d "$venv_path" ]]; then
+            default_permissions=777
+        else
+            default_permissions=666
+        fi
+        default_permissions="$(printf %o "$((~8#$(umask) & 8#$default_permissions))")"
+
         if [[ -f "$venv_path" ]] && [[ "$file_owner" != "$(id -u)" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
             printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
-            printf "Change ownership of ${AUTOSWITCH_PURPLE}$venv_path${AUTOSWITCH_NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-        elif [[ -f "$venv_path" ]] && ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
+            printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
+        elif [[ "$file_permissions" != "$default_permissions" ]]; then
             printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: ${AUTOSWITCH_PURPLE}\"chmod 600 $venv_path\"${AUTOSWITCH_NORMAL}\n"
+            printf "Reason: Found a $AUTOSWITCH_FILE file with non-default permission settings ($file_permissions).\n"
+            printf "Run the following command to fix this: ${PURPLE}\"chmod $default_permissions $venv_path\"${NORMAL}\n"
         else
             if [[ "$venv_path" == *"/Pipfile" ]]; then
                 if type "pipenv" > /dev/null && _activate_pipenv; then
