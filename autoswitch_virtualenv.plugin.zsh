@@ -216,14 +216,14 @@ function _has_expected_permissions() {
     if [[ -f "$venv_path" ]] && [[ "$file_owner" != "$(id -u)" ]]; then
         printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
         printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
-        printf "Change ownership of ${PURPLE}$venv_path${NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
+        printf "Change ownership of ${AUTOSWITCH_PURPLE}$venv_path${AUTOSWITCH_NORMAL} to ${AUTOSWITCH_PURPLE}'$USER'${AUTOSWITCH_NORMAL} to fix this\n"
         return 1
     fi
 
     if ! _check_perms_strict_enough $file_permissions $minimum_permissions; then
         printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
         printf "Reason: Found a $AUTOSWITCH_FILE file with unexpected permission settings ($file_permissions).\n"
-        printf "Run the following command to fix this: ${PURPLE}\"chmod $minimum_permissions $venv_path\"${NORMAL}\n"
+        printf "Run the following command to fix this: ${AUTOSWITCH_PURPLE}\"chmod $minimum_permissions $venv_path\"${AUTOSWITCH_NORMAL}\n"
         return 2
     fi
     return 0
