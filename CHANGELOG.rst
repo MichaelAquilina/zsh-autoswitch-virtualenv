@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.8.1
+-----
+* stop "setopt nullglob" from leaking into user's shell (#207) thanks @alinsavix!
+
 3.8.0
 -----
 * Better support for uv projects
