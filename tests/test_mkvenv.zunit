@@ -77,7 +77,7 @@
     run mkvenv
 
     assert $status equals 0
-    assert "$lines[1]" same_as "pipenv install --dev"
+    assert "$lines[1]" same_as "pipenv install --dev --editable ."
     assert "$lines[2]" same_as "activating pipenv"
 }
 
