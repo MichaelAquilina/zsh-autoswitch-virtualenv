@@ -415,6 +415,7 @@ function install_requirements() {
         fi
     fi
 
+    setopt localoptions
     setopt nullglob
     local requirements
     for requirements in **/*requirements.txt
