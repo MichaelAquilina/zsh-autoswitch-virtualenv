@@ -126,8 +126,8 @@ Source the plugin shell script in your `~/.zshrc` profile. For example
    source $HOME/zsh-autoswitch-virtualenv/autoswitch_virtualenv.plugin.zsh
 
 
-Uv Poetry and Pipenv Integration
------------------------------
+Uv, Poetry and Pipenv Integration
+---------------------------------
 
 This plugin will also detect and auto activate virtualenvs made with ``uv``, ``poetry`` or ``pipenv``.
 No action needs to be performed in projects where a uv/poetry/pipenv project has already been setup.
