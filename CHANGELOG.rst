@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.8.2
+-----
+* Fix uv virutal environments deactivting in subdirectories (#217)
+
 3.8.1
 -----
 * stop "setopt nullglob" from leaking into user's shell (#207) thanks @alinsavix!
