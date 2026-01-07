@@ -210,9 +210,9 @@ function check_venv()
                     return
                 fi
             elif [[ "$venv_path" == *"/uv.lock" ]]; then
-                if type "uv" > /dev/null && _activate_uv; then
-                    return
-                fi
+                local uv_venv_path="$(dirname "$venv_path")/.venv"
+                _maybeworkon "$uv_venv_path" "uv"
+                return
             # standard use case: $venv_path is a file containing a virtualenv name
             elif [[ -f "$venv_path" ]]; then
                 local switch_to="$(<"$venv_path")"
