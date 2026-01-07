@@ -373,8 +373,8 @@ NOTE: It is required that you use a minimum zunit version of 0.8.2
 .. |CircleCI| image:: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv.svg?style=svg
    :target: https://circleci.com/gh/MichaelAquilina/zsh-autoswitch-virtualenv
 
-.. |Release| image:: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv.svg
-   :target: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv
+.. |Release| image:: https://badge.fury.io/gh/MichaelAquilina%2Fzsh-autoswitch-virtualenv.svg?icon=si%3Agithub
+   :target: https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv/tags
 
 .. |ASCIICAST| image:: https://asciinema.org/a/ciDroIzqcC14VEeXMkqdRbvXf.svg
    :target: https://asciinema.org/a/ciDroIzqcC14VEeXMkqdRbvXf
