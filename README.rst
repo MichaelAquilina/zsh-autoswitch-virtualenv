@@ -324,6 +324,67 @@ By default `mkvenv` will install setup.py via pip in `editable (i.e. development
 <https://pip.pypa.io/en/stable/cli/pip_install/#editable-installs>`__.
 To change this set ``AUTOSWITCH_PIPINSTALL`` to ``FULL``.
 
+**Set pre and post hooks to run before and after virtual environment activation**
+
+Autoswitch Virtualenv allows you to define custom actions to be executed
+before and after a virtual environment is activated. This feature is useful
+for running setup scripts, updating environment variables, or performing any
+other tasks that should occur around the activation process.
+
+Usage:
+
+To set pre and post hooks, use the `autoswitch_add_pre_hook` and
+`autoswitch_add_post_hook` functions. These functions accept a string containing
+the commands you want to execute.
+
+::
+
+    autoswitch_add_pre_hook '
+        echo "Starting pre-hook"
+        for i in {1..3}; do
+            echo "Pre-hook step $i"
+        done
+    '
+
+    autoswitch_add_post_hook '
+        echo "Starting post-hook"
+        for i in {1..3}; do
+            echo "Post-hook step $i"
+        done
+    '
+
+In the example above:
+- The pre-hook will run before the virtual environment is activated.
+- The post-hook will run after the virtual environment has been successfully activated.
+
+You can add multiple pre and post hooks. They will be executed in the order they were added.
+
+Additional Information:
+
+1. Hooks are executed in a subshell, so they cannot modify the parent shell's environment directly.
+2. If you need to modify environment variables or perform actions that affect the current shell,
+   consider using the `eval` command within your hook.
+3. Hooks should be added after the Autoswitch Virtualenv plugin is loaded in your Zsh configuration.
+4. Pre-hooks run regardless of whether the activation is successful, while post-hooks only run if
+   the activation succeeds.
+5. Be cautious with the commands you include in hooks, especially if they modify the system or
+   project state.
+
+Example of a more practical post-hook:
+
+::
+
+    autoswitch_add_post_hook '
+        if [ -n "$VIRTUAL_ENV" ]; then
+            echo "Activated virtualenv: $VIRTUAL_ENV"
+            pip list
+        fi
+    '
+
+This post-hook will display the path of the activated virtual environment and list all installed packages whenever a virtualenv is activated.
+
+Remember to test your hooks thoroughly to ensure they don't introduce unexpected behavior in your development workflow.
+
 Security Warnings
 -----------------
 
