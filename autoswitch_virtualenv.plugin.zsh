@@ -123,7 +123,7 @@ function _check_path()
 {
     local check_dir="$1"
 
-    if [[ -f "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
+    if [[ -e "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
         printf "${check_dir}/${AUTOSWITCH_FILE}"
         return
     elif [[ -f "${check_dir}/poetry.lock" ]]; then
