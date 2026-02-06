@@ -47,6 +47,11 @@ function _autoswitch_message() {
 }
 
 
+function _is_valid_virtualenv() {
+    [[ -d "$1" ]] && [[ -f "$1/bin/activate" ]]
+}
+
+
 function _get_venv_type() {
     local venv_dir="$1"
     local venv_type="${2:-virtualenv}"
@@ -124,6 +129,9 @@ function _check_path()
     local check_dir="$1"
 
     if [[ -f "${check_dir}/${AUTOSWITCH_FILE}" ]]; then
+        printf "${check_dir}/${AUTOSWITCH_FILE}"
+        return
+    elif _is_valid_virtualenv "${check_dir}/${AUTOSWITCH_FILE}"; then
         printf "${check_dir}/${AUTOSWITCH_FILE}"
         return
     elif [[ -f "${check_dir}/poetry.lock" ]]; then
@@ -218,8 +226,7 @@ function check_venv()
                 local switch_to="$(<"$venv_path")"
                 _maybeworkon "$(_virtual_env_dir "$switch_to")" "virtualenv"
                 return
-            # $venv_path actually is itself a virtualenv
-            elif [[ -d "$venv_path" ]] && [[ -f "$venv_path/bin/activate" ]]; then
+            elif _is_valid_virtualenv "$venv_path"; then
                 _maybeworkon "$venv_path" "virtualenv"
                 return
             fi
