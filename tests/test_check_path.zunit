@@ -53,3 +53,33 @@
     assert $state equals 0
     assert "$output" is_empty
 }
+
+@test '_check_path - finds .venv directory with bin/activate' {
+    mkdir -p "$TARGET/.venv/bin"
+    touch "$TARGET/.venv/bin/activate"
+
+    run _check_path "$TARGET"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/.venv"
+}
+
+@test '_check_path - ignores .venv directory without bin/activate' {
+    mkdir -p "$TARGET/.venv"
+
+    run _check_path "$TARGET"
+
+    assert $state equals 0
+    assert "$output" is_empty
+}
+
+@test '_check_path - finds local .venv directory instead of parent marker' {
+    touch "$TARGET/uv.lock"
+    mkdir -p "$TARGET/subdir/.venv/bin"
+    touch "$TARGET/subdir/.venv/bin/activate"
+
+    run _check_path "$TARGET/subdir"
+
+    assert $state equals 0
+    assert "$output" same_as "$TARGET/subdir/.venv"
+}

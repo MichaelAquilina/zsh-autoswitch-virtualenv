@@ -1,0 +1,43 @@
+#!/usr/bin/env zunit
+
+
+@setup {
+    export DISABLE_AUTOSWITCH_VENV="1"
+    load "../autoswitch_virtualenv.plugin.zsh"
+    TARGET="$(mktemp -d)"
+}
+
+@teardown {
+    rm -rf "$TARGET"
+}
+
+@test '_is_valid_virtualenv - returns true for valid virtualenv' {
+    mkdir -p "$TARGET/.venv/bin"
+    touch "$TARGET/.venv/bin/activate"
+
+    run _is_valid_virtualenv "$TARGET/.venv"
+
+    assert $state equals 0
+}
+
+@test '_is_valid_virtualenv - returns false for directory without bin/activate' {
+    mkdir -p "$TARGET/.venv/bin"
+
+    run _is_valid_virtualenv "$TARGET/.venv"
+
+    assert $state equals 1
+}
+
+@test '_is_valid_virtualenv - returns false for non-existent path' {
+    run _is_valid_virtualenv "$TARGET/.venv"
+
+    assert $state equals 1
+}
+
+@test '_is_valid_virtualenv - returns false for file' {
+    touch "$TARGET/.venv"
+
+    run _is_valid_virtualenv "$TARGET/.venv"
+
+    assert $state equals 1
+}
