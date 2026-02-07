@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.9.0
+-----
+* Prioritize local .venv directory over parent (#220) thanks @Skesov
+
 3.8.2
 -----
 * Fix uv virutal environments deactivting in subdirectories (#217)
