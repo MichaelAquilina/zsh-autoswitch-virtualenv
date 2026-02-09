@@ -180,6 +180,64 @@ function _activate_uv() {
 }
 
 
+function _check_perms_strict_enough() {
+    local actual=$1
+    local minimum=$2
+
+    # Convert octal strings to numbers
+    local actual_num=$((8#$actual))
+    local minimum_num=$((8#$minimum))
+
+    # Check if actual has any permissions beyond minimum
+    # If (actual & ~minimum) == 0, then actual is subset of minimum
+    if (( (actual_num & ~minimum_num) == 0 )); then
+        return 0  # Success: strict enough
+    else
+        return 1  # Failure: too permissive
+    fi
+}
+
+function _has_expected_permissions() {
+    local venv_path="$1"
+    local minimum_permissions
+    local file_owner
+    local file_permissions
+
+    /usr/bin/stat --version &> /dev/null
+    if [[ $? -eq 0 ]]; then   # Linux, or GNU stat
+        file_owner="$(/usr/bin/stat -c %u "$venv_path")"
+        file_permissions="$(/usr/bin/stat -c %a "$venv_path")"
+    else                      # macOS, or FreeBSD stat
+        file_owner="$(/usr/bin/stat -f %u "$venv_path")"
+        file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
+    fi
+
+    # determine the expected permissions based on whether the venv path
+    # is a file (e.g. default virtualenv) or folder (e.g. uv/poetry)
+    if [[ -d "$venv_path" ]]; then
+        minimum_permissions=777
+    else
+        minimum_permissions=666
+    fi
+
+    minimum_permissions="$(printf %o "$((~8#$(umask) & 8#$minimum_permissions))")"
+    if [[ -f "$venv_path" ]] && [[ "$file_owner" != "$(id -u)" ]]; then
+        printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+        printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
+        printf "Change ownership of ${AUTOSWITCH_PURPLE}$venv_path${AUTOSWITCH_NORMAL} to ${AUTOSWITCH_PURPLE}'$USER'${AUTOSWITCH_NORMAL} to fix this\n"
+        return 1
+    fi
+
+    if ! _check_perms_strict_enough $file_permissions $minimum_permissions; then
+        printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
+        printf "Reason: Found a $AUTOSWITCH_FILE file with unexpected permission settings ($file_permissions).\n"
+        printf "Run the following command to fix this: ${AUTOSWITCH_PURPLE}\"chmod $minimum_permissions $venv_path\"${AUTOSWITCH_NORMAL}\n"
+        return 2
+    fi
+    return 0
+}
+
+
 # Automatically switch virtualenv when $AUTOSWITCH_FILE file detected
 function check_venv()
 {
@@ -199,16 +257,7 @@ function check_venv()
             file_owner="$(/usr/bin/stat -f %u "$venv_path")"
             file_permissions="$(/usr/bin/stat -f %OLp "$venv_path")"
         fi
-
-        if [[ -f "$venv_path" ]] && [[ "$file_owner" != "$(id -u)" ]]; then
-            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a $AUTOSWITCH_FILE file but it is not owned by the current user\n"
-            printf "Change ownership of ${AUTOSWITCH_PURPLE}$venv_path${AUTOSWITCH_NORMAL} to ${PURPLE}'$USER'${NORMAL} to fix this\n"
-        elif [[ -f "$venv_path" ]] && ! [[ "$file_permissions" =~ ^[64][04][04]$ ]]; then
-            printf "AUTOSWITCH WARNING: Virtualenv will not be activated\n\n"
-            printf "Reason: Found a $AUTOSWITCH_FILE file with weak permission settings ($file_permissions).\n"
-            printf "Run the following command to fix this: ${AUTOSWITCH_PURPLE}\"chmod 600 $venv_path\"${AUTOSWITCH_NORMAL}\n"
-        else
+        if _has_expected_permissions "$venv_path"; then
             if [[ "$venv_path" == *"/Pipfile" ]]; then
                 if type "pipenv" > /dev/null && _activate_pipenv; then
                     return
