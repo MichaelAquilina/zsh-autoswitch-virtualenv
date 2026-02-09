@@ -102,6 +102,12 @@ function _maybeworkon() {
             return
         fi
 
+        if [[ ! -z "$AUTOSWITCH_DEACTIVATE_CONDA" ]] && [[ ! -z "$CONDA_DEFAULT_ENV" ]]; then
+            _autoswitch_message "Deactivating Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$CONDA_DEFAULT_ENV"
+            export AUTOSWITCH_DEACTIVATED_CONDA_ENV=$CONDA_DEFAULT_ENV
+            conda deactivate
+        fi
+
         local py_version="$(_python_version "$venv_dir/bin/python")"
         local message="${AUTOSWITCH_MESSAGE_FORMAT:-"$DEFAULT_MESSAGE_FORMAT"}"
         message="${message//\%venv_type/$venv_type}"
@@ -254,6 +260,12 @@ function _default_venv()
         local venv_name="$(_get_venv_name "$VIRTUAL_ENV" "$venv_type")"
         _autoswitch_message "Deactivating: ${AUTOSWITCH_BOLD}${AUTOSWITCH_PURPLE}%s${AUTOSWITCH_NORMAL}\n" "$venv_name"
         deactivate
+
+        if [[ ! -z "$AUTOSWITCH_DEACTIVATE_CONDA" ]] && [[ ! -z "$AUTOSWITCH_DEACTIVATED_CONDA_ENV" ]]; then
+            _autoswitch_message "Switching Conda env: ${BOLD}${GREEN}%s${NORMAL}\n" "$AUTOSWITCH_DEACTIVATED_CONDA_ENV"
+            conda activate $AUTOSWITCH_DEACTIVATED_CONDA_ENV
+            unset AUTOSWITCH_DEACTIVATED_CONDA_ENV
+        fi
     fi
 }
 
